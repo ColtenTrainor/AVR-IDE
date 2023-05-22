@@ -6,23 +6,23 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 
 public class CommandExecutor {
-    private String operatingSys = System.getProperty("os.name").toLowerCase();
+    private final String operatingSystem = System.getProperty("os.name").toLowerCase();
 
     private String[] toWindowsCommand(String... cmd){
         String[] options = {"cmd", "/C"};
         String[] concatenatedArray = Arrays.copyOf(options, options.length + cmd.length);
         System.arraycopy(cmd, 0, concatenatedArray, options.length, cmd.length);
-//        System.out.printf(Arrays.toString(concatenatedArray));
+        System.out.printf(Arrays.toString(concatenatedArray));
         return concatenatedArray;
     }
 
     private String[] determineOSCommand(String... command){
-        if (operatingSys.contains("windows"))
+        if (operatingSystem.contains("windows"))
             return toWindowsCommand(command);
-        else if (operatingSys.contains("nux") || operatingSys.contains("nix"))
+        else if (operatingSystem.contains("nux") || operatingSystem.contains("nix"))
             return command;
         //TODO: nux & nix & mac PLACEHOLDER
-        else if (operatingSys.contains("mac"))
+        else if (operatingSystem.contains("mac"))
             return new String[]{};
         else return null;
     }
