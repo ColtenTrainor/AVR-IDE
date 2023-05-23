@@ -1,6 +1,7 @@
 package org.example;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
@@ -27,10 +28,15 @@ public class CommandExecutor {
         else return null;
     }
 
-    public void runCommand(String... command) {
+    public void runCommand(String... command){
+        runCommand(new File(""), command);
+    }
+
+    public void runCommand(File directory, String... command) {
         command = toWindowsCommand(command);
 
         ProcessBuilder processBuilder = new ProcessBuilder().command(command);
+        processBuilder.directory(directory);
 
         try {
             Process process = processBuilder.start();
@@ -38,7 +44,7 @@ public class CommandExecutor {
             //read the output
             InputStreamReader inputStreamReader = new InputStreamReader(process.getInputStream());
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            String output = null;
+            String output;
             while ((output = bufferedReader.readLine()) != null) {
                 System.out.println(output);
             }
