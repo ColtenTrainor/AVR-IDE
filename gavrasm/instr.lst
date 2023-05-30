@@ -1,0 +1,190 @@
+gavrasm Gerd's AVR assembler version 5.4 (C)2022 by DG4FAC
+----------------------------------------------------------
+Source file: instr.asm
+Hex file:    instr.hex
+Eeprom file: instr.eep
+Compiled:    29.05.2023, 22:34:21
+Pass:        2
+     1: ;
+     2: ; Complete instruction set of the AVRs
+     3: ;   ordered by the assembler mnemonic
+     4: ;   as test file for gavrasm assembler
+     5: ;
+     6: .device "ATmega1284"
+     7: ;
+     8: ; Definitions
+     9: ; Registers
+    10: .def r=R16
+    11: .def rHi=R16
+    12: .def rLo=R0
+    13: .def rD=R24
+    14: ;
+    15: ; Bits
+    16: .equ bit = 0
+    17: ;
+    18: ; Ports
+    19: .equ p = 63
+    20: .equ pLo = 31
+    21: ;
+    22: ; The instruction set
+    23: 000000   1F00  adc r,r
+    24: 000001   0F00  add r,r
+    25: 000002   96CF  adiw rd,63
+    26: 000003   2300  and r,r
+    27: 000004   7F0F  andi rHi,255
+    28: 000005   9505  asr r
+    29: 000006   9488  bclr bit
+    30: 000007   F900  bld r,bit
+    31: 000008   F408  brbc bit,+2
+    32: 000009   F008  brbs bit,+2
+    33: 00000A   F408  brcc +2
+    34: 00000B   F008  brcs +2
+    35: 00000C   F7E8  brbc bit,-2
+    36: 00000D   F3E8  brbs bit,-2
+    37: 00000E   F7E8  brcc -2
+    38: 00000F   F3E8  brcs -2
+    39: 000010   9598  break
+    40: 000011   F3E9  breq -2
+    41: 000012   F7EC  brge -2
+    42: 000013   F7ED  brhc -2
+    43: 000014   F3ED  brhs -2
+    44: 000015   F7EF  brid -2
+    45: 000016   F3EF  brie -2
+    46: 000017   F3E8  brlo -2
+    47: 000018   F3EC  brlt -2
+    48: 000019   F3EA  brmi -2
+    49: 00001A   F7E9  brne -2
+    50: 00001B   F7EA  brpl -2
+    51: 00001C   F7E8  brsh -2
+    52: 00001D   F7EE  brtc -2
+    53: 00001E   F3EE  brts -2
+    54: 00001F   F7EB  brvc -2
+    55: 000020   F3EB  brvs -2
+    56: 000021   9408  bset bit
+    57: 000022   FA00  bst rLo,bit
+    58: 000023   940E  call 10
+        000024   000A
+    59: 000025   98F8  cbi pLo,bit
+    60: 000026   7000  cbr rHi,255
+    61: 000027   9488  clc
+    62: 000028   94D8  clh
+    63: 000029   94F8  cli
+    64: 00002A   94A8  cln
+    65: 00002B   2700  clr r
+    66: 00002C   94C8  cls
+    67: 00002D   94E8  clt
+    68: 00002E   94B8  clv
+    69: 00002F   9498  clz
+    70: 000030   9500  com r
+    71: 000031   1700  cp r,r
+    72: 000032   0700  cpc r,r
+    73: 000033   3F0F  cpi rHi,255
+    74: 000034   1300  cpse r,r
+    75: 000035   950A  dec r
+    76: 000036   95D8  elpm
+    77: 000037   9106  elpm r,Z
+    78: 000038   9107  elpm r,Z+
+    79: 000039   2700  eor r,r
+    80: 00003A   0308  fmul r,r
+    81: 00003B   0380  fmuls r,r
+    82: 00003C   0388  fmulsu r,r
+    83: 00003D   9509  icall
+    84: 00003E   9409  ijmp
+    85: 00003F   B70F  in r,p
+    86: 000040   9503  inc r
+    87: 000041   940C  jmp 10
+        000042   000A
+    88: 000043   910C  ld r,X
+    89: 000044   910D  ld r,X+
+    90: 000045   910E  ld r,-X
+    91: 000046   8108  ld r,Y
+    92: 000047   9109  ld r,Y+
+    93: 000048   910A  ld r,-Y
+    94: 000049   8100  ld r,Z
+    95: 00004A   9101  ld r,Z+
+    96: 00004B   9102  ld r,-Z
+    97: 00004C   AD0F  ldd r,Y+63
+    98: 00004D   AD07  ldd r,Z+63
+    99: 00004E   EF0F  ldi rHi,255
+   100: 00004F   9100  lds r,65535
+        000050   FFFF
+   101: 000051   95C8  lpm
+   102: 000052   9104  lpm r,Z
+   103: 000053   9105  lpm r,Z+
+   104: 000054   0F00  lsl r
+   105: 000055   9506  lsr r
+   106: 000056   2F00  mov r,r
+   107: 000057   0188  movw r,r
+   108: 000058   9F00  mul r,r
+   109: 000059   0200  muls r,r
+   110: 00005A   9501  neg r
+   111: 00005B   0000  nop
+   112: 00005C   2B00  or r,r
+   113: 00005D   6F0F  ori rHi,255
+   114: 00005E   BF0F  out p,r
+   115: 00005F   910F  pop r
+   116: 000060   930F  push r
+   117: 000061   DFA8  rcall 10
+   118: 000062   9508  ret
+   119: 000063   9518  reti
+   120: 000064   CFA5  rjmp 10
+   121: 000065   1F00  rol r
+   122: 000066   9507  ror r
+   123: 000067   0B00  sbc r,r
+   124: 000068   4F0F  sbci rHi,255
+   125: 000069   9AF8  sbi pLo,bit
+   126: 00006A   99F8  sbic pLo,bit
+   127: 00006B   9BF8  sbis pLo,bit
+   128: 00006C   97CF  sbiw rD,63
+   129: 00006D   6F0F  sbr rHi,255
+   130: 00006E   FD00  sbrc r,bit
+   131: 00006F   FF00  sbrs r,bit
+   132: 000070   9408  sec
+   133: 000071   9458  seh
+   134: 000072   9478  sei
+   135: 000073   9428  sen
+   136: 000074   EF0F  ser rHi
+   137: 000075   9448  ses
+   138: 000076   9468  set
+   139: 000077   9438  sev
+   140: 000078   9418  sez
+   141: 000079   9588  sleep
+   142: 00007A   95E8  spm
+   143: 00007B   930C  st X,r
+   144: 00007C   930D  st X+,r
+   145: 00007D   930E  st -X,r
+   146: 00007E   8308  st Y,r
+   147: 00007F   9309  st Y+,r
+   148: 000080   930A  st -Y,r
+   149: 000081   8300  st Z,r
+   150: 000082   9301  st Z+,r
+   151: 000083   9302  st -Z,r
+   152: 000084   AF0F  std Y+63,r
+   153: 000085   AF07  std Z+63,r
+   154: 000086   9300  sts 65535,r
+        000087   FFFF
+   155: 000088   1B00  sub r,r
+   156: 000089   5F0F  subi rHi,255
+   157: 00008A   9502  swap r
+   158: 00008B   2300  tst r
+   159: 00008C   95A8  wdr
+   160: /*
+   161:   ; Instructions that are only implemented in a few AVR types
+   162:   des 8
+   163:   eicall
+   164:   eijmp
+   165:   lac Z,r
+   166:   las Z,r
+   167:   lat Z,r
+   168:   spm Z+
+   169:   xch Z,r
+   170: */
+   171: 
+
+Program             :      141 words.
+Constants           :        0 words.
+Total program memory:      141 words.
+Eeprom space        :        0 bytes.
+Data segment        :        0 bytes.
+Compilation completed, no errors.
+Compilation ended 29.05.2023, 22:34:21

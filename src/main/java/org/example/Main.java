@@ -4,17 +4,10 @@ import java.io.File;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("---" + System.getProperty("os.name"));
-        File currentDirectory = new File("");
-        System.out.println("Abs path: " + currentDirectory.getAbsolutePath());
+        Test testingModule = new Test();
 
-        // Windows
-        CommandExecutor commandExecutor = new CommandExecutor();
-        commandExecutor.runCommand(new File(currentDirectory + "gavrasm"), "gavrasm.exe", "instr.asm");
-//        commandExecutor.runCommand("dir");
-//        commandExecutor.runCommand("ipconfig", "/all");
+//        testingModule.commandTesting();
+        testingModule.viewTesting();
 
-        // Linux
-//        commandExecutor.runCommand("pwd");
     }
 }
