@@ -18,6 +18,9 @@ public class Test {
         View ex = new View("Testing.");
         ex.setWindowDefault();
     }
+
+
+
     public void commandTesting(){
         System.out.println("---" + System.getProperty("os.name"));
         File currentDirectory = new File("");
