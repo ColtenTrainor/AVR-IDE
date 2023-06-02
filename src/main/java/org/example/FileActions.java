@@ -1,6 +1,7 @@
 package org.example;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.ActionEvent;
 import java.io.File;
 
@@ -41,6 +42,7 @@ public class FileActions{
         @Override
         public void actionPerformed(ActionEvent e) {
             JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileFilter(new FileNameExtensionFilter("assembly file (.asm)", "asm"));
             int option = fileChooser.showOpenDialog(frame);
             if(option == JFileChooser.APPROVE_OPTION){
                 currentFile = fileChooser.getSelectedFile();
