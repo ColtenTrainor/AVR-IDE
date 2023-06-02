@@ -26,7 +26,7 @@ public class EditorView {
 
         Container mainContainer = mainFrame.getContentPane();
 
-        this.navBarPanelInit();
+        this.menuBarInit();
         this.editingAreaPanelInit();
 
         mainContainer.add(menuBar, BorderLayout.NORTH);
@@ -35,7 +35,7 @@ public class EditorView {
         this.mainFrame.setVisible(true);
     }
 
-    private void navBarPanelInit(){
+    private void menuBarInit(){
         // Menu bar layout
         var menuBarLayout = new FlowLayout();
         menuBarLayout.setAlignment(FlowLayout.LEFT);
