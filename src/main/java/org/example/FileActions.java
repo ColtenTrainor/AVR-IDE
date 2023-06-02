@@ -5,31 +5,35 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 
 public class FileActions{
-    private JButton openBtn;
-    private JButton saveBtn;
-    private JButton exportBtn;
+    private JMenuItem newBtn;
+    private JMenuItem openBtn;
+    private JMenuItem saveBtn;
+    private JMenuItem saveAsBtn;
     private JFrame frame;
     private File currentFile;
 
-    public FileActions(JButton openBtn, JButton saveBtn, JButton exportBtn, JFrame frame){
+    public FileActions(JMenuItem newBtn, JMenuItem openBtn, JMenuItem saveBtn, JMenuItem saveAsBtn, JFrame frame){
+        this.newBtn = newBtn;
         this.openBtn = openBtn;
         this.saveBtn = saveBtn;
-        this.exportBtn = exportBtn;
+        this.saveAsBtn = saveAsBtn;
         this.frame = frame;
 
         this.setActions();
     }
 
     public void setActions(){
+        // TODO: New, save, & saveAs file
+        // newBtn action
+        newBtn.setText("New");
+        // openBtn action
         Action openAction = new openFileAction();
         openBtn.setAction(openAction);
-        openBtn.setText("Open File");
-
-        // TODO: Save & export file
+        openBtn.setText("Open");
         // saveBtn action
-        saveBtn.setText("Save File");
+        saveBtn.setText("Save");
         // exportBtn action
-        exportBtn.setText("Export File");
+        saveAsBtn.setText("Save As");
     }
 
 
