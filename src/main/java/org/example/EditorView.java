@@ -1,6 +1,7 @@
 package org.example;
 
 import com.formdev.flatlaf.FlatDarkLaf;
+import org.example.actions.OpenFileAction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,7 +62,10 @@ public class EditorView {
         fileMenu.add(fileSave);
         fileMenu.add(fileSaveAs);
 
-        this.setFileActions(fileNew, fileOpen, fileSave, fileSaveAs);
+        fileOpen.setAction(new OpenFileAction(this.mainFrame));
+
+        fileOpen.setText("Open");
+
 
         // Compile & Upload buttons
         var separator = new JSeparator();
@@ -91,10 +95,4 @@ public class EditorView {
         this.editingAreaPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, columnPanel, editableAreaPanel);
         this.editingAreaPanel.setDividerLocation(100);
     }
-
-    private void setFileActions(JMenuItem fileNew, JMenuItem fileOpen, JMenuItem fileSave, JMenuItem fileSaveAs){
-        FileActions actions = new FileActions(fileNew, fileOpen, fileSave, fileSaveAs, mainFrame);
-        actions.setActions();
-    }
-
 }
