@@ -1,5 +1,7 @@
 package org.example;
 
+import com.formdev.flatlaf.FlatDarkLaf;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,10 +11,15 @@ public class EditorView {
     private JSplitPane editingAreaPanel;
 
     public EditorView(String text){
+        try {
+            UIManager.setLookAndFeel(new FlatDarkLaf() {
+            });
+        } catch (UnsupportedLookAndFeelException e) {
+            throw new RuntimeException(e);
+        }
+
         this.mainFrame = new JFrame("MVC example: " + text);
         this.menuBar = new JMenuBar();
-
-        this.menuBar.setLayout(new GridLayout());
     }
 
     public void setWindowSize(int width, int height){
