@@ -21,7 +21,7 @@ public class Main {
         else throw new RuntimeException("Failed to identify operating system");
     };
     public static File SaveDataDir;
-    static {
+    static { //TODO: make settings class and de/serialize that with json instead of just one path
         var cfg = new File("settings.cfg");
         Gson gson = new Gson();
         try {
