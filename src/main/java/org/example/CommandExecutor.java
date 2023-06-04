@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 
 public class CommandExecutor {
-    private final String operatingSystem = System.getProperty("os.name").toLowerCase();
 
     private String[] toWindowsCommand(String... cmd){
         String[] options = {"cmd", "/C"};
@@ -18,14 +17,12 @@ public class CommandExecutor {
     }
 
     private String[] determineOSCommand(String... command){
-        if (operatingSystem.contains("windows"))
-            return toWindowsCommand(command);
-        else if (operatingSystem.contains("nux") || operatingSystem.contains("nix"))
-            return command;
-        //TODO: nux & nix & mac PLACEHOLDER
-        else if (operatingSystem.contains("mac"))
-            return new String[]{};
-        else return null;
+        switch (Main.OperatingSystem) {
+            case Windows -> { return toWindowsCommand(command); }
+            case Linux -> { return command; }
+            case Mac -> { return new String[]{}; } //TODO: mac support
+            default -> { return null;}
+        }
     }
 
     public void runCommand(String... command){

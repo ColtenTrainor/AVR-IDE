@@ -1,11 +1,9 @@
 package org.example;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import impl.View;
+import interfaces.IModel;
+import interfaces.IView;
+
 import java.io.File;
 
 public class Test {
@@ -15,8 +13,12 @@ public class Test {
 
     public void viewTesting(){
         final String text = "XvX";
-        View ex = new View("Testing.");
-        ex.setWindowDefault();
+        IView view = new View("Testing.");
+        IModel model = new Model();
+
+        Controller controller = new Controller(view, model);
+        controller.runView();
+
     }
 
 
