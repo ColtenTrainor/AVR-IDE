@@ -1,5 +1,8 @@
 package org.example;
 
+
+import impl.Controller;
+import impl.Model;
 import impl.View;
 import interfaces.IModel;
 import interfaces.IView;
@@ -18,6 +21,9 @@ public class Test {
 
         Controller controller = new Controller(view, model);
         controller.runView();
+
+        EditorView ex = new EditorView("Testing.");
+        ex.setWindowDefault();
 
     }
 

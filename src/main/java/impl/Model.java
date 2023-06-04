@@ -1,4 +1,4 @@
-package org.example;
+package impl;
 
 import interfaces.IModel;
 
