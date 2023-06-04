@@ -2,10 +2,10 @@ package org.example;
 
 
 import impl.Controller;
+import impl.MainView;
 import impl.Model;
-import impl.View;
 import interfaces.IModel;
-import interfaces.IView;
+import interfaces.IMainView;
 
 import java.io.File;
 
@@ -15,15 +15,11 @@ public class Test {
     }
 
     public void viewTesting(){
-        final String text = "XvX";
-        IView view = new View("Testing.");
+        IMainView view = new MainView("Testing.");
         IModel model = new Model();
 
         Controller controller = new Controller(view, model);
         controller.runView();
-
-        EditorView ex = new EditorView("Testing.");
-        ex.setWindowDefault();
 
     }
 

@@ -1,8 +1,7 @@
 package impl;
 
-import impl.PopUpWindow;
 import interfaces.IModel;
-import interfaces.IView;
+import interfaces.IMainView;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -15,10 +14,10 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
 public class Controller implements PropertyChangeListener {
-    IView view;
+    IMainView view;
     IModel model;
 
-    public Controller(IView view, IModel model){
+    public Controller(IMainView view, IModel model){
         this.view = view;
         this.model = model;
 
@@ -32,10 +31,13 @@ public class Controller implements PropertyChangeListener {
 
     private void setUpLabels(){
         //TODO:
-        this.view.getNewFileButton().setText("New File");
-        this.view.getOpenButton().setText("Open File");
-        this.view.getSaveButton().setText("Save File");
-        this.view.getExportButton().setText("Export File");
+        this.view.getNewFileButton().setText("New");
+        this.view.getOpenButton().setText("Open");
+        this.view.getSaveButton().setText("Save");
+        this.view.getSaveAsButton().setText("Save As");
+        this.view.getExportButton().setText("Export");
+        this.view.getCompileButton().setText("Compile");
+        this.view.getUploadButton().setText("Upload");
     }
     @Override
     public void propertyChange(PropertyChangeEvent evt) {

@@ -1,20 +1,28 @@
 package impl;
-import interfaces.IView;
+import com.formdev.flatlaf.FlatDarkLaf;
+import interfaces.IMainView;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class View implements IView {
+public class MainView implements IMainView {
     private final JFrame mainFrame;
     private final int screenSolutionWidth;
     private final int screenSolutionHeight;
-    private final NavBar navBar;
+    private final MenuBar menuBar;
     private final EditingArea editingArea;
 
-    public View(String text){
-        this.mainFrame = new JFrame("MVC example: " + text);
+    public MainView(String text){
+        try {
+            UIManager.setLookAndFeel(new FlatDarkLaf() {
+            });
+        } catch (UnsupportedLookAndFeelException e) {
+            throw new RuntimeException(e);
+        }
 
-        this.navBar = new NavBar();
+        this.mainFrame = new JFrame("Example: " + text);
+
+        this.menuBar = new MenuBar();
         this.editingArea = new EditingArea();
 
         this.screenSolutionWidth = (int)(getScreenSolution().getWidth() * 0.8);
@@ -34,29 +42,36 @@ public class View implements IView {
         JSplitPane centerContainer = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, editingArea.columnPanel, editingArea.editableField);
         centerContainer.setDividerLocation(100);
 
-        mainContainer.add(navBar.getNavBarPanel(), BorderLayout.NORTH);
+        mainContainer.add(menuBar.getMenuBarContainer(), BorderLayout.NORTH);
         mainContainer.add(centerContainer, BorderLayout.CENTER);
 
         this.mainFrame.setVisible(true);
     }
 
 
-    private static class NavBar{
-        private final JPanel navBarPanel = new JPanel();
-        private final JButton newFileButton = new JButton();
-        private final JButton openFileButton = new JButton();
-        private final JButton saveButton = new JButton();
-        private final JButton exportButton = new JButton();
+    private static class MenuBar {
+        private final JMenuBar menuBarContainer = new JMenuBar();
+        private final JMenuItem newFileButton = new JMenuItem();
+        private final JMenuItem openFileButton = new JMenuItem();
+        private final JMenuItem saveButton = new JMenuItem();
+        private final JMenuItem exportButton = new JMenuItem();
+        private final JMenuItem saveAsButton = new JMenuItem();
+        private final JButton compileButton = new JButton();
+        private final JButton uploadButton = new JButton();
 
-        public NavBar(){
-            this.navBarPanel.setLayout(new GridLayout());
-            this.navBarPanel.add(newFileButton);
-            this.navBarPanel.add(openFileButton);
-            this.navBarPanel.add(saveButton);
-            this.navBarPanel.add(exportButton);
+        public MenuBar(){
+            this.menuBarContainer.setLayout(new FlowLayout(FlowLayout.LEFT));
+            JMenu fileMenu = new JMenu("File");
+            fileMenu.add(newFileButton);
+            fileMenu.add(openFileButton);
+            fileMenu.add(saveButton);
+            fileMenu.add(saveAsButton);
+            this.menuBarContainer.add(fileMenu);
+            this.menuBarContainer.add(compileButton);
+            this.menuBarContainer.add(uploadButton);
         }
-        public JPanel getNavBarPanel() {
-            return navBarPanel;
+        public JMenuBar getMenuBarContainer() {
+            return menuBarContainer;
         }
     }
 
@@ -90,15 +105,6 @@ public class View implements IView {
         }
     }
 
-    private void setFileActions(JButton openFileButton, JButton saveButton, JButton exportButton){
-        /*
-        *   This is place to add actions/listeners to the GUI
-        */
-        FileActions actions = new FileActions(openFileButton, saveButton, exportButton, mainFrame);
-        actions.setActions();
-    }
-
-
     private Dimension getScreenSolution(){
         return Toolkit.getDefaultToolkit().getScreenSize();
     }
@@ -114,23 +120,37 @@ public class View implements IView {
     }
 
     @Override
-    public JButton getOpenButton() {
-        return this.navBar.openFileButton;
+    public JMenuItem getOpenButton() {
+        return this.menuBar.openFileButton;
     }
 
     @Override
-    public JButton getSaveButton() {
-        return this.navBar.saveButton;
+    public JMenuItem getSaveButton() {
+        return this.menuBar.saveButton;
     }
 
     @Override
-    public JButton getExportButton() {
-        return navBar.exportButton;
+    public JMenuItem getSaveAsButton() {
+        return menuBar.saveAsButton;
+    }
+    @Override
+    public JMenuItem getExportButton() {
+        return menuBar.exportButton;
     }
 
     @Override
-    public JButton getNewFileButton() {
-        return navBar.newFileButton;
+    public JMenuItem getNewFileButton() {
+        return menuBar.newFileButton;
+    }
+
+    @Override
+    public JButton getCompileButton() {
+        return menuBar.compileButton;
+    }
+
+    @Override
+    public JButton getUploadButton() {
+        return menuBar.uploadButton;
     }
 
 }
