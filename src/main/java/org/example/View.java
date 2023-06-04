@@ -58,8 +58,7 @@ public class View {
 
         JLabel sideBar = new JLabel("Side Bar");
 
-        JTextArea editField = new JTextArea("Enter text here.");
-        editField.setLineWrap(true);
+        JTextPane editField = new JTextPane();
 
         columnPanel.add(sideBar);
         editableAreaPanel.add(editField);

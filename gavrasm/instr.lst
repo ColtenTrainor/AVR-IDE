@@ -3,7 +3,7 @@ gavrasm Gerd's AVR assembler version 5.4 (C)2022 by DG4FAC
 Source file: instr.asm
 Hex file:    instr.hex
 Eeprom file: instr.eep
-Compiled:    29.05.2023, 22:34:21
+Compiled:    01.06.2023, 12:52:17
 Pass:        2
      1: ;
      2: ; Complete instruction set of the AVRs
@@ -187,4 +187,4 @@ Total program memory:      141 words.
 Eeprom space        :        0 bytes.
 Data segment        :        0 bytes.
 Compilation completed, no errors.
-Compilation ended 29.05.2023, 22:34:21
+Compilation ended 01.06.2023, 12:52:17
