@@ -1,10 +1,10 @@
 package org.example;
 
 
-import impl.Controller;
+import impl.MainController;
 import impl.MainView;
-import impl.Model;
-import interfaces.IModel;
+import impl.MainModel;
+import interfaces.IMainModel;
 import interfaces.IMainView;
 
 import java.io.File;
@@ -16,11 +16,10 @@ public class Test {
 
     public void viewTesting(){
         IMainView view = new MainView("Testing.");
-        IModel model = new Model();
+        IMainModel model = new MainModel();
 
-        Controller controller = new Controller(view, model);
-        controller.runView();
-
+        MainController mainController = new MainController(view, model);
+        mainController.runView();
     }
 
 

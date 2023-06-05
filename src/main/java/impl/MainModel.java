@@ -1,16 +1,16 @@
 package impl;
 
-import interfaces.IModel;
+import interfaces.IMainModel;
 
 import java.io.File;
 import java.beans.*;
 
-public class Model implements IModel {
+public class MainModel implements IMainModel {
     private File currentOpenedFile;
     private String content;
     private final PropertyChangeSupport support;
 
-    public Model(){
+    public MainModel(){
         //TODO:
         this.content = "";
         this.currentOpenedFile = null;
