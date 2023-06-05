@@ -8,28 +8,28 @@ import java.beans.*;
 public class MainModel implements IMainModel {
     private File currentOpenedFile;
     private String content;
-    private final PropertyChangeSupport support;
+    private final PropertyChangeSupport changeObserver;
 
     public MainModel(){
         //TODO:
         this.content = "";
         this.currentOpenedFile = null;
-        this.support = new PropertyChangeSupport(this);
+        this.changeObserver = new PropertyChangeSupport(this);
     }
     public void addPropertyChangeListener(PropertyChangeListener listener) {
-        support.addPropertyChangeListener(listener);
+        changeObserver.addPropertyChangeListener(listener);
     }
     @Override
     public void setCurrentFile(File file){
         File oldFile = currentOpenedFile;
         this.currentOpenedFile = file;
-        support.firePropertyChange("file", oldFile, currentOpenedFile);
+        changeObserver.firePropertyChange("file", oldFile, currentOpenedFile);
     }
 
     public void setContent(String content){
         String oldContent = this.content;
         this.content = content;
-        support.firePropertyChange("content", oldContent, this.content);
+        changeObserver.firePropertyChange("content", oldContent, this.content);
         //TODO:
     }
 
@@ -37,11 +37,14 @@ public class MainModel implements IMainModel {
     public String getCurrentFilePath() {
         return getFilePathOrEmpty(this.currentOpenedFile);
     }
+//    @Override
+//    public String getContent() {
+//        return this.content;
+//    }
     @Override
     public String getContent() {
         return this.content;
     }
-
     public File getCurrentOpenedFile() {
         return currentOpenedFile;
     }

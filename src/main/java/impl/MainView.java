@@ -4,6 +4,8 @@ import interfaces.IMainView;
 
 import javax.swing.*;
 import java.awt.*;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 public class MainView implements IMainView {
     private final JFrame mainFrame;
@@ -48,7 +50,6 @@ public class MainView implements IMainView {
         this.mainFrame.setVisible(true);
     }
 
-
     private static class MenuBar {
         private final JMenuBar menuBarContainer = new JMenuBar();
         private final JMenuItem newFileButton = new JMenuItem();
@@ -80,28 +81,16 @@ public class MainView implements IMainView {
         private final JPanel editableAreaPanel = new JPanel();
         private final JLabel sideBar = new JLabel("Side Bar");
         private final JTextPane editableField = new JTextPane();
-
         public EditingArea() {
             this.columnPanel.setLayout(new GridLayout());
             this.editableAreaPanel.setLayout(new GridLayout());
-            this.layoutDefault();
+            this.editableField.setContentType("text/html");
+
+            this.setLayoutDefault();
         }
-        private void layoutDefault(){
+        private void setLayoutDefault(){
             this.columnPanel.add(sideBar);
             this.editableAreaPanel.add((editableField));
-        }
-
-        public JLabel getSideBar() {
-            return sideBar;
-        }
-        public JTextPane getEditableField() {
-            return editableField;
-        }
-        public JPanel getColumnPanel() {
-            return columnPanel;
-        }
-        public JPanel getEditableAreaPanel() {
-            return editableAreaPanel;
         }
     }
 
@@ -115,8 +104,8 @@ public class MainView implements IMainView {
     }
 
     @Override
-    public JTextPane getTextArea() {
-        return this.editingArea.getEditableField();
+    public JTextPane getTextArea(){
+        return this.editingArea.editableField;
     }
 
     @Override

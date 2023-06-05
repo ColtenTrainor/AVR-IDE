@@ -5,6 +5,7 @@ import interfaces.IMainModel;
 import interfaces.IMainView;
 
 import javax.swing.*;
+import javax.swing.text.html.HTMLDocument;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -18,10 +19,12 @@ public class MainController implements PropertyChangeListener {
     IMainView view;
     IMainModel model;
     MenuActions fileActions;
+    DebugMode debugMode;
 
     public MainController(IMainView view, IMainModel model){
         this.view = view;
         this.model = model;
+        this.debugMode = new DebugMode(this.view);
         this.fileActions = new MenuActions(this.view, this.model);
 
         // Set up and initialise stuff
@@ -30,9 +33,11 @@ public class MainController implements PropertyChangeListener {
 
         // Controller listens to model
         this.model.addPropertyChangeListener(this);
+        this.debugMode.addPropertyChangeListener(this);
     }
     public void runView(){
         this.view.setDefaultFrame();
+        this.debugMode.run();
     }
 
     private void setUpLabels(){
@@ -62,6 +67,9 @@ public class MainController implements PropertyChangeListener {
         else if (propertyName.equalsIgnoreCase("content")){
             view.getTextArea().setText(model.getContent());
         }
-    }
+        else if (propertyName.equalsIgnoreCase("state")){
+           view.getTextArea().setText(model.getContent());
+        }
+    }// propertyChange()
 
 }
