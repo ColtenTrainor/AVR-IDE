@@ -64,7 +64,6 @@ public class Settings {
         for (String setting : settingsData.keySet()){
             switch (setting){
                 case MapKeys.defaultSaveDir -> defaultSaveDir = new File(settingsData.get(MapKeys.defaultSaveDir));
-                default -> { continue; }
             }
         }
     }
