@@ -27,7 +27,7 @@ public class MainController implements PropertyChangeListener {
         this.debugMode = new DebugMode(this.view);
         this.fileActions = new MenuActions(this.view, this.model);
 
-        // Set up and initialise stuff
+        // Set up and initialize stuff
         setUpMenuListeners();
         setUpLabels();
 
@@ -55,6 +55,7 @@ public class MainController implements PropertyChangeListener {
         this.view.getNewFileButton().setAction(this.fileActions.NEW.apply("New File"));
         this.view.getOpenButton().setAction(this.fileActions.OPEN.apply("Open File"));
         this.view.getSaveButton().setAction(this.fileActions.SAVE.apply("Save File"));
+        this.view.getSaveAsButton().setAction(this.fileActions.SAVEAS.apply("Save File As"));
     }
 
     @Override

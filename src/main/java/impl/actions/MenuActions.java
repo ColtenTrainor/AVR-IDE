@@ -3,9 +3,11 @@ package impl.actions;
 import impl.PopUpWindow;
 import interfaces.IMainModel;
 import interfaces.IMainView;
+import org.example.Main;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.plaf.basic.BasicFileChooserUI;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
@@ -13,11 +15,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MenuActions {
     private final IMainView view;
     private final IMainModel model;
     public final Function<String, Action> OPEN, NEW, SAVE, SAVEAS, EXPORT, COMPILE, UPLOAD;
+
+    private final FileNameExtensionFilter AsmFilter = new FileNameExtensionFilter(
+            "Assembly File (.asm)", "asm");
+
     public MenuActions(IMainView view, IMainModel model){
         this.view = view;
         this.model = model;
@@ -26,34 +34,20 @@ public class MenuActions {
         this.OPEN = this::openFile;
         this.NEW = this::newFile;
         this.SAVE = this::save;
+        this.SAVEAS = this::saveAs;
         //TODO:
-        this.SAVEAS = null;
         this.EXPORT = null;
         this.COMPILE = null;
         this.UPLOAD = null;
     }
 
-    public Action openFileASM() {
-        return new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setFileFilter(new FileNameExtensionFilter("Assembly File (.asm)", "asm"));
-                int option = fileChooser.showOpenDialog(view.getMainFrame());
-                if (option == JFileChooser.APPROVE_OPTION) {
-                    var currentFile = fileChooser.getSelectedFile();
-                    view.getMainFrame().setTitle("File Selected: " + currentFile.getAbsolutePath());
-                } else {
-                    view.getMainFrame().setTitle("*New File");
-                }
-            }
-        };
-    }
     private Action openFile(String command){
         return new AbstractAction(command) {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileFilter(AsmFilter);
+                fileChooser.setCurrentDirectory(Main.Settings.getDefaultSaveDir());
                 int option = fileChooser.showOpenDialog(view.getMainFrame());
                 if(option == JFileChooser.APPROVE_OPTION) {
                     File currentFile = fileChooser.getSelectedFile();
@@ -75,28 +69,70 @@ public class MenuActions {
             public void actionPerformed(ActionEvent e) {
                 try {
                     if (model.getCurrentOpenedFile() == null) {
-                        JFileChooser fileChooser = new JFileChooser();
-                        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                        int option = fileChooser.showOpenDialog(view.getMainFrame());
-                        if (option == JFileChooser.APPROVE_OPTION) {
-                            File dirToSave = fileChooser.getSelectedFile();
-
-                            // TODO: Add new file's name changeability
-                            Path newFile = new File(dirToSave.toString() + "\\New_File.txt").toPath();
-
-                            model.setContent(view.getTextArea().getText());
-                            model.setCurrentFile(newFile.toFile());
-                            Files.write(newFile, model.getContent().getBytes(), StandardOpenOption.CREATE_NEW);
-                        }
+                        saveFileWithDialogue();
                     } else {
                         model.setContent(view.getTextArea().getText());
-                        Files.write(model.getCurrentOpenedFile().toPath(), model.getContent().getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
+                        Files.write(model.getCurrentOpenedFile().toPath(),
+                                model.getContent().getBytes(),
+                                StandardOpenOption.TRUNCATE_EXISTING);
                     }
                 }catch (IOException ex){
                     throw new RuntimeException("Save Failed.");
                 }
             }
         };
+    }
+
+    private Action saveAs(String command){
+        return new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    saveFileWithDialogue();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        };
+    }
+
+    private void saveFileWithDialogue() throws IOException {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(AsmFilter);
+
+    // removing this allows choosing a file to overwrite, which users may want
+//        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+        fileChooser.setSelectedFile(new File(Main.Settings.getDefaultSaveDir(), "New_File.asm"));
+        int option = fileChooser.showSaveDialog(view.getMainFrame());
+        if (option == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+
+            String saveDirectory = selectedFile.getParent();
+            String fileName = selectedFile.getName();
+
+            if (fileChooser.getFileFilter().equals(AsmFilter) && !fileName.contains(".asm")) {
+                fileName += ".asm";
+            }
+            Path newFile = new File(saveDirectory, fileName).toPath();
+
+            model.setContent(view.getTextArea().getText());
+            model.setCurrentFile(newFile.toFile());
+            String parsedText = parseHtml(model.getContent());
+            Files.write(newFile, parsedText.getBytes(), StandardOpenOption.CREATE_NEW);
+        }
+    }
+
+    // This might be useful as a public method somewhere else
+    private String parseHtml(String html){
+        Matcher matcher = Pattern.compile("<p.*?>\\s*(.+?)\\s*</p>").matcher(html);
+        StringBuilder parsedText = new StringBuilder();
+
+        while (matcher.find()) {
+            var newToken = matcher.group(1);
+            parsedText.append(newToken).append("\n");
+        }
+        return parsedText.toString();
     }
 
     private Action newFile(String command){

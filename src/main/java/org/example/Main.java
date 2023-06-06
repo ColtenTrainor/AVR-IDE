@@ -14,7 +14,6 @@ public class Main {
     public static Settings Settings = new Settings();
 
     public static void main(String[] args) {
-        System.out.println(Settings.getDefaultSaveDir());
         Test testingModule = new Test();
 
 //        testingModule.commandTesting();
