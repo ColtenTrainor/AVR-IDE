@@ -46,6 +46,7 @@ public class Settings {
             while (scanner.hasNext()){
                 var line = scanner.nextLine();
                 var splitLine = line.split("\\s+(?=(?:[^'\"]*['\"][^'\"]*['\"])*[^'\"]*$)");
+                if (splitLine.length < 2) continue;
                 var key = splitLine[0].replace("\"", "").toLowerCase();
                 var value = splitLine[1].replace("\"", "");
                 if (settingsData.containsKey(key) && !value.equals("")){
