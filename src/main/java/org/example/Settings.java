@@ -30,14 +30,12 @@ public class Settings {
         savepath += "/AVR-IDE";
         settingsData.put(MapKeys.defaultSaveDir, savepath);
 
-        try {
-            if (!settingsFile.createNewFile()){
-                deserialize();
-            }
-            serialize();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        parseSettingsData();
+
+        if (settingsFile.exists()) {
+            deserialize();
         }
+        serialize();
     }
 
     private void deserialize(){

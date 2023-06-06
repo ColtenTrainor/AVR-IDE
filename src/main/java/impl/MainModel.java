@@ -37,14 +37,12 @@ public class MainModel implements IMainModel {
     public String getCurrentFilePath() {
         return getFilePathOrEmpty(this.currentOpenedFile);
     }
-//    @Override
-//    public String getContent() {
-//        return this.content;
-//    }
+
     @Override
     public String getContent() {
         return this.content;
     }
+
     public File getCurrentOpenedFile() {
         return currentOpenedFile;
     }

@@ -7,12 +7,10 @@ import org.example.Main;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.plaf.basic.BasicFileChooserUI;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -71,10 +69,7 @@ public class MenuActions {
                     if (model.getCurrentOpenedFile() == null) {
                         saveFileWithDialogue();
                     } else {
-                        model.setContent(view.getTextArea().getText());
-                        Files.write(model.getCurrentOpenedFile().toPath(),
-                                model.getContent().getBytes(),
-                                StandardOpenOption.TRUNCATE_EXISTING);
+                        saveFile(model.getCurrentOpenedFile());
                     }
                 }catch (IOException ex){
                     throw new RuntimeException("Save Failed.");
@@ -114,13 +109,17 @@ public class MenuActions {
             if (fileChooser.getFileFilter().equals(AsmFilter) && !fileName.contains(".asm")) {
                 fileName += ".asm";
             }
-            Path newFile = new File(saveDirectory, fileName).toPath();
+            File newFile = new File(saveDirectory, fileName);
 
-            model.setContent(view.getTextArea().getText());
-            model.setCurrentFile(newFile.toFile());
-            String parsedText = parseHtml(model.getContent());
-            Files.write(newFile, parsedText.getBytes(), StandardOpenOption.CREATE_NEW);
+            saveFile(newFile);
         }
+    }
+
+    private void saveFile(File file) throws IOException {
+        model.setContent(view.getTextArea().getText());
+        model.setCurrentFile(file);
+        String parsedText = parseHtml(model.getContent());
+        Files.write(file.toPath(), parsedText.getBytes(), StandardOpenOption.CREATE_NEW);
     }
 
     // This might be useful as a public method somewhere else
