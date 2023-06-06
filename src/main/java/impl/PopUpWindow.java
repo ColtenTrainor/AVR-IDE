@@ -32,9 +32,12 @@ public class PopUpWindow {
         if (cancelButton != null)
             this.windowPane.add(cancelButton);
 
-        this.windowFrame.setSize(300,100);
+        this.windowFrame.setSize(400,100);
         this.windowFrame.add(message, BorderLayout.NORTH);
         this.windowFrame.add(windowPane, BorderLayout.CENTER);
+        this.windowFrame.setLocationRelativeTo(null);
+
+        this.message.setHorizontalAlignment(JLabel.CENTER);
     }
     public void setVisible(){
         this.windowFrame.setVisible(true);

@@ -1,11 +1,10 @@
 package impl;
+
 import com.formdev.flatlaf.FlatDarkLaf;
 import interfaces.IMainView;
 
 import javax.swing.*;
 import java.awt.*;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 
 public class MainView implements IMainView {
     private final JFrame mainFrame;

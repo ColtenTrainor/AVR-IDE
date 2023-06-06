@@ -4,16 +4,8 @@ import impl.actions.MenuActions;
 import interfaces.IMainModel;
 import interfaces.IMainView;
 
-import javax.swing.*;
-import javax.swing.text.html.HTMLDocument;
-import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 
 public class MainController implements PropertyChangeListener {
     IMainView view;
