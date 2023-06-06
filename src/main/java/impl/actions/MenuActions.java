@@ -125,7 +125,7 @@ public class MenuActions {
 
     // This might be useful as a public method somewhere else
     private String parseHtml(String html){
-        Matcher matcher = Pattern.compile("<p.*?>\\s*(.+?)\\s*</p>").matcher(html);
+        Matcher matcher = Pattern.compile("<p.*?>\\s*(.*?)\\s*</p>").matcher(html);
         StringBuilder parsedText = new StringBuilder();
 
         while (matcher.find()) {
