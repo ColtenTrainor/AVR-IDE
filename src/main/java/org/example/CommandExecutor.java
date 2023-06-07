@@ -17,7 +17,7 @@ public class CommandExecutor {
     }
 
     private String[] determineOSCommand(String... command){
-        switch (Main.OperatingSystem) {
+        switch (Settings.OperatingSystem) {
             case Windows -> { return toWindowsCommand(command); }
             case Linux -> { return command; }
             case Mac -> { return new String[]{}; } //TODO: mac support

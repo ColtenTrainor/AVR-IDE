@@ -10,6 +10,16 @@ import java.util.Scanner;
 
 public class Settings {
 
+    public enum OS { Windows, Linux, Mac }
+    public static final OS OperatingSystem;
+    static {
+        var os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("windows")) OperatingSystem = OS.Windows;
+        else if (os.contains("linux")) OperatingSystem = OS.Linux;
+        else if (os.contains("mac") || os.contains("osx")) OperatingSystem = OS.Mac;
+        else throw new RuntimeException("Failed to identify operating system");
+    }
+
     // Settings fields
     private File defaultSaveDir;
     public File getDefaultSaveDir() { return defaultSaveDir; }
@@ -26,8 +36,9 @@ public class Settings {
         // Initialize settings with defaults
         var savepath = FileSystemView.getFileSystemView()
                 .getDefaultDirectory().getAbsolutePath();
-        if (Main.OperatingSystem == Main.OS.Linux) savepath += "/Documents"; // may need to add documents in windows too, untested
+        if (OperatingSystem == OS.Linux) savepath += "/Documents"; // may need to add documents in windows too, untested
         savepath += "/AVR-IDE";
+        new File(savepath).mkdirs();
         settingsData.put(MapKeys.defaultSaveDir, savepath);
 
         parseSettingsData();
