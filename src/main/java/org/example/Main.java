@@ -12,6 +12,3 @@ public class Main {
         var commandExecutor = new CommandExecutor();
     }
 }
-
-
-//created syntax highlighting branch
