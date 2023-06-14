@@ -84,7 +84,7 @@ public class MainView implements IMainView {
             this.columnPanel.setLayout(new GridLayout());
             this.editableAreaPanel.setLayout(new GridLayout());
             this.editableField.setContentType("text/html");
-
+            this.editableField.setEditable(true);
             this.setLayoutDefault();
         }
         private void setLayoutDefault(){

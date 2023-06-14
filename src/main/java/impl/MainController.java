@@ -16,7 +16,7 @@ public class MainController implements PropertyChangeListener {
     public MainController(IMainView view, IMainModel model){
         this.view = view;
         this.model = model;
-        this.debugMode = new DebugMode(this.view);
+        this.debugMode = new DebugMode(this.view, this.model);
         this.fileActions = new MenuActions(this.view, this.model);
 
         // Set up and initialize stuff
@@ -58,12 +58,20 @@ public class MainController implements PropertyChangeListener {
             view.getMainFrame().setTitle(model.getCurrentFilePath());
         }
         else if (propertyName.equalsIgnoreCase("content")){
-            view.getTextArea().setText(model.getContent());
+            view.getTextArea().setText(fontColorChanging(model.getContent()));
         }
-        else if (propertyName.equalsIgnoreCase("state")){
-           String htmlText = view.getTextArea().getText();
-           model.setContent(htmlText);
-        }
+//        else if (propertyName.equalsIgnoreCase("state")){
+//            view.getTextArea().setText(fontColorChanging(model.getContent()));
+//           String htmlText = view.getTextArea().getText();
+//           model.setContent(htmlText);
+//        }
     }// propertyChange()
 
+    private String fontColorChanging(String htmlString){
+        String examples[] = new String[]{"ldi", "lw", "sw"};
+        for (String inst : examples)
+            htmlString = htmlString.replaceAll(inst, "<font color=\"#6a5acd\">" + inst +"</font>");
+
+        return htmlString;
+    }
 }

@@ -1,5 +1,6 @@
 package impl;
 
+import interfaces.IMainModel;
 import interfaces.IMainView;
 
 import javax.swing.text.BadLocationException;
@@ -9,11 +10,13 @@ import java.beans.PropertyChangeSupport;
 
 public class DebugMode implements Runnable{
     private final IMainView view;
-    private boolean isActivated;
+    private final IMainModel model;
+    private final boolean isActivated;
     private boolean isContentChanged;
     private final PropertyChangeSupport changeObserver;
-    public DebugMode(IMainView view){
+    public DebugMode(IMainView view, IMainModel model){
         this.view = view;
+        this.model = model;
         this.isActivated = true;
         this.isContentChanged = false;
         this.changeObserver = new PropertyChangeSupport(this);
@@ -31,6 +34,7 @@ public class DebugMode implements Runnable{
             if ( ! currentContent.contentEquals(previousContent)){
                 setContentState();
                 try {
+                    this.contentModify();
                     System.out.print("DEBUG: " + view.getTextArea().getText());
                     System.out.println("Raw: " +view.getTextArea().getDocument().getText(0, view.getTextArea().getDocument().getLength()));
                 } catch (BadLocationException e) {
@@ -52,8 +56,9 @@ public class DebugMode implements Runnable{
         System.out.println("...State changed");
     }
 
-    private void fontColorChanging(String htmlString){
-        htmlString = htmlString.replaceAll("ldi", "<font color=\"red\"> ldi </font>");
+    private void contentModify(){
+        String htmlText = view.getTextArea().getText();
+        model.setContent(htmlText);
     }
 
 }
