@@ -67,12 +67,14 @@ public class MenuActions {
             public void actionPerformed(ActionEvent e) {
                 try {
                     if (model.getCurrentOpenedFile() == null) {
+                        System.out.println("--Saved as new.");
                         saveFileWithDialogue();
                     } else {
-                        saveFile(model.getCurrentOpenedFile());
+                        System.out.println("--Saved as existing file.");
+                        saveFile(model.getCurrentOpenedFile(), StandardOpenOption.TRUNCATE_EXISTING);
                     }
                 }catch (IOException ex){
-                    throw new RuntimeException("Save Failed.");
+                    throw new RuntimeException("---Save Failed.");
                 }
             }
         };
@@ -111,15 +113,15 @@ public class MenuActions {
             }
             File newFile = new File(saveDirectory, fileName);
 
-            saveFile(newFile);
+            saveFile(newFile, StandardOpenOption.CREATE_NEW);
         }
     }
 
-    private void saveFile(File file) throws IOException {
+    private void saveFile(File file, java.nio.file.StandardOpenOption option) throws IOException {
         model.setContent(view.getTextArea().getText());
         model.setCurrentFile(file);
         String parsedText = parseHtml(model.getContent());
-        Files.write(file.toPath(), parsedText.getBytes(), StandardOpenOption.CREATE_NEW);
+        Files.write(file.toPath(), parsedText.getBytes(), option);
     }
 
     // This might be useful as a public method somewhere else
