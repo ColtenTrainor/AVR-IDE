@@ -1,6 +1,5 @@
 package org.example;
 
-import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -34,7 +33,7 @@ public class Settings {
 
     public Settings(){
         // Initialize settings with defaults
-        setDefaultSaveDir(new File("saves"));
+        setDefaultSaveDir(new File("saved"));
 
         // Handle config file
         parseSettingsData();
