@@ -1,7 +1,6 @@
-package interfaces;
+package org.example.interfaces;
 
 import javax.swing.*;
-import java.beans.PropertyChangeListener;
 
 public interface IMainView {
     JFrame getMainFrame();

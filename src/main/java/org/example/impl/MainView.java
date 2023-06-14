@@ -1,7 +1,7 @@
-package impl;
+package org.example.impl;
 
 import com.formdev.flatlaf.FlatDarkLaf;
-import interfaces.IMainView;
+import org.example.interfaces.IMainView;
 
 import javax.swing.*;
 import java.awt.*;

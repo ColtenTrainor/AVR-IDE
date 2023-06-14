@@ -63,8 +63,13 @@ public class CommandExecutor {
             switch (Settings.OperatingSystem){
                 case Windows -> {}
                 case Linux -> runCommand(new File("avra"), "avra", asmFile.getAbsolutePath(),
-                        "-o " + asmFile.getName().replace(".asm", ".hex"));
+                        "-o " + Settings.getDefaultSaveDir() + "/" + changeExtension(asmFile.getName()));
             }
+        }
+
+        private static String changeExtension(String fileName){
+            if (fileName.contains(".asm")) return fileName.replace(".asm", ".hex");
+            else return fileName + ".hex";
         }
     }
 }

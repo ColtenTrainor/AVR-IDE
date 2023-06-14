@@ -1,8 +1,8 @@
-package impl;
+package org.example.impl;
 
-import impl.actions.MenuActions;
-import interfaces.IMainModel;
-import interfaces.IMainView;
+import org.example.impl.actions.MenuActions;
+import org.example.interfaces.IMainModel;
+import org.example.interfaces.IMainView;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

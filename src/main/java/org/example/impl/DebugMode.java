@@ -1,9 +1,8 @@
-package impl;
+package org.example.impl;
 
-import interfaces.IMainView;
+import org.example.interfaces.IMainView;
 
 import javax.swing.text.BadLocationException;
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 

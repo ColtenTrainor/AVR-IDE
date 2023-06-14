@@ -1,4 +1,4 @@
-package interfaces;
+package org.example.interfaces;
 
 import java.beans.PropertyChangeListener;
 import java.io.File;
