@@ -34,19 +34,15 @@ public class Settings {
 
     public Settings(){
         // Initialize settings with defaults
-        var savepath = FileSystemView.getFileSystemView()
-                .getDefaultDirectory().getAbsolutePath();
-        if (OperatingSystem == OS.Linux) savepath += "/Documents"; // may need to add documents in windows too, untested
-        savepath += "/AVR-IDE";
-        new File(savepath).mkdirs();
-        settingsData.put(MapKeys.defaultSaveDir, savepath);
+        setDefaultSaveDir(new File("saves"));
 
+        // Handle config file
         parseSettingsData();
-
-        if (settingsFile.exists()) {
-            deserialize();
-        }
+        if (settingsFile.exists()) deserialize();
         serialize();
+
+        // Misc other setup
+        defaultSaveDir.mkdirs();
     }
 
     private void deserialize(){

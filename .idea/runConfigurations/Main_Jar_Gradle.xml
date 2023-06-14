@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Main Jar Gradle" type="JarApplication">
+    <option name="JAR_PATH" value="$PROJECT_DIR$/build/libs/AVR-IDE-1.0-SNAPSHOT.jar" />
+    <option name="WORKING_DIRECTORY" value="C:\dev\projects\java\AVR-IDE\build\libs" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <option name="ALTERNATIVE_JRE_PATH" value="$APPLICATION_HOME_DIR$/jbr" />
+    <method v="2">
+      <option name="Gradle.BeforeRunTask" enabled="false" tasks=":compileJava :processResources :classes :jar" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
+    </method>
+  </configuration>
+</component>
