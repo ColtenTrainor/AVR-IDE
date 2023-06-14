@@ -48,6 +48,7 @@ public class MainController implements PropertyChangeListener {
         this.view.getOpenButton().setAction(this.fileActions.OPEN.apply("Open File"));
         this.view.getSaveButton().setAction(this.fileActions.SAVE.apply("Save File"));
         this.view.getSaveAsButton().setAction(this.fileActions.SAVEAS.apply("Save File As"));
+        this.view.getCompileButton().setAction(this.fileActions.COMPILE.apply("Compile"));
     }
 
     @Override
@@ -59,6 +60,7 @@ public class MainController implements PropertyChangeListener {
         }
         else if (propertyName.equalsIgnoreCase("content")){
             view.getTextArea().setText(model.getContent());
+            model.setIsSaved(false);
         }
         else if (propertyName.equalsIgnoreCase("state")){
            view.getTextArea().setText(model.getContent());

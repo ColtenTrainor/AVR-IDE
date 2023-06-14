@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class CommandExecutor {
 
-    private String[] toWindowsCommand(String... cmd){
+    private static String[] toWindowsCommand(String... cmd){
         String[] options = {"cmd", "/C"};
         String[] concatenatedArray = Arrays.copyOf(options, options.length + cmd.length);
         System.arraycopy(cmd, 0, concatenatedArray, options.length, cmd.length);
@@ -16,7 +16,7 @@ public class CommandExecutor {
         return concatenatedArray;
     }
 
-    private String[] determineOSCommand(String... command){
+    private static String[] determineOSCommand(String... command){
         switch (Settings.OperatingSystem) {
             case Windows -> { return toWindowsCommand(command); }
             case Linux -> { return command; }
@@ -25,12 +25,12 @@ public class CommandExecutor {
         }
     }
 
-    public void runCommand(String... command){
+    public static void runCommand(String... command){
         runCommand(new File(""), command);
     }
 
-    public void runCommand(File directory, String... command) {
-        command = toWindowsCommand(command);
+    public static void runCommand(File directory, String... command) {
+        command = determineOSCommand(command);
 
         ProcessBuilder processBuilder = new ProcessBuilder().command(command);
         processBuilder.directory(directory);
@@ -55,6 +55,16 @@ public class CommandExecutor {
 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static class Avra {
+        public static void compile(File asmFile){
+            switch (Settings.OperatingSystem){
+                case Windows -> {}
+                case Linux -> runCommand(new File("avra"), "avra", asmFile.getAbsolutePath(),
+                        "-o " + asmFile.getName().replace(".asm", ".hex"));
+            }
         }
     }
 }

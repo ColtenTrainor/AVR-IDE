@@ -9,6 +9,9 @@ public class MainModel implements IMainModel {
     private File currentOpenedFile;
     private String content;
     private final PropertyChangeSupport changeObserver;
+    private boolean isSaved;
+    @Override public boolean getIsSaved() { return isSaved; }
+    @Override public void setIsSaved(boolean value) { isSaved = value; }
 
     public MainModel(){
         //TODO:
@@ -19,6 +22,7 @@ public class MainModel implements IMainModel {
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         changeObserver.addPropertyChangeListener(listener);
     }
+
     @Override
     public void setCurrentFile(File file){
         File oldFile = currentOpenedFile;

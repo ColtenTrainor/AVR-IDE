@@ -3,7 +3,9 @@ package impl.actions;
 import impl.PopUpWindow;
 import interfaces.IMainModel;
 import interfaces.IMainView;
+import org.example.CommandExecutor;
 import org.example.Main;
+import org.example.Settings;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -35,7 +37,7 @@ public class MenuActions {
         this.SAVEAS = this::saveAs;
         //TODO:
         this.EXPORT = null;
-        this.COMPILE = null;
+        this.COMPILE = this::compile;
         this.UPLOAD = null;
     }
 
@@ -45,7 +47,7 @@ public class MenuActions {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setFileFilter(AsmFilter);
-                fileChooser.setCurrentDirectory(Main.Settings.getDefaultSaveDir());
+                fileChooser.setCurrentDirectory(Settings.getDefaultSaveDir());
                 int option = fileChooser.showOpenDialog(view.getMainFrame());
                 if(option == JFileChooser.APPROVE_OPTION) {
                     File currentFile = fileChooser.getSelectedFile();
@@ -53,6 +55,7 @@ public class MenuActions {
                         String text = Files.readString(currentFile.toPath());
                         model.setCurrentFile(currentFile);
                         model.setContent(text);
+                        model.setIsSaved(true);
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -65,14 +68,10 @@ public class MenuActions {
         return new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    if (model.getCurrentOpenedFile() == null) {
-                        saveFileWithDialogue();
-                    } else {
-                        saveFile(model.getCurrentOpenedFile());
-                    }
-                }catch (IOException ex){
-                    throw new RuntimeException("Save Failed.");
+                if (model.getCurrentOpenedFile() == null) {
+                    saveFileWithDialogue();
+                } else {
+                    saveFile(model.getCurrentOpenedFile());
                 }
             }
         };
@@ -82,23 +81,17 @@ public class MenuActions {
         return new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    saveFileWithDialogue();
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
+                saveFileWithDialogue();
             }
         };
     }
 
-    private void saveFileWithDialogue() throws IOException {
+    private boolean saveFileWithDialogue() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileFilter(AsmFilter);
 
-    // removing this allows choosing a file to overwrite, which users may want
-//        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-
-        fileChooser.setSelectedFile(new File(Main.Settings.getDefaultSaveDir(), "New_File.asm"));
+        fileChooser.setSelectedFile(new File(Settings.getDefaultSaveDir(), "New_File.asm"));
+        fileChooser.setCurrentDirectory(Settings.getDefaultSaveDir());
         int option = fileChooser.showSaveDialog(view.getMainFrame());
         if (option == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
@@ -111,15 +104,23 @@ public class MenuActions {
             }
             File newFile = new File(saveDirectory, fileName);
 
-            saveFile(newFile);
+            return saveFile(newFile);
+        } else {
+            return false;
         }
     }
 
-    private void saveFile(File file) throws IOException {
+    private boolean saveFile(File file) {
         model.setContent(view.getTextArea().getText());
         model.setCurrentFile(file);
         String parsedText = parseHtml(model.getContent());
-        Files.write(file.toPath(), parsedText.getBytes(), StandardOpenOption.CREATE_NEW);
+        try {
+            Files.write(file.toPath(), parsedText.getBytes(), StandardOpenOption.CREATE_NEW);
+        } catch (IOException e) {
+            return false;
+        }
+        model.setIsSaved(true);
+        return true;
     }
 
     // This might be useful as a public method somewhere else
@@ -146,6 +147,7 @@ public class MenuActions {
                 else{
                     model.setCurrentFile(null);
                     model.setContent("");
+                    model.setIsSaved(false);
                 }
             }
         };
@@ -158,6 +160,7 @@ public class MenuActions {
             public void actionPerformed(ActionEvent e) {
                 model.setCurrentFile(null);
                 model.setContent("");
+                model.setIsSaved(false);
                 popUp.setInvisible();
             }
         });
@@ -168,5 +171,24 @@ public class MenuActions {
             }
         });
         popUp.setVisible();
+    }
+
+    private Action compile(String s) {
+        return new AbstractAction(s) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                var currentFile = model.getCurrentOpenedFile();
+                if (model.getIsSaved()){
+                    CommandExecutor.Avra.compile(currentFile);
+                } else if (currentFile != null && currentFile.exists()) {
+                    if (saveFile(currentFile)) CommandExecutor.Avra.compile(currentFile);
+                } else {
+                    if (saveFileWithDialogue()){
+                        currentFile = model.getCurrentOpenedFile();
+                        CommandExecutor.Avra.compile(currentFile);
+                    }
+                }
+            }
+        };
     }
 }
