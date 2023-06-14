@@ -61,7 +61,8 @@ public class MainController implements PropertyChangeListener {
             view.getTextArea().setText(model.getContent());
         }
         else if (propertyName.equalsIgnoreCase("state")){
-           view.getTextArea().setText(model.getContent());
+           String htmlText = view.getTextArea().getText();
+           model.setContent(htmlText);
         }
     }// propertyChange()
 

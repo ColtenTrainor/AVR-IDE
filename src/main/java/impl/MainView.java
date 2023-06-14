@@ -26,8 +26,8 @@ public class MainView implements IMainView {
         this.menuBar = new MenuBar();
         this.editingArea = new EditingArea();
 
-        this.screenSolutionWidth = (int)(getScreenSolution().getWidth() * 0.8);
-        this.screenSolutionHeight = (int)(getScreenSolution().getHeight() * 0.8);
+        this.screenSolutionWidth = (int)(getScreenSolution().getWidth() * 0.5);
+        this.screenSolutionHeight = (int)(getScreenSolution().getHeight() * 0.5);
     }
 
     public void setWindowSize(int width, int height){

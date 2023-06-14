@@ -42,6 +42,10 @@ public class MainModel implements IMainModel {
     public String getContent() {
         return this.content;
     }
+    @Override
+    public String getHtmlContent(){
+        return this.content;
+    }
 
     public File getCurrentOpenedFile() {
         return currentOpenedFile;

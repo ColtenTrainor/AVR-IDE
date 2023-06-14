@@ -9,5 +9,6 @@ public interface IMainModel {
     String getCurrentFilePath();
     File getCurrentOpenedFile();
     String getContent();
+    String getHtmlContent();
     void addPropertyChangeListener(PropertyChangeListener listener);
 }

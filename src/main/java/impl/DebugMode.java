@@ -31,7 +31,8 @@ public class DebugMode implements Runnable{
             if ( ! currentContent.contentEquals(previousContent)){
                 setContentState();
                 try {
-                    System.out.println(view.getTextArea().getDocument().getText(0, view.getTextArea().getDocument().getLength()));
+                    System.out.print("DEBUG: " + view.getTextArea().getText());
+                    System.out.println("Raw: " +view.getTextArea().getDocument().getText(0, view.getTextArea().getDocument().getLength()));
                 } catch (BadLocationException e) {
                     throw new RuntimeException(e);
                 }
@@ -50,13 +51,9 @@ public class DebugMode implements Runnable{
         changeObserver.firePropertyChange("state", oldState, true);
         System.out.println("...State changed");
     }
-    public String highlightExample(String longAssString){
-        return longAssString.replaceAll("ldi", getRedHighLight("ldi"));
-    }
 
-    private String getRedHighLight(String highlightedString){
-        return "<html><font color=\"red\">" + highlightedString + "</font></html>";
+    private void fontColorChanging(String htmlString){
+        htmlString = htmlString.replaceAll("ldi", "<font color=\"red\"> ldi </font>");
     }
-
 
 }

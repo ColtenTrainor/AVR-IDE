@@ -50,7 +50,7 @@ public class MenuActions {
                 if(option == JFileChooser.APPROVE_OPTION) {
                     File currentFile = fileChooser.getSelectedFile();
                     try {
-                        String text = Files.readString(currentFile.toPath());
+                        String text = "<p>" + Files.readString(currentFile.toPath()).replaceAll("\n", "</p><p>") + "</p>";
                         model.setCurrentFile(currentFile);
                         model.setContent(text);
                     } catch (IOException ex) {
