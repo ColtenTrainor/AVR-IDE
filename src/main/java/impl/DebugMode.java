@@ -9,22 +9,20 @@ import java.awt.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
 public class DebugMode implements Runnable{
     private final IMainView view;
     private final IMainModel model;
     private final boolean isActivated;
-    private boolean isContentChanged;
-    private final PropertyChangeSupport changeObserver;
+    private HashMap<String, String> colorMap;
+
     public DebugMode(IMainView view, IMainModel model){
         this.view = view;
         this.model = model;
         this.isActivated = true;
-        this.isContentChanged = false;
-        this.changeObserver = new PropertyChangeSupport(this);
-    }
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        changeObserver.addPropertyChangeListener(listener);
+        colorMap = new HashMap<>();
     }
 
     @Override
@@ -47,6 +45,7 @@ public class DebugMode implements Runnable{
             }
         }
     }
+
     private String getViewRawContent() {
         try {
             return view.getTextArea().getDocument().getText(0, view.getTextArea().getDocument().getLength());
@@ -56,19 +55,12 @@ public class DebugMode implements Runnable{
         return "";
     }
 
-    private void setContentState(){
-        boolean oldState = this.isContentChanged;
-        this.isContentChanged = true;
-        changeObserver.firePropertyChange("state", oldState, true);
-        System.out.println("...State changed");
-    }
-
     private void contentModify(){
         String htmlText = view.getTextArea().getText();
         model.setContent(htmlText);
     }
 
-    public void testingColor() {
+    public void addColorHighlighting() {
         JTextPane textPane = view.getTextArea();
         StyledDocument doc = textPane.getStyledDocument();
         resetStyledDocument(doc, textPane);
@@ -77,7 +69,6 @@ public class DebugMode implements Runnable{
             String text = doc.getText(0, doc.getLength());
 
             Style style = textPane.addStyle("style-tag", null);
-//            StyleConstants.setForeground(style, Color.red);
 
             instructionHighlight(text, doc, style);
             textPane.setCaretPosition(doc.getLength());
@@ -87,10 +78,13 @@ public class DebugMode implements Runnable{
     }
 
     private void instructionHighlight(String string, StyledDocument doc, Style style){
-        String instructions[] = new String[]{"ldi", "lw", "sw"};
+        String instructions[] = new String[]{"add", "sub", "inc", "dec", "and", "or", "mul",
+                "nop", "break", "sleep", "mov", "in", "out", "push", "pop", "ldi",
+                "rjmp", "ijmp", "jmp",
+                "rcall", "icall", "ret"};
 
         for (String inst : instructions){
-            ArrayList<Integer> indices = findWordIndices(string, inst);
+            ArrayList<Integer> indices = findWordIndices(string.toLowerCase(), inst);
             if (indices.size() == 0)
                 continue;
 
@@ -98,7 +92,7 @@ public class DebugMode implements Runnable{
                 try {
                     StyleConstants.setForeground(style, Color.decode("#6a5acd"));
                     doc.remove(index, inst.length());
-                    doc.insertString(index, inst ,style);
+                    doc.insertString(index, inst.toUpperCase() ,style);
                 } catch (BadLocationException e) {
                     e.printStackTrace();
                 }

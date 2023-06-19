@@ -4,9 +4,6 @@ import impl.actions.MenuActions;
 import interfaces.IMainModel;
 import interfaces.IMainView;
 
-import javax.swing.*;
-import javax.swing.text.*;
-import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -62,7 +59,7 @@ public class MainController implements PropertyChangeListener {
             view.getTextArea().setText(model.getContent());
         }
         else if (propertyName.equalsIgnoreCase("content")){
-            debugMode.testingColor();
+            debugMode.addColorHighlighting();
         }
 
     }// propertyChange()
