@@ -4,6 +4,9 @@ import impl.actions.MenuActions;
 import interfaces.IMainModel;
 import interfaces.IMainView;
 
+import javax.swing.*;
+import javax.swing.text.*;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -23,7 +26,7 @@ public class MainController implements PropertyChangeListener {
         setUpMenuListeners();
         setUpLabels();
 
-        // Controller listens to model
+        // Controller listens to model, debug
         this.model.addPropertyChangeListener(this);
         this.debugMode.addPropertyChangeListener(this);
     }
@@ -58,13 +61,10 @@ public class MainController implements PropertyChangeListener {
             view.getMainFrame().setTitle(model.getCurrentFilePath());
         }
         else if (propertyName.equalsIgnoreCase("content")){
-            view.getTextArea().setText(fontColorChanging(model.getContent()));
-        }
-//        else if (propertyName.equalsIgnoreCase("state")){
 //            view.getTextArea().setText(fontColorChanging(model.getContent()));
-//           String htmlText = view.getTextArea().getText();
-//           model.setContent(htmlText);
-//        }
+            debugMode.testingColor();
+        }
+
     }// propertyChange()
 
     private String fontColorChanging(String htmlString){

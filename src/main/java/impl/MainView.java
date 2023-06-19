@@ -90,6 +90,7 @@ public class MainView implements IMainView {
         private void setLayoutDefault(){
             this.columnPanel.add(sideBar);
             this.editableAreaPanel.add((editableField));
+
         }
     }
 
