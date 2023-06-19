@@ -32,28 +32,35 @@ public class DebugMode implements Runnable{
         String previousContent = "";
         while (isActivated){
             try {
-            String currentContent = view.getTextArea().getDocument().getText(0, view.getTextArea().getDocument().getLength());
+            String currentContent = getViewRawContent();
 
             if ( ! currentContent.contentEquals(previousContent)){
-                    this.contentModify();
-                    System.out.print("DEBUG: " + view.getTextArea().getText());
-                    System.out.println("Raw: " + currentContent);
+                this.contentModify();
+                System.out.print("DEBUG: " + view.getTextArea().getText());
+                System.out.println("Raw: " + currentContent);
                 previousContent = currentContent;
             }
             Thread.sleep(1000);
 
-            } catch (InterruptedException | BadLocationException e) {
+            } catch (InterruptedException e) {
                 throw new RuntimeException("Sleep failed.");
             }
         }
     }
-    private String getRawContent() {
+    private String getViewRawContent() {
         try {
             return view.getTextArea().getDocument().getText(0, view.getTextArea().getDocument().getLength());
         }catch (BadLocationException ex){
             ex.printStackTrace();
         }
         return "";
+    }
+
+    private void setContentState(){
+        boolean oldState = this.isContentChanged;
+        this.isContentChanged = true;
+        changeObserver.firePropertyChange("state", oldState, true);
+        System.out.println("...State changed");
     }
 
     private void contentModify(){
@@ -111,15 +118,12 @@ public class DebugMode implements Runnable{
     }
 
     private void resetStyledDocument(StyledDocument doc, JTextPane textPane) {
-        // Remove all styled text
+        // Remove styled text
         doc.setCharacterAttributes(0, doc.getLength(), textPane.getStyle(StyleContext.DEFAULT_STYLE), true);
 
         // Clear any additional styles
         Style style = textPane.getStyle(StyleContext.DEFAULT_STYLE);
         StyleConstants.setForeground(style, textPane.getForeground());
-//        StyleConstants.setBackground(style, textPane.getBackground());
-//        StyleConstants.setFontFamily(style, textPane.getFont().getFamily());
-//        StyleConstants.setFontSize(style, textPane.getFont().getSize());
 
         textPane.setCaretPosition(doc.getLength()); // Set the caret position to the beginning of the document
     }

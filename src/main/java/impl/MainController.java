@@ -28,7 +28,7 @@ public class MainController implements PropertyChangeListener {
 
         // Controller listens to model, debug
         this.model.addPropertyChangeListener(this);
-        this.debugMode.addPropertyChangeListener(this);
+//        this.debugMode.addPropertyChangeListener(this);
     }
     public void runView(){
         this.view.setDefaultFrame();
@@ -59,19 +59,11 @@ public class MainController implements PropertyChangeListener {
 
         if (propertyName.equalsIgnoreCase("file")) {
             view.getMainFrame().setTitle(model.getCurrentFilePath());
+            view.getTextArea().setText(model.getContent());
         }
         else if (propertyName.equalsIgnoreCase("content")){
-//            view.getTextArea().setText(fontColorChanging(model.getContent()));
             debugMode.testingColor();
         }
 
     }// propertyChange()
-
-    private String fontColorChanging(String htmlString){
-        String examples[] = new String[]{"ldi", "lw", "sw"};
-        for (String inst : examples)
-            htmlString = htmlString.replaceAll(inst, "<font color=\"#6a5acd\">" + inst +"</font>");
-
-        return htmlString;
-    }
 }

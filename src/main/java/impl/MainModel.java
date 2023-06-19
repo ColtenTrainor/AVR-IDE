@@ -4,6 +4,8 @@ import interfaces.IMainModel;
 
 import java.io.File;
 import java.beans.*;
+import java.io.IOException;
+import java.nio.file.Files;
 
 public class MainModel implements IMainModel {
     private File currentOpenedFile;
@@ -23,6 +25,13 @@ public class MainModel implements IMainModel {
     public void setCurrentFile(File file){
         File oldFile = currentOpenedFile;
         this.currentOpenedFile = file;
+
+        try {
+            String text = "<p>" + Files.readString(currentOpenedFile.toPath()).replaceAll("\n", "</p><p>") + "</p>";
+            this.content = text;
+        }catch (IOException ex){
+            ex.printStackTrace();
+        }
         changeObserver.firePropertyChange("file", oldFile, currentOpenedFile);
     }
 
