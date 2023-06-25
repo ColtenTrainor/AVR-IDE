@@ -61,9 +61,10 @@ public class CommandExecutor {
     public static class Avra {
         public static void compile(File asmFile){
             switch (Settings.OperatingSystem){
-                case Windows -> {}
-                case Linux -> runCommand(new File("avra"), "avra", asmFile.getAbsolutePath(),
-                        "-o " + Settings.getDefaultSaveDir() + "/" + changeExtension(asmFile.getName()));
+                case Windows -> runCommand(new File("avra"), "avra.exe", "\"" + asmFile.getAbsolutePath() + "\"",
+                        "-o", "\"" + Settings.getDefaultSaveDir().getAbsolutePath() + "\\" + changeExtension(asmFile.getName()) + "\"");
+                case Linux -> runCommand(new File("avra"), "avra", "\"" + asmFile.getAbsolutePath() + "\"",
+                        "-o", "\"" + Settings.getDefaultSaveDir().getAbsolutePath() + "/" + changeExtension(asmFile.getName()) + "\"");
             }
         }
 
