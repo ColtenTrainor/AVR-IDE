@@ -129,13 +129,14 @@ public class DebugMode implements Runnable{
                 Point pt = new Point(e.getX(), e.getY());
                 int pos = editableField.viewToModel2D(pt);
                 try {
+                    // TODO: only add tip if instruction in format "inst ..."
                     String text = editableField.getDocument().getText(0, editableField.getDocument().getLength());
                     int[] wordPos = getWordOffsetAndLen(pos, text);
                     tipDisplayText = editableField.getDocument().getText(wordPos[0], wordPos[1]);
 
-                    if (!rules.isAnInstruction(tipDisplayText.strip()))
-                        tipDisplayText = "SCREAMING IN DESPAIR.";
-                    else tipDisplayText = rules.getInstructionDescription(tipDisplayText.strip());
+                    if (rules.isAnInstruction(tipDisplayText.strip()))
+                        tipDisplayText = rules.getInstructionDescription(tipDisplayText.strip());
+                    else tipDisplayText = "SCREAMING AAAAA";
                 }
                 catch (BadLocationException ex) {
                     System.out.println("BAD LOCATION!");
@@ -146,9 +147,9 @@ public class DebugMode implements Runnable{
     }
 
     private int[] getWordOffsetAndLen(int currentCaretPostion, String text){
-        int head_pos = text.lastIndexOf(" ", currentCaretPostion);
+        int head_pos = text.lastIndexOf("\n", currentCaretPostion);
         if (head_pos == -1)
-            head_pos = text.lastIndexOf("\n", currentCaretPostion);
+            head_pos = text.lastIndexOf(" ", currentCaretPostion);
         if (head_pos == -1)
             head_pos = 0;
 
