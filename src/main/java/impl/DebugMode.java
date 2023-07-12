@@ -80,11 +80,6 @@ public class DebugMode implements Runnable{
     }
 
     private void instructionHighlight(String string, StyledDocument doc, Style style){
-//        String instructions[] = new String[]{"add", "sub", "inc", "dec", "and", "or", "mul",
-//                "nop", "break", "sleep", "mov", "in", "out", "push", "pop", "ldi",
-//                "rjmp", "ijmp", "jmp",
-//                "rcall", "icall", "ret"};
-
         RulesInit rules = new RulesInit();
         List<String> instructions = rules.getKeySet();
 
