@@ -1,5 +1,6 @@
 package impl;
 
+import impl.regAndIns.RulesInit;
 import interfaces.IMainModel;
 import interfaces.IMainView;
 
@@ -11,6 +12,7 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public class DebugMode implements Runnable{
     private final IMainView view;
@@ -78,13 +80,16 @@ public class DebugMode implements Runnable{
     }
 
     private void instructionHighlight(String string, StyledDocument doc, Style style){
-        String instructions[] = new String[]{"add", "sub", "inc", "dec", "and", "or", "mul",
-                "nop", "break", "sleep", "mov", "in", "out", "push", "pop", "ldi",
-                "rjmp", "ijmp", "jmp",
-                "rcall", "icall", "ret"};
+//        String instructions[] = new String[]{"add", "sub", "inc", "dec", "and", "or", "mul",
+//                "nop", "break", "sleep", "mov", "in", "out", "push", "pop", "ldi",
+//                "rjmp", "ijmp", "jmp",
+//                "rcall", "icall", "ret"};
+
+        RulesInit rules = new RulesInit();
+        List<String> instructions = rules.getKeySet();
 
         for (String inst : instructions){
-            ArrayList<Integer> indices = findWordIndices(string.toLowerCase(), inst);
+            ArrayList<Integer> indices = findWordIndices(string.toLowerCase(), inst.toLowerCase());
             if (indices.size() == 0)
                 continue;
 
@@ -92,7 +97,7 @@ public class DebugMode implements Runnable{
                 try {
                     StyleConstants.setForeground(style, Color.decode("#6a5acd"));
                     doc.remove(index, inst.length());
-                    doc.insertString(index, inst.toUpperCase() ,style);
+                    doc.insertString(index, inst ,style);
                 } catch (BadLocationException e) {
                     e.printStackTrace();
                 }

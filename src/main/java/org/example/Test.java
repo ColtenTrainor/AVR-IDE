@@ -4,6 +4,7 @@ package org.example;
 import impl.MainController;
 import impl.MainView;
 import impl.MainModel;
+import impl.regAndIns.RulesInit;
 import interfaces.IMainModel;
 import interfaces.IMainView;
 
@@ -23,7 +24,6 @@ public class Test {
     }
 
 
-
     public void commandTesting(){
         System.out.println("---" + System.getProperty("os.name"));
         File currentDirectory = new File("");
@@ -37,6 +37,11 @@ public class Test {
 
         // Linux
 //        commandExecutor.runCommand("pwd");
+    }
+
+    public void syntaxTesting(){
+        RulesInit rules = new RulesInit();
+        rules.printRuleMap();
     }
 
 }

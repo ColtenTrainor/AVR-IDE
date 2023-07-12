@@ -40,7 +40,7 @@ public class MainView implements IMainView {
         this.mainFrame.setLocationRelativeTo(null);
         Container mainContainer = mainFrame.getContentPane();
 
-        JSplitPane centerContainer = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, editingArea.columnPanel, editingArea.editableField);
+        JSplitPane centerContainer = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, editingArea.columnPanel, editingArea.editableScrollPane);
         centerContainer.setDividerLocation(100);
 
         mainContainer.add(menuBar.getMenuBarContainer(), BorderLayout.NORTH);
@@ -77,20 +77,18 @@ public class MainView implements IMainView {
 
     private static class EditingArea{
         private final JPanel columnPanel = new JPanel();
-        private final JPanel editableAreaPanel = new JPanel();
+        private final JScrollPane editableScrollPane;
         private final JLabel sideBar = new JLabel("Side Bar");
         private final JTextPane editableField = new JTextPane();
         public EditingArea() {
             this.columnPanel.setLayout(new GridLayout());
-            this.editableAreaPanel.setLayout(new GridLayout());
+            this.editableScrollPane = new JScrollPane(editableField);
             this.editableField.setContentType("text/html");
             this.editableField.setEditable(true);
             this.setLayoutDefault();
         }
         private void setLayoutDefault(){
             this.columnPanel.add(sideBar);
-            this.editableAreaPanel.add((editableField));
-
         }
     }
 
