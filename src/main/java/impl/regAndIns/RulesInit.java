@@ -39,7 +39,7 @@ public class RulesInit {
     }
     private List<String> readLines(){
         try {
-            return Files.readAllLines(new File("D:\\Summer 2023\\AVR-IDE\\src\\main\\java\\impl\\regAndIns\\instructionSyntax.txt").toPath());
+            return Files.readAllLines(new File(".\\src\\main\\java\\impl\\regAndIns\\instructionSyntax.txt").toPath());
         }catch (IOException ex){
             System.out.println("Read rules failed.");
             ex.printStackTrace();
