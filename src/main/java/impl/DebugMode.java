@@ -1,16 +1,15 @@
 package impl;
 
-import impl.regAndIns.RulesInit;
+import impl.regAndIns.InstructionRules;
 import interfaces.IMainModel;
 import interfaces.IMainView;
 
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,6 +24,7 @@ public class DebugMode implements Runnable{
         this.model = model;
         this.isActivated = true;
         colorMap = new HashMap<>();
+        this.setUpToolTipListener();
     }
 
     @Override
@@ -36,8 +36,8 @@ public class DebugMode implements Runnable{
 
             if ( ! currentContent.contentEquals(previousContent)){
                 this.contentModify();
-                System.out.print("DEBUG: " + view.getTextArea().getText());
-                System.out.println("Raw: " + currentContent);
+//                System.out.print("DEBUG: " + view.getTextArea().getText());
+//                System.out.println("Raw: " + currentContent);
                 previousContent = currentContent;
             }
             Thread.sleep(1000);
@@ -80,7 +80,7 @@ public class DebugMode implements Runnable{
     }
 
     private void instructionHighlight(String string, StyledDocument doc, Style style){
-        RulesInit rules = new RulesInit();
+        InstructionRules rules = new InstructionRules();
         List<String> instructions = rules.getKeySet();
 
         for (String inst : instructions){
@@ -89,19 +89,16 @@ public class DebugMode implements Runnable{
                 continue;
 
             indices.forEach(index -> {
-                try {
-                    StyleConstants.setForeground(style, Color.decode("#6a5acd"));
-                    doc.remove(index, inst.length());
-                    doc.insertString(index, inst ,style);
-                } catch (BadLocationException e) {
-                    e.printStackTrace();
-                }
+                StyleConstants.setForeground(style, Color.decode(rules.getColorCode(inst)));
+                // Setting attr instead of removing -> inserting
+                doc.setCharacterAttributes(index, inst.length(), style, true);
             });
         }
     }
 
     private ArrayList<Integer> findWordIndices(String text, String word) {
         ArrayList<Integer> indices = new ArrayList<>();
+
         int index = text.indexOf(word);
 
         while (index >= 0) {
@@ -120,5 +117,48 @@ public class DebugMode implements Runnable{
         StyleConstants.setForeground(style, textPane.getForeground());
 
         textPane.setCaretPosition(doc.getLength()); // Set the caret position to the beginning of the document
+    }
+
+    private void setUpToolTipListener(){
+        JTextPane editableField = view.getTextArea();
+        editableField.addMouseMotionListener(new MouseMotionAdapter() {
+            final InstructionRules rules = new InstructionRules();
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                String tipDisplayText = "";
+                Point pt = new Point(e.getX(), e.getY());
+                int pos = editableField.viewToModel2D(pt);
+                try {
+                    String text = editableField.getDocument().getText(0, editableField.getDocument().getLength());
+                    int[] wordPos = getWordOffsetAndLen(pos, text);
+                    tipDisplayText = editableField.getDocument().getText(wordPos[0], wordPos[1]);
+
+                    if (!rules.isAnInstruction(tipDisplayText.strip()))
+                        tipDisplayText = "SCREAMING IN DESPAIR.";
+                    else tipDisplayText = rules.getInstructionDescription(tipDisplayText.strip());
+                }
+                catch (BadLocationException ex) {
+                    System.out.println("BAD LOCATION!");
+                }
+                editableField.setToolTipText(tipDisplayText);
+            }
+        });
+    }
+
+    private int[] getWordOffsetAndLen(int currentCaretPostion, String text){
+        int head_pos = text.lastIndexOf(" ", currentCaretPostion);
+        if (head_pos == -1)
+            head_pos = text.lastIndexOf("\n", currentCaretPostion);
+        if (head_pos == -1)
+            head_pos = 0;
+
+        int tail_pos = text.indexOf(" ", currentCaretPostion);
+        if (tail_pos == -1)
+            tail_pos = text.indexOf("\n", currentCaretPostion);
+        if (tail_pos == -1)
+            tail_pos = text.length();
+
+        int len = tail_pos - head_pos;
+        return new int[]{head_pos, len};
     }
 }

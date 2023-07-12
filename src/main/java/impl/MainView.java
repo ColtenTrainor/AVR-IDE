@@ -4,7 +4,15 @@ import com.formdev.flatlaf.FlatDarkLaf;
 import interfaces.IMainView;
 
 import javax.swing.*;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Caret;
+import javax.swing.text.Document;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.util.StringTokenizer;
 
 public class MainView implements IMainView {
     private final JFrame mainFrame;
@@ -69,6 +77,7 @@ public class MainView implements IMainView {
             this.menuBarContainer.add(fileMenu);
             this.menuBarContainer.add(compileButton);
             this.menuBarContainer.add(uploadButton);
+
         }
         public JMenuBar getMenuBarContainer() {
             return menuBarContainer;
@@ -82,13 +91,14 @@ public class MainView implements IMainView {
         private final JTextPane editableField = new JTextPane();
         public EditingArea() {
             this.columnPanel.setLayout(new GridLayout());
-            this.editableScrollPane = new JScrollPane(editableField);
             this.editableField.setContentType("text/html");
             this.editableField.setEditable(true);
+            this.editableScrollPane = new JScrollPane(editableField);
             this.setLayoutDefault();
         }
         private void setLayoutDefault(){
             this.columnPanel.add(sideBar);
+            editableField.setToolTipText("Type codes here.");
         }
     }
 

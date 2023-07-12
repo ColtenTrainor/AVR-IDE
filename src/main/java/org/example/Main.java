@@ -9,8 +9,8 @@ public class Main {
 
 
 //        testingModule.commandTesting();
-//        testingModule.viewTesting();
-            testingModule.syntaxTesting();
+        testingModule.viewTesting();
+//            testingModule.syntaxTesting();
 //        var commandExecutor = new CommandExecutor();
     }
 }

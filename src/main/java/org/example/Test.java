@@ -4,7 +4,7 @@ package org.example;
 import impl.MainController;
 import impl.MainView;
 import impl.MainModel;
-import impl.regAndIns.RulesInit;
+import impl.regAndIns.InstructionRules;
 import interfaces.IMainModel;
 import interfaces.IMainView;
 
@@ -40,7 +40,7 @@ public class Test {
     }
 
     public void syntaxTesting(){
-        RulesInit rules = new RulesInit();
+        InstructionRules rules = new InstructionRules();
         rules.printRuleMap();
     }
 
