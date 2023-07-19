@@ -71,7 +71,6 @@ public class InstructionRules {
 
     public List<String> findMatchedInstructions(String word){
         List<String> list = new ArrayList<>();
-        System.out.println(word);
 
         if (!word.equals(""))
             for (String inst : instructionMap.keySet()){
