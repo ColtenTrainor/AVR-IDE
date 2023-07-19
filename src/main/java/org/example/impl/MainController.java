@@ -49,6 +49,7 @@ public class MainController implements PropertyChangeListener {
         this.view.getSaveButton().setAction(this.fileActions.SAVE.apply("Save File"));
         this.view.getSaveAsButton().setAction(this.fileActions.SAVEAS.apply("Save File As"));
         this.view.getCompileButton().setAction(this.fileActions.COMPILE.apply("Compile"));
+        this.view.getUploadButton().setAction(this.fileActions.UPLOAD.apply("Upload"));
     }
 
     @Override

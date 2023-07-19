@@ -37,7 +37,7 @@ public class MenuActions {
         //TODO:
         this.EXPORT = null;
         this.COMPILE = this::compile;
-        this.UPLOAD = null;
+        this.UPLOAD = this::upload;
     }
 
     private Action openFile(String command){
@@ -176,17 +176,31 @@ public class MenuActions {
         return new AbstractAction(s) {
             @Override
             public void actionPerformed(ActionEvent e) {
+                compileFile(model.getCurrentOpenedFile());
+            }
+        };
+    }
+
+    private void compileFile(File currentFile){
+        if (model.getIsSaved()){
+            CommandExecutor.Avra.compile(currentFile);
+        } else if (currentFile != null && currentFile.exists()) {
+            if (saveFile(currentFile)) CommandExecutor.Avra.compile(currentFile);
+        } else {
+            if (saveFileWithDialogue()){
+                currentFile = model.getCurrentOpenedFile();
+                CommandExecutor.Avra.compile(currentFile);
+            }
+        }
+    }
+
+    private Action upload(String s){
+        return new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 var currentFile = model.getCurrentOpenedFile();
-                if (model.getIsSaved()){
-                    CommandExecutor.Avra.compile(currentFile);
-                } else if (currentFile != null && currentFile.exists()) {
-                    if (saveFile(currentFile)) CommandExecutor.Avra.compile(currentFile);
-                } else {
-                    if (saveFileWithDialogue()){
-                        currentFile = model.getCurrentOpenedFile();
-                        CommandExecutor.Avra.compile(currentFile);
-                    }
-                }
+                compileFile(currentFile);
+                CommandExecutor.AvrDude.flash(currentFile);
             }
         };
     }

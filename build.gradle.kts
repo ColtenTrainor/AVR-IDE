@@ -28,7 +28,7 @@ tasks.withType<Jar> {
     // To avoid the duplicate handling strategy error
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
-    // To add all of the dependencies otherwise a "NoClassDefFoundError" error
+    // To add all the dependencies otherwise a "NoClassDefFoundError" error
     from(sourceSets.main.get().output)
 
     dependsOn(configurations.runtimeClasspath)

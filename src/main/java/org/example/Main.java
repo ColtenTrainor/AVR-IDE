@@ -7,8 +7,6 @@ public class Main {
 
 //        testingModule.commandTesting();
         testingModule.viewTesting();
-
-        var commandExecutor = new CommandExecutor();
     }
 }
 

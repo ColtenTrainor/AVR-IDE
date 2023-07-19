@@ -58,19 +58,29 @@ public class CommandExecutor {
         }
     }
 
+    private static String changeExtension(String fileName){
+        if (fileName.contains(".asm")) return fileName.replace(".asm", ".hex");
+        else return fileName + ".hex";
+    }
+
     public static class Avra {
         public static void compile(File asmFile){
-            switch (Settings.OperatingSystem){
+            switch (Settings.OperatingSystem){ //TODO: add include path to command
                 case Windows -> runCommand(new File("avra"), "avra.exe", "\"" + asmFile.getAbsolutePath() + "\"",
                         "-o", "\"" + Settings.getDefaultSaveDir().getAbsolutePath() + "\\" + changeExtension(asmFile.getName()) + "\"");
                 case Linux -> runCommand(new File("avra"), "avra", "\"" + asmFile.getAbsolutePath() + "\"",
                         "-o", "\"" + Settings.getDefaultSaveDir().getAbsolutePath() + "/" + changeExtension(asmFile.getName()) + "\"");
             }
         }
+    }
 
-        private static String changeExtension(String fileName){
-            if (fileName.contains(".asm")) return fileName.replace(".asm", ".hex");
-            else return fileName + ".hex";
+    public static class AvrDude {
+        public static void flash(File asmFile){
+            switch (Settings.OperatingSystem){ //TODO: do this
+                case Windows -> runCommand(new File("avrdude"), "avrdude.exe", "-p", "m328p",
+                        "-c", "arduino", "-P", "COM7", changeExtension(asmFile.getAbsolutePath()));
+                case Linux -> {}
+            }
         }
     }
 }
