@@ -115,6 +115,15 @@ public class MainView implements IMainView {
     public JTextPane getTextArea(){
         return this.editingArea.editableField;
     }
+    @Override
+    public JLabel getSideBarLabel(){
+        return editingArea.sideBar;
+    }
+
+    @Override
+    public JScrollPane getScrollPane() {
+        return editingArea.editableScrollPane;
+    }
 
     @Override
     public JMenuItem getOpenButton() {

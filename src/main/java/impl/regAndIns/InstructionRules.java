@@ -69,6 +69,18 @@ public class InstructionRules {
         return instructionMap.get(inst.toUpperCase()).description;
     }
 
+    public List<String> findMatchedInstructions(String word){
+        List<String> list = new ArrayList<>();
+        System.out.println(word);
+
+        if (!word.equals(""))
+            for (String inst : instructionMap.keySet()){
+                if (inst.contains(word.toUpperCase()))
+                    list.add(inst);
+            }
+        return  list;
+    }
+
     private void splittingStuff(List<String> readLines){
         readLines.forEach(line -> {
             String[] instructionANDDescription = line.split("\\s*:\\s*");

@@ -60,6 +60,7 @@ public class MainController implements PropertyChangeListener {
         }
         else if (propertyName.equalsIgnoreCase("content")){
             debugMode.addColorHighlighting();
+            debugMode.addTextPrediction();
         }
 
     }// propertyChange()

@@ -1,5 +1,6 @@
 package impl;
 
+import impl.actions.SuggestionPopup;
 import impl.regAndIns.InstructionRules;
 import interfaces.IMainModel;
 import interfaces.IMainView;
@@ -9,6 +10,7 @@ import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,12 +20,16 @@ public class DebugMode implements Runnable{
     private final IMainModel model;
     private final boolean isActivated;
     private HashMap<String, String> colorMap;
+    private final InstructionRules rules;
+    private final SuggestionPopup popup;
 
     public DebugMode(IMainView view, IMainModel model){
         this.view = view;
         this.model = model;
         this.isActivated = true;
         colorMap = new HashMap<>();
+        rules = new InstructionRules();
+        this.popup = new SuggestionPopup(this.view.getMainFrame());
         this.setUpToolTipListener();
     }
 
@@ -62,6 +68,30 @@ public class DebugMode implements Runnable{
         model.setContent(htmlText);
     }
 
+    public void addTextPrediction(){
+        JTextPane textPane = view.getTextArea();
+        StyledDocument doc = textPane.getStyledDocument();
+
+        try{
+            int lastEscapeN = doc.getText(0, doc.getLength()).lastIndexOf('\n');
+            String lastLine = doc.getText( lastEscapeN == -1? 0 : lastEscapeN, doc.getLength());
+            //TODO: add validation of existent instruction
+//            String[] words = lastLine.split("\\s+");
+            int lastWordOffset = lastLine.lastIndexOf(' ') == -1 ? 0 : lastLine.lastIndexOf(' ')+1;
+            String lastWord = lastLine.substring(lastWordOffset);
+
+            popup.clearPopMenu();
+            popup.addListOfItemsToMenu(rules.findMatchedInstructions(lastWord));
+            popup.showPopupMenu(200, 200);
+
+        }catch (BadLocationException | IndexOutOfBoundsException ex){
+            System.out.println("Text prediction failed.");
+//            ex.printStackTrace();
+        }
+
+    }
+
+
     public void addColorHighlighting() {
         JTextPane textPane = view.getTextArea();
         StyledDocument doc = textPane.getStyledDocument();
@@ -95,6 +125,7 @@ public class DebugMode implements Runnable{
             });
         }
     }
+
 
     private ArrayList<Integer> findWordIndices(String text, String word) {
         ArrayList<Integer> indices = new ArrayList<>();
@@ -136,7 +167,7 @@ public class DebugMode implements Runnable{
 
                     if (rules.isAnInstruction(tipDisplayText.strip()))
                         tipDisplayText = rules.getInstructionDescription(tipDisplayText.strip());
-                    else tipDisplayText = "SCREAMING AAAAA";
+                    else tipDisplayText = null;
                 }
                 catch (BadLocationException ex) {
                     System.out.println("BAD LOCATION!");
@@ -146,16 +177,16 @@ public class DebugMode implements Runnable{
         });
     }
 
-    private int[] getWordOffsetAndLen(int currentCaretPostion, String text){
-        int head_pos = text.lastIndexOf("\n", currentCaretPostion);
+    private int[] getWordOffsetAndLen(int currentCaretPosition, String text){
+        int head_pos = text.lastIndexOf("\n", currentCaretPosition);
         if (head_pos == -1)
-            head_pos = text.lastIndexOf(" ", currentCaretPostion);
+            head_pos = text.lastIndexOf(" ", currentCaretPosition);
         if (head_pos == -1)
             head_pos = 0;
 
-        int tail_pos = text.indexOf(" ", currentCaretPostion);
+        int tail_pos = text.indexOf(" ", currentCaretPosition);
         if (tail_pos == -1)
-            tail_pos = text.indexOf("\n", currentCaretPostion);
+            tail_pos = text.indexOf("\n", currentCaretPosition);
         if (tail_pos == -1)
             tail_pos = text.length();
 
