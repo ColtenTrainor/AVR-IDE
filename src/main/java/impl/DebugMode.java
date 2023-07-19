@@ -10,7 +10,6 @@ import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +28,7 @@ public class DebugMode implements Runnable{
         this.isActivated = true;
         colorMap = new HashMap<>();
         rules = new InstructionRules();
-        this.popup = new SuggestionPopup(this.view.getMainFrame());
+        this.popup = new SuggestionPopup(this.view);
         this.setUpToolTipListener();
     }
 
@@ -46,7 +45,7 @@ public class DebugMode implements Runnable{
 //                System.out.println("Raw: " + currentContent);
                 previousContent = currentContent;
             }
-            Thread.sleep(1000);
+            Thread.sleep(500);
 
             } catch (InterruptedException e) {
                 throw new RuntimeException("Sleep failed.");
@@ -66,41 +65,6 @@ public class DebugMode implements Runnable{
     private void contentModify(){
         String htmlText = view.getTextArea().getText();
         model.setContent(htmlText);
-    }
-
-    public void addTextPrediction(){
-        JTextPane textPane = view.getTextArea();
-        StyledDocument doc = textPane.getStyledDocument();
-
-        try{
-            int lastEscapeN = doc.getText(0, doc.getLength()).lastIndexOf('\n');
-            String lastLine = doc.getText( lastEscapeN == -1? 0 : lastEscapeN, doc.getLength());
-            //TODO: add validation of existent instruction
-//            String[] words = lastLine.split("\\s+");
-            int lastWordOffset = lastLine.lastIndexOf(' ') == -1 ? 0 : lastLine.lastIndexOf(' ')+1;
-            String lastWord = lastLine.substring(lastWordOffset);
-
-            popup.clearPopMenu();
-            popup.addListOfItemsToMenu(rules.findMatchedInstructions(lastWord));
-            popup.showPopupMenu(getCaretPositionInView()[0], getCaretPositionInView()[1]);
-
-        }catch (BadLocationException | IndexOutOfBoundsException ex){
-            System.out.println("Text prediction failed.");
-//            ex.printStackTrace();
-        }
-
-    }
-
-    private int[] getCaretPositionInView(){
-        Rectangle2D xy = null;
-        JTextPane pane = this.view.getTextArea();
-        try{
-            xy =  pane.modelToView2D(pane.getDocument().getLength());
-            System.out.println(xy.getX() + " & " + xy.getY());
-        } catch (BadLocationException | NullPointerException ex){
-            System.out.println("Caret Position -> x,y : failed ||" + pane.getDocument().getLength());
-        }
-        return new int[]{100, 100};
     }
 
     public void addColorHighlighting() {
@@ -203,5 +167,8 @@ public class DebugMode implements Runnable{
 
         int len = tail_pos - head_pos;
         return new int[]{head_pos, len};
+    }
+    public void activateSuggestionPopUp(){
+        SwingUtilities.invokeLater(this.popup);
     }
 }
