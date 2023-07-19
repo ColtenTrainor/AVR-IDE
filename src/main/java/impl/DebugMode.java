@@ -82,7 +82,7 @@ public class DebugMode implements Runnable{
 
             popup.clearPopMenu();
             popup.addListOfItemsToMenu(rules.findMatchedInstructions(lastWord));
-            popup.showPopupMenu(200, 200);
+            popup.showPopupMenu(getCaretPositionInView()[0], getCaretPositionInView()[1]);
 
         }catch (BadLocationException | IndexOutOfBoundsException ex){
             System.out.println("Text prediction failed.");
@@ -91,6 +91,17 @@ public class DebugMode implements Runnable{
 
     }
 
+    private int[] getCaretPositionInView(){
+        Rectangle2D xy = null;
+        JTextPane pane = this.view.getTextArea();
+        try{
+            xy =  pane.modelToView2D(pane.getDocument().getLength());
+            System.out.println(xy.getX() + " & " + xy.getY());
+        } catch (BadLocationException | NullPointerException ex){
+            System.out.println("Caret Position -> x,y : failed ||" + pane.getDocument().getLength());
+        }
+        return new int[]{100, 100};
+    }
 
     public void addColorHighlighting() {
         JTextPane textPane = view.getTextArea();
