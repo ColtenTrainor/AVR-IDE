@@ -1,5 +1,7 @@
 package org.example;
 
+import com.fazecast.jSerialComm.SerialPort;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -75,10 +77,11 @@ public class CommandExecutor {
     }
 
     public static class AvrDude {
-        public static void flash(File asmFile){
-            switch (Settings.OperatingSystem){ //TODO: do this
+        public static void flash(File asmFile, SerialPort port){
+            switch (Settings.OperatingSystem){
                 case Windows -> runCommand(new File("avrdude"), "avrdude.exe", "-p", "m328p",
-                        "-c", "arduino", "-P", "COM7", changeExtension(asmFile.getAbsolutePath()));
+                        "-c", "arduino", "-P", port.getSystemPortName(), "-U", "flash:w:" +
+                                changeExtension(asmFile.getAbsolutePath()) + ":i");
                 case Linux -> {}
             }
         }

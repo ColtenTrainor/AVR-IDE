@@ -1,5 +1,6 @@
 package org.example.impl;
 
+import com.fazecast.jSerialComm.SerialPort;
 import com.formdev.flatlaf.FlatDarkLaf;
 import org.example.interfaces.IMainView;
 
@@ -56,19 +57,22 @@ public class MainView implements IMainView {
         private final JMenuItem saveButton = new JMenuItem();
         private final JMenuItem exportButton = new JMenuItem();
         private final JMenuItem saveAsButton = new JMenuItem();
+        private final JComboBox<SerialPort> portSelector = new JComboBox<>();
         private final JButton compileButton = new JButton();
-        private final JButton uploadButton = new JButton();
+        private final JButton flashButton = new JButton();
 
         public MenuBar(){
-            this.menuBarContainer.setLayout(new FlowLayout(FlowLayout.LEFT));
+            this.menuBarContainer.setLayout(new BoxLayout(menuBarContainer, BoxLayout.X_AXIS));
             JMenu fileMenu = new JMenu("File");
             fileMenu.add(newFileButton);
             fileMenu.add(openFileButton);
             fileMenu.add(saveButton);
             fileMenu.add(saveAsButton);
             this.menuBarContainer.add(fileMenu);
+            this.menuBarContainer.add(Box.createHorizontalGlue());
+            this.menuBarContainer.add(portSelector);
             this.menuBarContainer.add(compileButton);
-            this.menuBarContainer.add(uploadButton);
+            this.menuBarContainer.add(flashButton);
         }
         public JMenuBar getMenuBarContainer() {
             return menuBarContainer;
@@ -131,14 +135,18 @@ public class MainView implements IMainView {
         return menuBar.newFileButton;
     }
 
+    @Override public JComboBox<SerialPort> getPortSelector(){
+        return menuBar.portSelector;
+    }
+
     @Override
     public JButton getCompileButton() {
         return menuBar.compileButton;
     }
 
     @Override
-    public JButton getUploadButton() {
-        return menuBar.uploadButton;
+    public JButton getFlashButton() {
+        return menuBar.flashButton;
     }
 
 }

@@ -1,10 +1,11 @@
 package org.example.impl.actions;
 
+import org.example.CommandExecutor;
+import org.example.Settings;
+import org.example.impl.MainController;
 import org.example.impl.PopUpWindow;
 import org.example.interfaces.IMainModel;
 import org.example.interfaces.IMainView;
-import org.example.CommandExecutor;
-import org.example.Settings;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -20,24 +21,24 @@ import java.util.regex.Pattern;
 public class MenuActions {
     private final IMainView view;
     private final IMainModel model;
-    public final Function<String, Action> OPEN, NEW, SAVE, SAVEAS, EXPORT, COMPILE, UPLOAD;
+    private final MainController controller;
+    public final Function<String, Action> OPEN, NEW, SAVE, SAVEAS, COMPILE, FLASH;
 
     private final FileNameExtensionFilter AsmFilter = new FileNameExtensionFilter(
             "Assembly File (.asm)", "asm");
 
-    public MenuActions(IMainView view, IMainModel model){
+    public MenuActions(IMainView view, IMainModel model, MainController controller){
         this.view = view;
         this.model = model;
+        this.controller = controller;
 
-        // this.OPEN = command -> openFile(command);
         this.OPEN = this::openFile;
         this.NEW = this::newFile;
         this.SAVE = this::save;
         this.SAVEAS = this::saveAs;
-        //TODO:
-        this.EXPORT = null;
+
         this.COMPILE = this::compile;
-        this.UPLOAD = this::upload;
+        this.FLASH = this::flash;
     }
 
     private Action openFile(String command){
@@ -194,13 +195,14 @@ public class MenuActions {
         }
     }
 
-    private Action upload(String s){
+    private Action flash(String s){
         return new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 var currentFile = model.getCurrentOpenedFile();
                 compileFile(currentFile);
-                CommandExecutor.AvrDude.flash(currentFile);
+                System.out.println(controller.getSelectedPort());
+                CommandExecutor.AvrDude.flash(currentFile, controller.getSelectedPort());
             }
         };
     }

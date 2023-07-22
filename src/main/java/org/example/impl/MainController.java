@@ -1,5 +1,6 @@
 package org.example.impl;
 
+import com.fazecast.jSerialComm.SerialPort;
 import org.example.impl.actions.MenuActions;
 import org.example.interfaces.IMainModel;
 import org.example.interfaces.IMainView;
@@ -17,9 +18,11 @@ public class MainController implements PropertyChangeListener {
         this.view = view;
         this.model = model;
         this.debugMode = new DebugMode(this.view);
-        this.fileActions = new MenuActions(this.view, this.model);
+        this.fileActions = new MenuActions(this.view, this.model, this);
 
         // Set up and initialize stuff
+        refreshSerialPorts();
+
         setUpMenuListeners();
         setUpLabels();
 
@@ -33,14 +36,13 @@ public class MainController implements PropertyChangeListener {
     }
 
     private void setUpLabels(){
-        //TODO:
         this.view.getNewFileButton().setText("New");
         this.view.getOpenButton().setText("Open");
         this.view.getSaveButton().setText("Save");
         this.view.getSaveAsButton().setText("Save As");
         this.view.getExportButton().setText("Export");
         this.view.getCompileButton().setText("Compile");
-        this.view.getUploadButton().setText("Upload");
+        this.view.getFlashButton().setText("Flash");
     }
 
     private void setUpMenuListeners(){
@@ -49,7 +51,7 @@ public class MainController implements PropertyChangeListener {
         this.view.getSaveButton().setAction(this.fileActions.SAVE.apply("Save File"));
         this.view.getSaveAsButton().setAction(this.fileActions.SAVEAS.apply("Save File As"));
         this.view.getCompileButton().setAction(this.fileActions.COMPILE.apply("Compile"));
-        this.view.getUploadButton().setAction(this.fileActions.UPLOAD.apply("Upload"));
+        this.view.getFlashButton().setAction(this.fileActions.FLASH.apply("Upload"));
     }
 
     @Override
@@ -66,6 +68,20 @@ public class MainController implements PropertyChangeListener {
         else if (propertyName.equalsIgnoreCase("state")){
            view.getTextArea().setText(model.getContent());
         }
-    }// propertyChange()
+    }
 
+    public SerialPort getSelectedPort(){
+        return (SerialPort) view.getPortSelector().getSelectedItem();
+    }
+
+    public void refreshSerialPorts(){
+        var portSelector = view.getPortSelector();
+        var selectedItem = portSelector.getSelectedItem();
+        portSelector.removeAllItems();
+        for (var port : SerialPort.getCommPorts()) {
+            portSelector.addItem(port);
+            if (selectedItem != null && selectedItem.equals(port))
+                portSelector.setSelectedItem(port);
+        }
+    }
 }
