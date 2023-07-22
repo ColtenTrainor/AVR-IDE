@@ -63,16 +63,21 @@ public class MainView implements IMainView {
 
         public MenuBar(){
             this.menuBarContainer.setLayout(new BoxLayout(menuBarContainer, BoxLayout.X_AXIS));
+
             JMenu fileMenu = new JMenu("File");
             fileMenu.add(newFileButton);
             fileMenu.add(openFileButton);
             fileMenu.add(saveButton);
             fileMenu.add(saveAsButton);
-            this.menuBarContainer.add(fileMenu);
-            this.menuBarContainer.add(Box.createHorizontalGlue());
-            this.menuBarContainer.add(portSelector);
-            this.menuBarContainer.add(compileButton);
-            this.menuBarContainer.add(flashButton);
+            var leftSide = new JMenuBar();
+            leftSide.add(fileMenu);
+            var rightSide = new JMenuBar();
+            rightSide.setLayout(new FlowLayout(FlowLayout.RIGHT));
+            rightSide.add(portSelector);
+            rightSide.add(compileButton);
+            rightSide.add(flashButton);
+            this.menuBarContainer.add(leftSide);
+            this.menuBarContainer.add(rightSide);
         }
         public JMenuBar getMenuBarContainer() {
             return menuBarContainer;
