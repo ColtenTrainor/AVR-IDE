@@ -11,7 +11,6 @@ public interface IMainView {
     JMenuItem getOpenButton();
     JMenuItem getSaveButton();
     JMenuItem getSaveAsButton();
-    JMenuItem getExportButton();
     JMenuItem getNewFileButton();
     JComboBox<SerialPort> getPortSelector();
     JButton getCompileButton();

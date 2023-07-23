@@ -40,7 +40,6 @@ public class MainController implements PropertyChangeListener {
         this.view.getOpenButton().setText("Open");
         this.view.getSaveButton().setText("Save");
         this.view.getSaveAsButton().setText("Save As");
-        this.view.getExportButton().setText("Export");
         this.view.getCompileButton().setText("Compile");
         this.view.getFlashButton().setText("Flash");
     }
