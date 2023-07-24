@@ -78,6 +78,16 @@ public class MainView implements IMainView {
     }
 
     @Override
+    public JLabel getSideBarLabel() {
+        return null;
+    }
+
+    @Override
+    public JScrollPane getScrollPane() {
+        return null;
+    }
+
+    @Override
     public JMenuItem getOpenButton() {
         return this.menuBar.OpenFileButton;
     }

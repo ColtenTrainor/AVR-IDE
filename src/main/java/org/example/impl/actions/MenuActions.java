@@ -65,7 +65,7 @@ public class MenuActions {
                 if (model.getCurrentOpenedFile() == null) {
                     saveFileWithDialogue();
                 } else {
-                    saveFile(model.getCurrentOpenedFile());
+                    saveFile(model.getCurrentOpenedFile(), StandardOpenOption.CREATE_NEW);
                 }
             }
         };
@@ -131,8 +131,6 @@ public class MenuActions {
 
     private Action newFile(String command){
         return new AbstractAction(command){
-            final String message = "Current File is not saved, abandon changes?";
-            final PopUpWindow popUp = new PopUpWindow("Warning:", message,"Yes", "No" );
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (model.getCurrentOpenedFile() != null){
@@ -179,7 +177,7 @@ public class MenuActions {
         if (model.getIsSaved()){
             CommandExecutor.Avra.compile(currentFile);
         } else if (currentFile != null && currentFile.exists()) {
-            if (saveFile(currentFile)) CommandExecutor.Avra.compile(currentFile);
+            if (saveFile(currentFile, StandardOpenOption.CREATE_NEW)) CommandExecutor.Avra.compile(currentFile);
         } else {
             if (saveFileWithDialogue()){
                 currentFile = model.getCurrentOpenedFile();
