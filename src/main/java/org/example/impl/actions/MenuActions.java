@@ -1,8 +1,8 @@
-package impl.actions;
+package org.example.impl.actions;
 
-import impl.PopUpWindow;
-import interfaces.IMainModel;
-import interfaces.IMainView;
+import org.example.impl.PopUpWindow;
+import org.example.interfaces.IMainModel;
+import org.example.interfaces.IMainView;
 import org.example.Main;
 
 import javax.swing.*;

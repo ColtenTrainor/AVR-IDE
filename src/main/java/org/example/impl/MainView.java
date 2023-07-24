@@ -1,18 +1,10 @@
-package impl;
+package org.example.impl;
 
 import com.formdev.flatlaf.FlatDarkLaf;
-import interfaces.IMainView;
+import org.example.interfaces.IMainView;
 
 import javax.swing.*;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Caret;
-import javax.swing.text.Document;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
-import java.util.StringTokenizer;
 
 public class MainView implements IMainView {
     private final JFrame mainFrame;

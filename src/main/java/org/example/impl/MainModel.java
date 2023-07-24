@@ -1,6 +1,6 @@
-package impl;
+package org.example.impl;
 
-import interfaces.IMainModel;
+import org.example.interfaces.IMainModel;
 
 import java.io.File;
 import java.beans.*;

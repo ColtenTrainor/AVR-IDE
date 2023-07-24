@@ -1,7 +1,7 @@
-package impl.actions;
+package org.example.impl.actions;
 
-import impl.regAndIns.InstructionRules;
-import interfaces.IMainView;
+import org.example.impl.regAndIns.InstructionRules;
+import org.example.interfaces.IMainView;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;

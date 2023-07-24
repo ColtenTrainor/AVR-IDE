@@ -1,12 +1,12 @@
 package org.example;
 
 
-import impl.MainController;
-import impl.MainView;
-import impl.MainModel;
-import impl.regAndIns.InstructionRules;
-import interfaces.IMainModel;
-import interfaces.IMainView;
+import org.example.impl.MainController;
+import org.example.impl.MainView;
+import org.example.impl.MainModel;
+import org.example.impl.regAndIns.InstructionRules;
+import org.example.interfaces.IMainModel;
+import org.example.interfaces.IMainView;
 
 import java.io.File;
 

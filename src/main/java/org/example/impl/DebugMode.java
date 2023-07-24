@@ -1,9 +1,9 @@
-package impl;
+package org.example.impl;
 
-import impl.actions.SuggestionPopup;
-import impl.regAndIns.InstructionRules;
-import interfaces.IMainModel;
-import interfaces.IMainView;
+import org.example.impl.actions.SuggestionPopup;
+import org.example.impl.regAndIns.InstructionRules;
+import org.example.interfaces.IMainModel;
+import org.example.interfaces.IMainView;
 
 import javax.swing.*;
 import javax.swing.text.*;
