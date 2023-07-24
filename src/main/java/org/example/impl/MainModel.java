@@ -2,8 +2,9 @@ package org.example.impl;
 
 import org.example.interfaces.IMainModel;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.File;
-import java.beans.*;
 import java.io.IOException;
 import java.nio.file.Files;
 
@@ -11,9 +12,11 @@ public class MainModel implements IMainModel {
     private File currentOpenedFile;
     private String content;
     private final PropertyChangeSupport changeObserver;
+    private boolean isSaved;
+    @Override public boolean getIsSaved() { return isSaved; }
+    @Override public void setIsSaved(boolean value) { isSaved = value; }
 
     public MainModel(){
-        //TODO:
         this.content = "";
         this.currentOpenedFile = null;
         this.changeObserver = new PropertyChangeSupport(this);
@@ -21,6 +24,7 @@ public class MainModel implements IMainModel {
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         changeObserver.addPropertyChangeListener(listener);
     }
+
     @Override
     public void setCurrentFile(File file){
         File oldFile = currentOpenedFile;
@@ -39,7 +43,6 @@ public class MainModel implements IMainModel {
         String oldContent = this.content;
         this.content = content;
         changeObserver.firePropertyChange("content", oldContent, this.content);
-        //TODO:
     }
 
     @Override

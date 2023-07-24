@@ -1,16 +1,20 @@
 package org.example;
 
+import org.example.impl.MainController;
+import org.example.impl.MainModel;
+import org.example.impl.MainView;
+import org.example.interfaces.IMainModel;
+import org.example.interfaces.IMainView;
+
 public class Main {
-    public static Settings Settings = new Settings();
 
     public static void main(String[] args) {
-        Test testingModule = new Test();
 
+        IMainView view = new MainView("AVR Development Environment");
+        IMainModel model = new MainModel();
 
-
-//        testingModule.commandTesting();
-        testingModule.viewTesting();
-//            testingModule.syntaxTesting();
-//        var commandExecutor = new CommandExecutor();
+        MainController controller = new MainController(view, model);
+        controller.runView();
     }
 }
+

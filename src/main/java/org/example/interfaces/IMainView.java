@@ -1,5 +1,7 @@
 package org.example.interfaces;
 
+import com.fazecast.jSerialComm.SerialPort;
+
 import javax.swing.*;
 
 public interface IMainView {
@@ -11,9 +13,9 @@ public interface IMainView {
     JMenuItem getOpenButton();
     JMenuItem getSaveButton();
     JMenuItem getSaveAsButton();
-    JMenuItem getExportButton();
     JMenuItem getNewFileButton();
+    JComboBox<SerialPort> getPortSelector();
     JButton getCompileButton();
-    JButton getUploadButton();
+    JButton getFlashButton();
     void setDefaultFrame();
 }

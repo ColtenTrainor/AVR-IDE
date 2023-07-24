@@ -1,5 +1,7 @@
 package org.example;
 
+import com.fazecast.jSerialComm.SerialPort;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -8,7 +10,7 @@ import java.util.Arrays;
 
 public class CommandExecutor {
 
-    private String[] toWindowsCommand(String... cmd){
+    private static String[] toWindowsCommand(String... cmd){
         String[] options = {"cmd", "/C"};
         String[] concatenatedArray = Arrays.copyOf(options, options.length + cmd.length);
         System.arraycopy(cmd, 0, concatenatedArray, options.length, cmd.length);
@@ -16,7 +18,7 @@ public class CommandExecutor {
         return concatenatedArray;
     }
 
-    private String[] determineOSCommand(String... command){
+    private static String[] determineOSCommand(String... command){
         switch (Settings.OperatingSystem) {
             case Windows -> { return toWindowsCommand(command); }
             case Linux -> { return command; }
@@ -25,12 +27,12 @@ public class CommandExecutor {
         }
     }
 
-    public void runCommand(String... command){
+    public static void runCommand(String... command){
         runCommand(new File(""), command);
     }
 
-    public void runCommand(File directory, String... command) {
-        command = toWindowsCommand(command);
+    public static void runCommand(File directory, String... command) {
+        command = determineOSCommand(command);
 
         ProcessBuilder processBuilder = new ProcessBuilder().command(command);
         processBuilder.directory(directory);
@@ -55,6 +57,33 @@ public class CommandExecutor {
 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
+        }
+    }
+
+    private static String changeExtension(String fileName){
+        if (fileName.contains(".asm")) return fileName.replace(".asm", ".hex");
+        else return fileName + ".hex";
+    }
+
+    public static class Avra {
+        public static void compile(File asmFile){
+            switch (Settings.OperatingSystem){ //TODO: add include path to command
+                case Windows -> runCommand(new File("avra"), "avra.exe", "\"" + asmFile.getAbsolutePath() + "\"",
+                        "-o", "\"" + Settings.getDefaultSaveDir().getAbsolutePath() + "\\" + changeExtension(asmFile.getName()) + "\"");
+                case Linux -> runCommand(new File("avra"), "avra", "\"" + asmFile.getAbsolutePath() + "\"",
+                        "-o", "\"" + Settings.getDefaultSaveDir().getAbsolutePath() + "/" + changeExtension(asmFile.getName()) + "\"");
+            }
+        }
+    }
+
+    public static class AvrDude {
+        public static void flash(File asmFile, SerialPort port){
+            switch (Settings.OperatingSystem){
+                case Windows -> runCommand(new File("avrdude"), "avrdude.exe", "-p", "m328p",
+                        "-c", "arduino", "-P", port.getSystemPortName(), "-U", "flash:w:" +
+                                changeExtension(asmFile.getAbsolutePath()) + ":i");
+                case Linux -> {}
+            }
         }
     }
 }

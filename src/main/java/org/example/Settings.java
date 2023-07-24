@@ -1,6 +1,5 @@
 package org.example;
 
-import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -8,7 +7,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class Settings {
+public final class Settings {
 
     public enum OS { Windows, Linux, Mac }
     public static final OS OperatingSystem;
@@ -21,35 +20,33 @@ public class Settings {
     }
 
     // Settings fields
-    private File defaultSaveDir;
-    public File getDefaultSaveDir() { return defaultSaveDir; }
-    public void setDefaultSaveDir(File newDir){
+    private static File defaultSaveDir;
+    public static File getDefaultSaveDir() { return defaultSaveDir; }
+    public static void setDefaultSaveDir(File newDir){
         defaultSaveDir = newDir;
         settingsData.put(MapKeys.defaultSaveDir, newDir.getPath());
     }
 
     // Utility fields
     private static final File settingsFile = new File("settings.cfg");
-    private final HashMap<String, String> settingsData = new HashMap<>();
+    private static final HashMap<String, String> settingsData = new HashMap<>();
 
-    public Settings(){
+    static {
         // Initialize settings with defaults
-        var savepath = FileSystemView.getFileSystemView()
-                .getDefaultDirectory().getAbsolutePath();
-        if (OperatingSystem == OS.Linux) savepath += "/Documents"; // may need to add documents in windows too, untested
-        savepath += "/AVR-IDE";
-        new File(savepath).mkdirs();
-        settingsData.put(MapKeys.defaultSaveDir, savepath);
+        setDefaultSaveDir(new File("saved"));
 
+        // Handle config file
         parseSettingsData();
-
-        if (settingsFile.exists()) {
-            deserialize();
-        }
+        if (settingsFile.exists()) deserialize();
         serialize();
+
+        // Misc other setup
+        defaultSaveDir.mkdirs();
     }
 
-    private void deserialize(){
+    private Settings(){} // Constructor never called, made private to disallow instantiating an instance
+
+    private static void deserialize(){
         try {
             var scanner = new Scanner(settingsFile);
             while (scanner.hasNext()){
@@ -69,7 +66,7 @@ public class Settings {
         parseSettingsData();
     }
 
-    private void parseSettingsData(){
+    private static void parseSettingsData(){
         for (String setting : settingsData.keySet()){
             switch (setting){
                 case MapKeys.defaultSaveDir -> defaultSaveDir = new File(settingsData.get(MapKeys.defaultSaveDir));
@@ -77,7 +74,7 @@ public class Settings {
         }
     }
 
-    private void serialize(){
+    private static void serialize(){
         try {
             var writer = new FileWriter(settingsFile);
             StringBuilder fullSettingsString = new StringBuilder();
