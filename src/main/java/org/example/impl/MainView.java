@@ -20,14 +20,14 @@ public class MainView implements IMainView {
     private final JSideBar sideBar;
     private final JConsole console;
 
-    public MainView(String text){
+    public MainView(String windowTitle){
         try {
             UIManager.setLookAndFeel(new FlatDarkLaf() {});
         } catch (UnsupportedLookAndFeelException e) {
             throw new RuntimeException(e);
         }
 
-        mainFrame = new JFrame("Example: " + text);
+        mainFrame = new JFrame(windowTitle);
 
         menuBar = new JCustomMenuBar();
         codeEditor = new JCodeEditor();
