@@ -1,0 +1,352 @@
+[
+  {
+    "inst": "AND",
+    "args": ["Rd", "Rr"],
+    "category": "inst_logic",
+    "short_desc": "Logical AND",
+    "essential": true
+  },
+  {
+    "inst": "ANDI",
+    "args": ["Rd", "K"],
+    "category": "inst_logic",
+    "short_desc": "Logical AND with Immediate",
+    "essential": false
+  },
+  {
+    "inst": "OR",
+    "args": ["Rd", "Rr"],
+    "category": "inst_logic",
+    "short_desc": "Logical OR",
+    "essential": true
+  },
+  {
+    "inst": "ORI",
+    "args": ["Rd", "K"],
+    "category": "inst_logic",
+    "short_desc": "Logical OR with Immediate",
+    "essential": false
+  },
+  {
+    "inst": "EOR",
+    "args": ["Rd", "Rr"],
+    "category": "inst_logic",
+    "short_desc": "Exclusive OR",
+    "essential": true
+  },
+  {
+    "inst": "COM",
+    "args": ["Rd"],
+    "category": "inst_logic",
+    "short_desc": "One’s Complement",
+    "essential": false
+  },
+  {
+    "inst": "NEG",
+    "args": ["Rd"],
+    "category": "inst_logic",
+    "short_desc": "Two’s Complement",
+    "essential": false
+  },
+  {
+    "inst": "TST",
+    "args": ["Rd"],
+    "category": "inst_logic",
+    "short_desc": "Test for Zero or Minus",
+    "essential": false
+  },
+  {
+    "inst": "CLR",
+    "args": ["Rd"],
+    "category": "inst_logic",
+    "short_desc": "Clear Register",
+    "essential": false
+  },
+  {
+    "inst": "SER",
+    "args": ["Rd"],
+    "category": "inst_logic",
+    "short_desc": "Set Register",
+    "essential": false
+  },
+  {
+    "inst": "ADD",
+    "args": ["Rd", "Rr"],
+    "category": "inst_math",
+    "short_desc": "Add without Carry",
+    "essential": true
+  },
+  {
+    "inst": "ADC",
+    "args": ["Rd", "Rr"],
+    "category": "inst_math",
+    "short_desc": "Add with Carry",
+    "essential": false
+  },
+  {
+    "inst": "ADIW",
+    "args": ["Rd", "K"],
+    "category": "inst_math",
+    "short_desc": "Add Immediate to Word",
+    "essential": false
+  },
+  {
+    "inst": "SUB",
+    "args": ["Rd", "Rr"],
+    "category": "inst_math",
+    "short_desc": "Subtract without Carry",
+    "essential": true
+  },
+  {
+    "inst": "SUBI",
+    "args": ["Rd", "K"],
+    "category": "inst_math",
+    "short_desc": "Subtract Immediate",
+    "essential": true
+  },
+  {
+    "inst": "SBC",
+    "args": ["Rd", "Rr"],
+    "category": "inst_math",
+    "short_desc": "Subtract with Carry",
+    "essential": false
+  },
+  {
+    "inst": "SBCI",
+    "args": ["Rd", "K"],
+    "category": "inst_math",
+    "short_desc": "Subtract Immediate with Carry",
+    "essential": false
+  },
+  {
+    "inst": "SBIW",
+    "args": ["Rd", "K"],
+    "category": "inst_math",
+    "short_desc": "Subtract Immediate from Word",
+    "essential": false
+  },
+  {
+    "inst": "INC",
+    "args": ["Rd"],
+    "category": "inst_math",
+    "short_desc": "Increment",
+    "essential": true
+  },
+  {
+    "inst": "DEC",
+    "args": ["Rd"],
+    "category": "inst_math",
+    "short_desc": "Decrement",
+    "essential": true
+  },
+  {
+    "inst": "MUL",
+    "args": ["Rd", "Rr"],
+    "category": "inst_math",
+    "short_desc": "Multiply Unsigned",
+    "essential": true
+  },
+  {
+    "inst": "MULS",
+    "args": ["Rd", "Rr"],
+    "category": "inst_math",
+    "short_desc": "Multiply Signed",
+    "essential": true
+  },
+  {
+    "inst": "MULSU",
+    "args": ["Rd", "Rr"],
+    "category": "inst_math",
+    "short_desc": "Multiply Signed with Unsigned",
+    "essential": false
+  },
+  {
+    "inst": "FMUL",
+    "args": ["Rd", "Rr"],
+    "category": "inst_math",
+    "short_desc": "Fractional Multiply Unsigned",
+    "essential": false
+  },
+  {
+    "inst": "FMULS",
+    "args": ["Rd", "Rr"],
+    "category": "inst_math",
+    "short_desc": "Fractional Multiply Signed",
+    "essential": false
+  },
+  {
+    "inst": "FMULSU",
+    "args": ["Rd", "Rr"],
+    "category": "inst_math",
+    "short_desc": "Fractional Multiply Signed with Unsigned",
+    "essential": false
+  },
+  {
+    "inst": "SBR",
+    "args": ["Rd", "K"],
+    "category": "inst_bitwise",
+    "short_desc": "Set Bit(s) in Register",
+    "essential": false
+  },
+  {
+    "inst": "CBR",
+    "args": ["Rd", "K"],
+    "category": "inst_bitwise",
+    "short_desc": "Clear Bit(s) in Register",
+    "essential": false
+  },
+  {
+    "inst": "CP",
+    "args": ["Rd", "Rr"],
+    "category": "inst_comparison",
+    "short_desc": "Compare two registers",
+    "essential": true
+  },
+  {
+    "inst": "CPI",
+    "args": ["Rd", "K"],
+    "category": "inst_comparison",
+    "short_desc": "Compare with Immediate",
+    "essential": true
+  },
+  {
+    "inst": "CPSE",
+    "args": ["Rd", "Rr"],
+    "category": "inst_comparison",
+    "short_desc": "Compare Skip if Equal",
+    "essential": true
+  },
+  {
+    "inst": "LSL",
+    "args": ["Rd"],
+    "category": "inst_shift",
+    "short_desc": "Logical Shift Left",
+    "essential": true
+  },
+  {
+    "inst": "LSR",
+    "args": ["Rd"],
+    "category": "inst_shift",
+    "short_desc": "Logical Shift Right",
+    "essential": true
+  },
+  {
+    "inst": "MOV",
+    "args": ["Rd", "Rr"],
+    "category": "inst_data",
+    "short_desc": "Copy Register",
+    "essential": true
+  },
+  {
+    "inst": "LDI",
+    "args": ["Rd", "K"],
+    "category": "inst_data",
+    "short_desc": "Loads an 8 bit constant directly to register",
+    "essential": true
+  },
+  {
+    "inst": "IN",
+    "args": ["Rd", "P"],
+    "category": "inst_data",
+    "short_desc": "Load an I/O Location to Register",
+    "essential": true
+  },
+  {
+    "inst": "OUT",
+    "args": ["P", "Rr"],
+    "category": "inst_data",
+    "short_desc": "Store Register to I/O Location",
+    "essential": true
+  },
+  {
+    "inst": "PUSH",
+    "args": ["Rr"],
+    "category": "inst_data",
+    "short_desc": "Push Register on Stack",
+    "essential": true
+  },
+  {
+    "inst": "POP",
+    "args": ["Rd"],
+    "category": "inst_data",
+    "short_desc": "Pop Register from Stack",
+    "essential": true
+  },
+  {
+    "inst": "RJMP",
+    "args": ["A"],
+    "category": "inst_jump",
+    "short_desc": "Relative Jump",
+    "essential": true
+  },
+  {
+    "inst": "JMP",
+    "args": ["A"],
+    "category": "inst_jump",
+    "short_desc": "Long Jump",
+    "essential": true
+  },
+  {
+    "inst": "RCALL",
+    "args": ["A"],
+    "category": "inst_jump",
+    "short_desc": "Relative Call to Subroutine",
+    "essential": true
+  },
+  {
+    "inst": "CALL",
+    "args": ["A"],
+    "category": "inst_jump",
+    "short_desc": "Long Call to a Subroutine",
+    "essential": true
+  },
+  {
+    "inst": "RET",
+    "args": ["A"],
+    "category": "inst_jump",
+    "short_desc": "Return from Subroutine",
+    "essential": true
+  },
+  {
+    "inst": "RETI",
+    "args": ["A"],
+    "category": "inst_jump",
+    "short_desc": "Return from Interrupt",
+    "essential": true
+  },
+  {
+    "inst": "BREQ",
+    "args": ["A"],
+    "category": "inst_jump",
+    "short_desc": "Branch if Equal",
+    "essential": true
+  },
+  {
+    "inst": "BRNE",
+    "args": ["A"],
+    "category": "inst_jump",
+    "short_desc": "Branch if Not Equal",
+    "essential": true
+  },
+  {
+    "inst": "BRGE",
+    "args": ["A"],
+    "category": "inst_jump",
+    "short_desc": "Branch if Greater or Equal (Signed)",
+    "essential": true
+  },
+  {
+    "inst": "BRLT",
+    "args": ["A"],
+    "category": "inst_jump",
+    "short_desc": "Branch if Less Than (Signed)",
+    "essential": true
+  },
+  {
+    "inst": "NOP",
+    "args": [],
+    "category": "inst_device",
+    "short_desc": "No Operation",
+    "essential": false
+  }
+]

@@ -14,6 +14,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     implementation("com.formdev:flatlaf:3.1.1")
     implementation("com.fazecast:jSerialComm:[2.0.0,3.0.0)")
+    implementation("com.google.code.gson:gson:2.10.1")
 }
 
 tasks.register<Copy>("copyExternalToInstall") {

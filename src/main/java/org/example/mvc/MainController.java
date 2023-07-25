@@ -2,7 +2,8 @@ package org.example.mvc;
 
 import com.fazecast.jSerialComm.SerialPort;
 import org.example.mvc.actions.MenuActions;
-import org.example.mvc.codeassist.DebugMode;
+import org.example.mvc.codeassist.SuggestionManager;
+import org.example.mvc.codeassist.SyntaxHighlighter;
 import org.example.mvc.view.IMainView;
 
 import java.beans.PropertyChangeEvent;
@@ -12,12 +13,14 @@ public class MainController implements PropertyChangeListener {
     IMainView view;
     IMainModel model;
     MenuActions fileActions;
-    DebugMode debugMode;
+    SyntaxHighlighter syntaxHighlighter;
+    SuggestionManager suggestionManager;
 
     public MainController(IMainView view, IMainModel model){
         this.view = view;
         this.model = model;
-        this.debugMode = new DebugMode(this.view, this.model);
+        this.syntaxHighlighter = new SyntaxHighlighter(this.view, this.model);
+        this.suggestionManager = new SuggestionManager(this.view);
         this.fileActions = new MenuActions(this.view, this.model, this);
 
         // Set up and initialize stuff
@@ -32,7 +35,7 @@ public class MainController implements PropertyChangeListener {
     }
     public void runView(){
         this.view.setDefaultFrame();
-        this.debugMode.run();
+        this.syntaxHighlighter.run();
     }
 
     private void setUpLabels(){
@@ -63,9 +66,8 @@ public class MainController implements PropertyChangeListener {
             model.setIsSaved(false);
         }
         else if (propertyName.equalsIgnoreCase("content")){
-            debugMode.addColorHighlighting();
-//            debugMode.addTextPrediction();
-            debugMode.activateSuggestionPopUp();
+            syntaxHighlighter.addColorHighlighting();
+            suggestionManager.activateSuggestionPopUp();
         }
     }
 

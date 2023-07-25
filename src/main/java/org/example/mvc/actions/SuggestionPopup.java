@@ -1,6 +1,6 @@
 package org.example.mvc.actions;
 
-import org.example.mvc.codeassist.InstructionRules;
+import org.example.mvc.codeassist.InstructionData;
 import org.example.mvc.view.IMainView;
 
 import javax.swing.*;
@@ -13,12 +13,10 @@ import java.util.List;
 public class SuggestionPopup implements Runnable{
     private final JPopupMenu popupMenu;
     private final IMainView view;
-    private final InstructionRules rules;
     public SuggestionPopup(IMainView view){
         this.popupMenu = new JPopupMenu();
         this.popupMenu.setMaximumSize(new Dimension(100, 200));
         this.view = view;
-        this.rules = new InstructionRules();
         this.view.getMainFrame().add(popupMenu);
     }
 
@@ -28,7 +26,7 @@ public class SuggestionPopup implements Runnable{
 
     public void addListOfItemsToMenu(List<String> list){
         for (String item : list)
-            this.popupMenu.add(new JMenuItem(rules.getInstructionDescription(item)));
+            this.popupMenu.add(new JMenuItem(InstructionData.getInstructionData(item).getShortDescription()));
     }
     public void clearPopMenu(){
         this.popupMenu.removeAll();
@@ -58,7 +56,7 @@ public class SuggestionPopup implements Runnable{
             String lastWord = lastLine.substring(lastWordOffset);
 
             this.clearPopMenu();
-            this.addListOfItemsToMenu(rules.findMatchedInstructions(lastWord));
+            this.addListOfItemsToMenu(InstructionData.findMatchedInstructions(lastWord));
             this.showPopupMenu(getCaretPositionInView()[0], getCaretPositionInView()[1]);
 
         }catch (BadLocationException | IndexOutOfBoundsException ex){
