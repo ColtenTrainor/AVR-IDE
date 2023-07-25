@@ -1,6 +1,6 @@
 package org.example.mvc.actions;
 
-import org.example.mvc.regAndIns.InstructionRules;
+import org.example.mvc.codeassist.InstructionRules;
 import org.example.mvc.view.IMainView;
 
 import javax.swing.*;

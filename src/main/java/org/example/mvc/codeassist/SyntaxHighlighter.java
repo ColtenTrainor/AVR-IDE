@@ -1,4 +1,4 @@
-package org.example.mvc;
+package org.example.mvc.codeassist;
 
 import org.example.util.ConfigIOHandler;
 

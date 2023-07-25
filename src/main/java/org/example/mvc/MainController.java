@@ -2,6 +2,7 @@ package org.example.mvc;
 
 import com.fazecast.jSerialComm.SerialPort;
 import org.example.mvc.actions.MenuActions;
+import org.example.mvc.codeassist.DebugMode;
 import org.example.mvc.view.IMainView;
 
 import java.beans.PropertyChangeEvent;

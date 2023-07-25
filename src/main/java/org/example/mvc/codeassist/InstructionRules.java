@@ -1,4 +1,4 @@
-package org.example.mvc.regAndIns;
+package org.example.mvc.codeassist;
 
 import java.io.File;
 import java.io.IOException;

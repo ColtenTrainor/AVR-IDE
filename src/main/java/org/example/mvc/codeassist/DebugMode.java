@@ -1,7 +1,7 @@
-package org.example.mvc;
+package org.example.mvc.codeassist;
 
+import org.example.mvc.IMainModel;
 import org.example.mvc.actions.SuggestionPopup;
-import org.example.mvc.regAndIns.InstructionRules;
 import org.example.mvc.view.IMainView;
 
 import javax.swing.*;
