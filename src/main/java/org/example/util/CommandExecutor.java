@@ -1,6 +1,7 @@
-package org.example;
+package org.example.util;
 
 import com.fazecast.jSerialComm.SerialPort;
+import org.example.Settings;
 
 import java.io.BufferedReader;
 import java.io.File;

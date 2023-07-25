@@ -16,6 +16,19 @@ dependencies {
     implementation("com.fazecast:jSerialComm:[2.0.0,3.0.0)")
 }
 
+tasks.register<Copy>("copyExternalToInstall") {
+    from(layout.projectDirectory.dir("external"))
+    include("**/*")
+    into(layout.buildDirectory.dir("installFolder"))
+}
+
+tasks.register<Copy>("copyJarToInstall") {
+    dependsOn(":jar")
+    from(layout.buildDirectory.dir("libs"))
+    include("${rootProject.name}-${version}.jar")
+    into(layout.buildDirectory.dir("installFolder"))
+}
+
 tasks.test {
     useJUnitPlatform()
 }

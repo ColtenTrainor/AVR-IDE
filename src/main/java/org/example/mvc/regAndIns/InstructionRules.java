@@ -12,7 +12,6 @@ public class InstructionRules {
         private final String description;
         private final String colorCode;
         private Rule(String description, String colorCode){
-
             this.description = description;
             this.colorCode = colorCode;
         }
@@ -43,7 +42,7 @@ public class InstructionRules {
 
     private List<String> readLines(){
         try {
-            return Files.readAllLines(new File("cfg/instructionSyntax.txt").toPath());
+            return Files.readAllLines(new File("cfg/instructionDescriptions.cfg").toPath());
         }catch (IOException ex){
             System.out.println("Read rules failed.");
             ex.printStackTrace();

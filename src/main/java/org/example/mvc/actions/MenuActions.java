@@ -1,6 +1,6 @@
 package org.example.mvc.actions;
 
-import org.example.CommandExecutor;
+import org.example.util.CommandExecutor;
 import org.example.Settings;
 import org.example.mvc.MainController;
 import org.example.mvc.view.PopUpWindow;
