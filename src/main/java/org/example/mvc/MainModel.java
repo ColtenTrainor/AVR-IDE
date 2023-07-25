@@ -1,6 +1,4 @@
-package org.example.impl;
-
-import org.example.interfaces.IMainModel;
+package org.example.mvc;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;

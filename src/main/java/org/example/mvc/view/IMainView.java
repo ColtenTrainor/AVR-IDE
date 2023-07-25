@@ -1,4 +1,4 @@
-package org.example.interfaces;
+package org.example.mvc.view;
 
 import com.fazecast.jSerialComm.SerialPort;
 

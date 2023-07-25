@@ -1,9 +1,8 @@
-package org.example.impl;
+package org.example.mvc;
 
 import com.fazecast.jSerialComm.SerialPort;
-import org.example.impl.actions.MenuActions;
-import org.example.interfaces.IMainModel;
-import org.example.interfaces.IMainView;
+import org.example.mvc.actions.MenuActions;
+import org.example.mvc.view.IMainView;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

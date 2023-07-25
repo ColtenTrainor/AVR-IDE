@@ -1,9 +1,8 @@
-package org.example.impl;
+package org.example.mvc;
 
-import org.example.impl.actions.SuggestionPopup;
-import org.example.impl.regAndIns.InstructionRules;
-import org.example.interfaces.IMainModel;
-import org.example.interfaces.IMainView;
+import org.example.mvc.actions.SuggestionPopup;
+import org.example.mvc.regAndIns.InstructionRules;
+import org.example.mvc.view.IMainView;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -54,8 +53,9 @@ public class DebugMode implements Runnable{
     }
 
     private String getViewRawContent() {
+        var doc = view.getTextArea().getDocument();
         try {
-            return view.getTextArea().getDocument().getText(0, view.getTextArea().getDocument().getLength());
+            return doc.getText(0, doc.getLength());
         }catch (BadLocationException ex){
             ex.printStackTrace();
         }

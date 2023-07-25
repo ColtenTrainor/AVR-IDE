@@ -1,4 +1,4 @@
-package org.example.interfaces;
+package org.example.mvc;
 
 import java.beans.PropertyChangeListener;
 import java.io.File;

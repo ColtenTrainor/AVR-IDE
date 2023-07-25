@@ -1,12 +1,11 @@
-package org.example.impl;
+package org.example.mvc.view;
 
 import com.fazecast.jSerialComm.SerialPort;
 import com.formdev.flatlaf.FlatDarkLaf;
-import org.example.components.JConsole;
-import org.example.components.JCustomMenuBar;
-import org.example.interfaces.IMainView;
-import org.example.components.JSideBar;
-import org.example.components.JCodeEditor;
+import org.example.mvc.view.components.JCodeEditor;
+import org.example.mvc.view.components.JConsole;
+import org.example.mvc.view.components.JCustomMenuBar;
+import org.example.mvc.view.components.JSideBar;
 
 import javax.swing.*;
 import java.awt.*;

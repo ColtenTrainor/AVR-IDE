@@ -1,4 +1,4 @@
-package org.example.impl;
+package org.example.mvc.view;
 
 import javax.swing.*;
 import java.awt.*;

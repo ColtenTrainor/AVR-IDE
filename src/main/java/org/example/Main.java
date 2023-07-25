@@ -1,10 +1,10 @@
 package org.example;
 
-import org.example.impl.MainController;
-import org.example.impl.MainModel;
-import org.example.impl.MainView;
-import org.example.interfaces.IMainModel;
-import org.example.interfaces.IMainView;
+import org.example.mvc.MainController;
+import org.example.mvc.MainModel;
+import org.example.mvc.view.MainView;
+import org.example.mvc.IMainModel;
+import org.example.mvc.view.IMainView;
 
 public class Main {
 

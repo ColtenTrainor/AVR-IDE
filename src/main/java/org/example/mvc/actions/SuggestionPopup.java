@@ -1,7 +1,7 @@
-package org.example.impl.actions;
+package org.example.mvc.actions;
 
-import org.example.impl.regAndIns.InstructionRules;
-import org.example.interfaces.IMainView;
+import org.example.mvc.regAndIns.InstructionRules;
+import org.example.mvc.view.IMainView;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;

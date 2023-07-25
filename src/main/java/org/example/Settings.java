@@ -1,11 +1,7 @@
 package org.example;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.Scanner;
 
 public final class Settings {
 
@@ -28,7 +24,7 @@ public final class Settings {
     }
 
     // Utility fields
-    private static final File settingsFile = new File("settings.cfg");
+    private static final File settingsFile = new File("cfg/settings.cfg");
     private static final HashMap<String, String> settingsData = new HashMap<>();
 
     static {
@@ -36,9 +32,13 @@ public final class Settings {
         setDefaultSaveDir(new File("saved"));
 
         // Handle config file
+        new File("cfg").mkdir();
+        var configHandler = new ConfigIOHandler(settingsFile, settingsData);
+
         parseSettingsData();
-        if (settingsFile.exists()) deserialize();
-        serialize();
+        if (settingsFile.exists()) configHandler.deserialize();
+        parseSettingsData();
+        configHandler.serialize();
 
         // Misc other setup
         defaultSaveDir.mkdirs();
@@ -46,45 +46,11 @@ public final class Settings {
 
     private Settings(){} // Constructor never called, made private to disallow instantiating an instance
 
-    private static void deserialize(){
-        try {
-            var scanner = new Scanner(settingsFile);
-            while (scanner.hasNext()){
-                var line = scanner.nextLine();
-                var splitLine = line.split("\\s+(?=(?:[^'\"]*['\"][^'\"]*['\"])*[^'\"]*$)");
-                if (splitLine.length < 2) continue;
-                var key = splitLine[0].replace("\"", "").toLowerCase();
-                var value = splitLine[1].replace("\"", "");
-                if (settingsData.containsKey(key) && !value.equals("")){
-                    settingsData.put(key, value);
-                }
-            }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
-        parseSettingsData();
-    }
-
     private static void parseSettingsData(){
         for (String setting : settingsData.keySet()){
             switch (setting){
                 case MapKeys.defaultSaveDir -> defaultSaveDir = new File(settingsData.get(MapKeys.defaultSaveDir));
             }
-        }
-    }
-
-    private static void serialize(){
-        try {
-            var writer = new FileWriter(settingsFile);
-            StringBuilder fullSettingsString = new StringBuilder();
-            for (String setting : settingsData.keySet()){
-                fullSettingsString.append(setting).append(" \"").append(settingsData.get(setting)).append("\"\n");
-            }
-            writer.write(fullSettingsString.toString());
-            writer.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 

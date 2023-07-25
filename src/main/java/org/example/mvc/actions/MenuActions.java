@@ -1,11 +1,11 @@
-package org.example.impl.actions;
+package org.example.mvc.actions;
 
 import org.example.CommandExecutor;
 import org.example.Settings;
-import org.example.impl.MainController;
-import org.example.impl.PopUpWindow;
-import org.example.interfaces.IMainModel;
-import org.example.interfaces.IMainView;
+import org.example.mvc.MainController;
+import org.example.mvc.view.PopUpWindow;
+import org.example.mvc.IMainModel;
+import org.example.mvc.view.IMainView;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;

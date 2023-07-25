@@ -1,4 +1,4 @@
-package org.example.components;
+package org.example.mvc.view.components;
 
 import javax.swing.*;
 

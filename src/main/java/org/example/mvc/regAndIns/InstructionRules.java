@@ -1,4 +1,4 @@
-package org.example.impl.regAndIns;
+package org.example.mvc.regAndIns;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +43,7 @@ public class InstructionRules {
 
     private List<String> readLines(){
         try {
-            return Files.readAllLines(new File("instructionSyntax.txt").toPath());
+            return Files.readAllLines(new File("cfg/instructionSyntax.txt").toPath());
         }catch (IOException ex){
             System.out.println("Read rules failed.");
             ex.printStackTrace();
