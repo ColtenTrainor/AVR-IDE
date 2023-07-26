@@ -10,7 +10,8 @@ import java.util.*;
 public class InstructionData {
 
     private static final HashMap<String, InstructionData> allInstructionData = new HashMap<>();
-    static { LoadDataFromConfig(); }
+    private static String[] essentialInstructions;
+    static { loadDataFromConfig(); }
 
     private final String instruction;
     private final String[] arguments;
@@ -52,7 +53,7 @@ public class InstructionData {
         return  list;
     }
 
-    public static void LoadDataFromConfig(){
+    public static void loadDataFromConfig(){
         var gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(InstructionData.class, new InstructionDataDeserializer());
         var gson = gsonBuilder.create();
@@ -62,5 +63,25 @@ public class InstructionData {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static String getArgumentsAsString(String instruction){
+        var args = getInstructionData(instruction).getArguments();
+        var stringBuilder = new StringBuilder();
+        for (int i = 0; i < args.size() - 1; i++) {
+            stringBuilder.append(args.get(i)).append(", ");
+        }
+        stringBuilder.append(args.get(args.size() - 1));
+        return stringBuilder.toString();
+    }
+
+    public static String getShortInfo(String instruction){
+        var instData = allInstructionData.get(instruction);
+        return instruction + " " + getArgumentsAsString(instruction) +
+                " : " + instData.getShortDescription();
+    }
+
+    public static String getLongInfo(){
+        return "";
     }
 }

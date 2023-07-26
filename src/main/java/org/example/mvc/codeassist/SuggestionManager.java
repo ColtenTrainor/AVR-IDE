@@ -15,6 +15,7 @@ public class SuggestionManager {
     public SuggestionManager(IMainView view) {
         this.view = view;
         popup = new SuggestionPopup(this.view);
+        setUpToolTipListener();
     }
 
     private void setUpToolTipListener(){
@@ -31,8 +32,10 @@ public class SuggestionManager {
                     int[] wordPos = getWordOffsetAndLen(pos, text);
                     tipDisplayText = editableField.getDocument().getText(wordPos[0], wordPos[1]);
 
-                    if (InstructionData.getInstructionSet().contains(tipDisplayText.strip()))
-                        tipDisplayText = InstructionData.getInstructionData(tipDisplayText.strip()).getShortDescription();
+                    if (InstructionData.getInstructionSet().contains(tipDisplayText.strip())) {
+                        InstructionData instData = InstructionData.getInstructionData(tipDisplayText.strip());
+                        tipDisplayText = instData.getInstruction() + " : " + instData.getShortDescription();
+                    }
                     else tipDisplayText = null;
                 }
                 catch (BadLocationException ex) {

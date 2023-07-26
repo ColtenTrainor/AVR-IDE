@@ -31,6 +31,7 @@ public class JConsole extends JPanel {
         textPanel.setLayout(new BorderLayout());
         textPanel.add(OutputPane, BorderLayout.CENTER);
         textPanel.add(InputPane, BorderLayout.SOUTH);
+
         add(textPanel, constraints);
     }
 }

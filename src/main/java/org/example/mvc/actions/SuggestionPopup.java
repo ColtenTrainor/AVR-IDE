@@ -25,8 +25,9 @@ public class SuggestionPopup implements Runnable{
     }
 
     public void addListOfItemsToMenu(List<String> list){
-        for (String item : list)
-            this.popupMenu.add(new JMenuItem(InstructionData.getInstructionData(item).getShortDescription()));
+        for (String item : list) {
+            this.popupMenu.add(new JMenuItem(InstructionData.getShortInfo(item)));
+        }
     }
     public void clearPopMenu(){
         this.popupMenu.removeAll();
@@ -56,6 +57,7 @@ public class SuggestionPopup implements Runnable{
             String lastWord = lastLine.substring(lastWordOffset);
 
             this.clearPopMenu();
+
             this.addListOfItemsToMenu(InstructionData.findMatchedInstructions(lastWord));
             this.showPopupMenu(getCaretPositionInView()[0], getCaretPositionInView()[1]);
 
