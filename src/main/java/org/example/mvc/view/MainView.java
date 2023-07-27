@@ -4,7 +4,6 @@ import com.fazecast.jSerialComm.SerialPort;
 import com.formdev.flatlaf.FlatDarkLaf;
 import org.example.mvc.view.components.JCodeEditor;
 import org.example.mvc.view.components.JConsole;
-import org.example.mvc.view.components.JCustomMenuBar;
 import org.example.mvc.view.components.JSideBar;
 
 import javax.swing.*;
@@ -14,7 +13,7 @@ public class MainView implements IMainView {
     private final JFrame mainFrame;
     private final int screenSolutionWidth;
     private final int screenSolutionHeight;
-    private final JCustomMenuBar menuBar;
+    private final MainMenuBar menuBar;
     private final JCodeEditor codeEditor;
     private final JSideBar sideBar;
     private final JConsole console;
@@ -28,11 +27,11 @@ public class MainView implements IMainView {
 
         mainFrame = new JFrame(windowTitle);
 
-        menuBar = new JCustomMenuBar();
+        menuBar = new MainMenuBar();
         codeEditor = new JCodeEditor();
         sideBar = new JSideBar();
         console = new JConsole();
-
+        console.setInputEnabled(false);
 
         screenSolutionWidth = (int)(getScreenSolution().getWidth() * 0.8);
         screenSolutionHeight = (int)(getScreenSolution().getHeight() * 0.8);
@@ -62,6 +61,37 @@ public class MainView implements IMainView {
         mainFrame.setVisible(true);
     }
 
+    private class MainMenuBar extends JPanel{
+        public final JMenuItem NewFileButton = new JMenuItem();
+        public final JMenuItem OpenFileButton = new JMenuItem();
+        public final JMenuItem SaveButton = new JMenuItem();
+        public final JMenuItem SaveAsButton = new JMenuItem();
+        public final JComboBox<SerialPort> PortSelector = new JComboBox<>();
+        public final JButton CompileButton = new JButton();
+        public final JButton FlashButton = new JButton();
+
+        public MainMenuBar(){
+            setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+
+            JMenu fileMenu = new JMenu("File");
+            fileMenu.add(NewFileButton);
+            fileMenu.add(OpenFileButton);
+            fileMenu.add(SaveButton);
+            fileMenu.add(SaveAsButton);
+            var leftSide = new JMenuBar();
+            leftSide.add(fileMenu);
+            var rightSide = new JMenuBar();
+            rightSide.setLayout(new FlowLayout(FlowLayout.RIGHT));
+            rightSide.add(PortSelector);
+            rightSide.add(CompileButton);
+            rightSide.add(FlashButton);
+            add(leftSide);
+            add(rightSide);
+            setLayout(new GridLayout());
+        }
+    }
+
+
     private Dimension getScreenSolution(){
         return Toolkit.getDefaultToolkit().getScreenSize();
     }
@@ -74,16 +104,6 @@ public class MainView implements IMainView {
     @Override
     public JTextPane getTextArea(){
         return codeEditor.TextPane;
-    }
-
-    @Override
-    public JLabel getSideBarLabel() {
-        return null;
-    }
-
-    @Override
-    public JScrollPane getScrollPane() {
-        return null;
     }
 
     @Override
