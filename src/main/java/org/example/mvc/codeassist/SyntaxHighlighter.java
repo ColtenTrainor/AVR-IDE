@@ -86,8 +86,10 @@ public class SyntaxHighlighter implements Runnable{
 
             Style style = textPane.addStyle("style-tag", null);
 
-            instructionHighlight(text, doc, style);
-            textPane.setCaretPosition(doc.getLength());
+            instructionHighlight(text, doc, style); // add highlight to instructions
+            registerHighlight(text, doc, style);
+
+            textPane.setCaretPosition(doc.getLength()); // reposition caret to last character
         }catch (BadLocationException ex){
             ex.printStackTrace();
         }
@@ -109,7 +111,20 @@ public class SyntaxHighlighter implements Runnable{
     }
 
 
-
+    private void registerHighlight(String text, StyledDocument doc, Style style){
+        ArrayList<String> registerIteration = new ArrayList<>();
+        for (int index = 0, end = 32; index < end ; ++index){
+            registerIteration.add("r" + index);
+        }
+        for (String reg : registerIteration){
+            int index = text.indexOf(reg);
+            while (index >= 0) {
+                StyleConstants.setForeground(style, colorMap.get("macro"));
+                doc.setCharacterAttributes(index, reg.length(), style, true);
+                index = text.indexOf(reg, index + 1);
+            }
+        }
+    }
 
     private ArrayList<Integer> findOneInstEachLine(String text, String word){
         ArrayList<Integer> indices = new ArrayList<>();
