@@ -35,11 +35,13 @@ public class InstructionData {
     public String getCategory(){ return category; }
     public String getShortDescription(){ return shortDescription; }
     public boolean getIsEssential(){ return isEssential; }
-
+    public static boolean isAnInstruction(String inst){
+        return allInstructionData.containsKey(inst.toUpperCase());
+    }
     public static Set<String> getInstructionSet(){ return allInstructionData.keySet(); }
 
     public static InstructionData getInstructionData(String instruction){
-        return allInstructionData.get(instruction);
+        return allInstructionData.get(instruction.toUpperCase());
     }
 
     public static List<String> findMatchedInstructions(String word){

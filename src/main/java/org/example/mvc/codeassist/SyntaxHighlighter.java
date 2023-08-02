@@ -10,6 +10,8 @@ import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SyntaxHighlighter implements Runnable{
     private final IMainView view;
@@ -94,7 +96,7 @@ public class SyntaxHighlighter implements Runnable{
     private void instructionHighlight(String string, StyledDocument doc, Style style){
 
         for (String inst : InstructionData.getInstructionSet()){
-            ArrayList<Integer> indices = findWordIndices(string.toLowerCase(), inst.toLowerCase());
+            ArrayList<Integer> indices = findOneInstEachLine(string.toLowerCase(), inst.toLowerCase());
             if (indices.size() == 0)
                 continue;
 
@@ -107,14 +109,17 @@ public class SyntaxHighlighter implements Runnable{
     }
 
 
-    private ArrayList<Integer> findWordIndices(String text, String word) {
+
+
+    private ArrayList<Integer> findOneInstEachLine(String text, String word){
         ArrayList<Integer> indices = new ArrayList<>();
 
-        int index = text.indexOf(word);
+        Pattern pattern = Pattern.compile("(?<=\n|^)" + word);
+        Matcher matcher = pattern.matcher(text);
 
-        while (index >= 0) {
-            indices.add(index);
-            index = text.indexOf(word, index + 1);
+        while (matcher.find()) {
+            int startIndex = matcher.start();
+            indices.add(startIndex);
         }
         return indices;
     }
