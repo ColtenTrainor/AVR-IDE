@@ -88,6 +88,7 @@ public class SyntaxHighlighter implements Runnable{
 
             instructionHighlight(text, doc, style); // add highlight to instructions
             registerHighlight(text, doc, style);
+            constantHighlight(text, doc, style);
 
             textPane.setCaretPosition(doc.getLength()); // reposition caret to last character
         }catch (BadLocationException ex){
@@ -125,7 +126,25 @@ public class SyntaxHighlighter implements Runnable{
             }
         }
     }
+    private void constantHighlight(String text, StyledDocument doc, Style style){
+        Pattern pattern = Pattern.compile("\\b\\d+\\b");
+        Matcher matcher = pattern.matcher(text);
 
+        ArrayList<String> numbers = new ArrayList<>();
+        while (matcher.find()) {
+            String matchedNumber = matcher.group();
+            numbers.add(matchedNumber);
+        }
+
+        for (String number: numbers){
+            int index = text.indexOf(number);
+            while (index >= 0) {
+                StyleConstants.setForeground(style, colorMap.get("constant"));
+                doc.setCharacterAttributes(index, number.length(), style, true);
+                index = text.indexOf(number, index + 1);
+            }
+        }
+    }
     private ArrayList<Integer> findOneInstEachLine(String text, String word){
         ArrayList<Integer> indices = new ArrayList<>();
 
