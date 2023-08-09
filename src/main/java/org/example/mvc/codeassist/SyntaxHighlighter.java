@@ -19,7 +19,8 @@ public class SyntaxHighlighter implements Runnable{
     private final HashMap<String, Color> colorMap = new HashMap<>();
     private final boolean isActivated;
     private final ArrayList<String> registerIteration = new ArrayList<>();
-    private Pattern constantPattern = null;
+    private final Pattern constantPattern = Pattern.compile("\\b\\d+\\b");;
+    private final Pattern commentPattern = Pattern.compile(";([^\\n;]*)");
 
     public SyntaxHighlighter(MainView view, MainModel model){
         this.view = view;
@@ -97,6 +98,7 @@ public class SyntaxHighlighter implements Runnable{
             instructionHighlight(text, doc, style); // add highlight to instructions
             registerHighlight(text, doc, style);
             constantHighlight(text, doc, style);
+            commentHighlight(text, doc, style);
 
             textPane.setCaretPosition(doc.getLength()); // reposition caret to last character
         }catch (BadLocationException ex){
@@ -123,7 +125,6 @@ public class SyntaxHighlighter implements Runnable{
         for (int index = 0, end = 32; index < end ; ++index){
             registerIteration.add("r" + index);
         }
-        constantPattern = Pattern.compile("\\b\\d+\\b");
     }
     private void registerHighlight(String text, StyledDocument doc, Style style){
 
@@ -155,6 +156,18 @@ public class SyntaxHighlighter implements Runnable{
             }
         }
     }
+
+    private void commentHighlight(String text, StyledDocument doc, Style style){
+        Matcher matcher = commentPattern.matcher(text);
+        while (matcher.find()) {
+            int startIndex = matcher.start();
+            int endIndex = matcher.end(1);
+
+            StyleConstants.setForeground(style, colorMap.get("ignore"));
+            doc.setCharacterAttributes(startIndex, endIndex - startIndex, style, true);
+        }
+    }
+
     private ArrayList<Integer> findOneInstEachLine(String text, String word){
         ArrayList<Integer> indices = new ArrayList<>();
 
