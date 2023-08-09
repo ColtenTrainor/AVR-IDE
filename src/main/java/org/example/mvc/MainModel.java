@@ -28,9 +28,10 @@ public class MainModel{
         this.currentOpenedFile = file;
 
         try {
-            String text = "<p>" + Files.readString(currentOpenedFile.toPath()).replaceAll("\n", "</p><p>") + "</p>";
-            this.content = text;
-        }catch (IOException ex){
+            if (currentOpenedFile != null)
+                this.content = Files.readString(currentOpenedFile.toPath());
+            else this.content = "";
+        }catch (IOException | NullPointerException ex){
             ex.printStackTrace();
         }
         changeObserver.firePropertyChange("file", oldFile, currentOpenedFile);

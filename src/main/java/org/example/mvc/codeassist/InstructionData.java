@@ -73,7 +73,11 @@ public class InstructionData {
         for (int i = 0; i < args.size() - 1; i++) {
             stringBuilder.append(args.get(i)).append(", ");
         }
-        stringBuilder.append(args.get(args.size() - 1));
+        try {
+            stringBuilder.append(args.get(args.size() - 1));
+        }catch (ArrayIndexOutOfBoundsException ex){
+            System.out.println("getArgumentAsString failed.");
+        }
         return stringBuilder.toString();
     }
 

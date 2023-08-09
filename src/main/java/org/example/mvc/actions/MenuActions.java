@@ -11,6 +11,7 @@ import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.BadLocationException;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
@@ -69,7 +70,7 @@ public class MenuActions {
                 if (model.getCurrentOpenedFile() == null) {
                     saveFileWithDialogue();
                 } else {
-                    saveFile(model.getCurrentOpenedFile(), StandardOpenOption.CREATE_NEW);
+                    saveFile(model.getCurrentOpenedFile(), StandardOpenOption.TRUNCATE_EXISTING);
                 }
             }
         };
@@ -109,12 +110,14 @@ public class MenuActions {
     }
 
     private boolean saveFile(File file, StandardOpenOption openOption) {
-        model.setContent(view.getTextArea().getText());
-        model.setCurrentFile(file);
-        String parsedText = parseHtml(model.getContent());
         try {
-            Files.write(file.toPath(), parsedText.getBytes(), openOption);
-        } catch (IOException e) {
+            String text = view.getTextArea().getDocument().getText(0, view.getTextArea().getDocument().getLength());
+
+            model.setContent(text);
+            model.setCurrentFile(file);
+
+            Files.write(file.toPath(), text.getBytes(), openOption);
+        } catch (IOException | BadLocationException e) {
             return false;
         }
         model.setIsSaved(true);

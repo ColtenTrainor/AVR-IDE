@@ -72,8 +72,13 @@ public class SyntaxHighlighter implements Runnable{
     }
 
     private void contentModify(){
-        String htmlText = view.getTextArea().getText();
-        model.setContent(htmlText);
+        try {
+            String text = view.getTextArea().getDocument().getText(0, view.getTextArea().getDocument().getLength());
+            model.setContent(text);
+//            System.out.println(text);
+        }catch (BadLocationException ex){
+            ex.printStackTrace();
+        }
     }
 
     public void addColorHighlighting() {

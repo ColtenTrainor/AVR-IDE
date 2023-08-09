@@ -65,7 +65,7 @@ public class MainController implements PropertyChangeListener {
 
         if (propertyName.equalsIgnoreCase("file")) {
             view.getMainFrame().setTitle(model.getCurrentFilePath());
-            view.getTextArea().setText(model.getContent());
+            view.getTextArea().setText("<p>" + model.getContent().replaceAll("\n", "</p><p>") + "</p>");
             model.setIsSaved(false);
         }
         else if (propertyName.equalsIgnoreCase("content")){
