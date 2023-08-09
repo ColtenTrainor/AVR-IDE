@@ -1,7 +1,7 @@
 package org.example.mvc.codeassist;
 
 import org.example.mvc.actions.SuggestionPopup;
-import org.example.mvc.view.IMainView;
+import org.example.mvc.view.MainView;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -10,9 +10,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 
 public class SuggestionManager {
-    private final IMainView view;
+    private final MainView view;
     private final SuggestionPopup popup;
-    public SuggestionManager(IMainView view) {
+    public SuggestionManager(MainView view) {
         this.view = view;
         popup = new SuggestionPopup(this.view);
         setUpToolTipListener();

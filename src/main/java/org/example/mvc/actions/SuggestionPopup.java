@@ -1,7 +1,7 @@
 package org.example.mvc.actions;
 
 import org.example.mvc.codeassist.InstructionData;
-import org.example.mvc.view.IMainView;
+import org.example.mvc.view.MainView;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -12,8 +12,8 @@ import java.util.List;
 
 public class SuggestionPopup implements Runnable{
     private final JPopupMenu popupMenu;
-    private final IMainView view;
-    public SuggestionPopup(IMainView view){
+    private final MainView view;
+    public SuggestionPopup(MainView view){
         this.popupMenu = new JPopupMenu();
         this.popupMenu.setMaximumSize(new Dimension(100, 200));
         this.view = view;

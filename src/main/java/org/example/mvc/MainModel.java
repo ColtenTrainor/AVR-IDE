@@ -6,13 +6,13 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-public class MainModel implements IMainModel {
+public class MainModel{
     private File currentOpenedFile;
     private String content;
     private final PropertyChangeSupport changeObserver;
     private boolean isSaved;
-    @Override public boolean getIsSaved() { return isSaved; }
-    @Override public void setIsSaved(boolean value) { isSaved = value; }
+    public boolean getIsSaved() { return isSaved; }
+    public void setIsSaved(boolean value) { isSaved = value; }
 
     public MainModel(){
         this.content = "";
@@ -23,7 +23,6 @@ public class MainModel implements IMainModel {
         changeObserver.addPropertyChangeListener(listener);
     }
 
-    @Override
     public void setCurrentFile(File file){
         File oldFile = currentOpenedFile;
         this.currentOpenedFile = file;
@@ -43,16 +42,15 @@ public class MainModel implements IMainModel {
         changeObserver.firePropertyChange("content", oldContent, this.content);
     }
 
-    @Override
+
     public String getCurrentFilePath() {
         return getFilePathOrEmpty(this.currentOpenedFile);
     }
 
-    @Override
     public String getContent() {
         return this.content;
     }
-    @Override
+
     public String getHtmlContent(){
         return this.content;
     }

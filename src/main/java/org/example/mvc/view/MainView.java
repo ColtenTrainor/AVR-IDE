@@ -9,7 +9,7 @@ import org.example.mvc.view.components.JSideBar;
 import javax.swing.*;
 import java.awt.*;
 
-public class MainView implements IMainView {
+public class MainView {
     private final JFrame mainFrame;
     private final int screenSolutionWidth;
     private final int screenSolutionHeight;
@@ -96,46 +96,39 @@ public class MainView implements IMainView {
         return Toolkit.getDefaultToolkit().getScreenSize();
     }
 
-    @Override
     public JFrame getMainFrame() {
         return mainFrame;
     }
 
-    @Override
     public JTextPane getTextArea(){
         return codeEditor.TextPane;
     }
 
-    @Override
     public JMenuItem getOpenButton() {
         return this.menuBar.OpenFileButton;
     }
 
-    @Override
     public JMenuItem getSaveButton() {
         return this.menuBar.SaveButton;
     }
 
-    @Override
+
     public JMenuItem getSaveAsButton() {
         return menuBar.SaveAsButton;
     }
 
-    @Override
     public JMenuItem getNewFileButton() {
         return menuBar.NewFileButton;
     }
 
-    @Override public JComboBox<SerialPort> getPortSelector(){
+    public JComboBox<SerialPort> getPortSelector(){
         return menuBar.PortSelector;
     }
 
-    @Override
     public JButton getCompileButton() {
         return menuBar.CompileButton;
     }
 
-    @Override
     public JButton getFlashButton() {
         return menuBar.FlashButton;
     }

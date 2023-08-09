@@ -4,19 +4,19 @@ import com.fazecast.jSerialComm.SerialPort;
 import org.example.mvc.actions.MenuActions;
 import org.example.mvc.codeassist.SuggestionManager;
 import org.example.mvc.codeassist.SyntaxHighlighter;
-import org.example.mvc.view.IMainView;
+import org.example.mvc.view.MainView;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 public class MainController implements PropertyChangeListener {
-    IMainView view;
-    IMainModel model;
+    MainView view;
+    MainModel model;
     MenuActions menuActions;
     SyntaxHighlighter syntaxHighlighter;
     SuggestionManager suggestionManager;
 
-    public MainController(IMainView view, IMainModel model){
+    public MainController(MainView view, MainModel model){
         this.view = view;
         this.model = model;
         this.syntaxHighlighter = new SyntaxHighlighter(this.view, this.model);

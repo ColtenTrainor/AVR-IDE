@@ -1,11 +1,11 @@
 package org.example.mvc.actions;
 
+import org.example.mvc.MainModel;
+import org.example.mvc.view.MainView;
 import org.example.util.CommandExecutor;
 import org.example.Settings;
 import org.example.mvc.MainController;
 import org.example.mvc.view.PopUpWindow;
-import org.example.mvc.IMainModel;
-import org.example.mvc.view.IMainView;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -21,8 +21,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MenuActions {
-    private final IMainView view;
-    private final IMainModel model;
+    private final MainView view;
+    private final MainModel model;
     private final MainController controller;
     public final Function<String, Action> OPEN, NEW, SAVE, SAVEAS, COMPILE, FLASH;
     public final Function<String, PopupMenuListener> OPENPORTSELECTOR;
@@ -30,7 +30,7 @@ public class MenuActions {
     private final FileNameExtensionFilter AsmFilter = new FileNameExtensionFilter(
             "Assembly File (.asm)", "asm");
 
-    public MenuActions(IMainView view, IMainModel model, MainController controller){
+    public MenuActions(MainView view, MainModel model, MainController controller){
         this.view = view;
         this.model = model;
         this.controller = controller;

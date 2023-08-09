@@ -1,7 +1,7 @@
 package org.example.mvc.codeassist;
 
-import org.example.mvc.IMainModel;
-import org.example.mvc.view.IMainView;
+import org.example.mvc.MainModel;
+import org.example.mvc.view.MainView;
 import org.example.util.ConfigIOHandler;
 
 import javax.swing.*;
@@ -14,12 +14,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SyntaxHighlighter implements Runnable{
-    private final IMainView view;
-    private final IMainModel model;
+    private final MainView view;
+    private final MainModel model;
     private final HashMap<String, Color> colorMap = new HashMap<>();
     private final boolean isActivated;
 
-    public SyntaxHighlighter(IMainView view, IMainModel model){
+    public SyntaxHighlighter(MainView view, MainModel model){
         this.view = view;
         this.model = model;
 
