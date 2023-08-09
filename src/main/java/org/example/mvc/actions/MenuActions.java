@@ -8,6 +8,8 @@ import org.example.mvc.IMainModel;
 import org.example.mvc.view.IMainView;
 
 import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -23,6 +25,7 @@ public class MenuActions {
     private final IMainModel model;
     private final MainController controller;
     public final Function<String, Action> OPEN, NEW, SAVE, SAVEAS, COMPILE, FLASH;
+    public final Function<String, PopupMenuListener> OPENPORTSELECTOR;
 
     private final FileNameExtensionFilter AsmFilter = new FileNameExtensionFilter(
             "Assembly File (.asm)", "asm");
@@ -36,9 +39,10 @@ public class MenuActions {
         this.NEW = this::newFile;
         this.SAVE = this::save;
         this.SAVEAS = this::saveAs;
-
         this.COMPILE = this::compile;
         this.FLASH = this::flash;
+
+        this.OPENPORTSELECTOR = this::openPortSelector;
     }
 
     private Action openFile(String command){
@@ -195,6 +199,21 @@ public class MenuActions {
                 System.out.println(controller.getSelectedPort());
                 CommandExecutor.AvrDude.flash(currentFile, controller.getSelectedPort());
             }
+        };
+    }
+
+    private PopupMenuListener openPortSelector(String s){
+        return new PopupMenuListener() {
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                controller.refreshSerialPorts();
+            }
+
+            @Override
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {}
+
+            @Override
+            public void popupMenuCanceled(PopupMenuEvent e) {}
         };
     }
 }

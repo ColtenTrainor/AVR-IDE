@@ -12,7 +12,7 @@ import java.beans.PropertyChangeListener;
 public class MainController implements PropertyChangeListener {
     IMainView view;
     IMainModel model;
-    MenuActions fileActions;
+    MenuActions menuActions;
     SyntaxHighlighter syntaxHighlighter;
     SuggestionManager suggestionManager;
 
@@ -21,7 +21,7 @@ public class MainController implements PropertyChangeListener {
         this.model = model;
         this.syntaxHighlighter = new SyntaxHighlighter(this.view, this.model);
         this.suggestionManager = new SuggestionManager(this.view);
-        this.fileActions = new MenuActions(this.view, this.model, this);
+        this.menuActions = new MenuActions(this.view, this.model, this);
 
         // Set up and initialize stuff
         refreshSerialPorts();
@@ -48,12 +48,15 @@ public class MainController implements PropertyChangeListener {
     }
 
     private void setUpMenuListeners(){
-        this.view.getNewFileButton().setAction(this.fileActions.NEW.apply("New File"));
-        this.view.getOpenButton().setAction(this.fileActions.OPEN.apply("Open File"));
-        this.view.getSaveButton().setAction(this.fileActions.SAVE.apply("Save File"));
-        this.view.getSaveAsButton().setAction(this.fileActions.SAVEAS.apply("Save File As"));
-        this.view.getCompileButton().setAction(this.fileActions.COMPILE.apply("Compile"));
-        this.view.getFlashButton().setAction(this.fileActions.FLASH.apply("Upload"));
+        this.view.getNewFileButton().setAction(this.menuActions.NEW.apply("New File"));
+        this.view.getOpenButton().setAction(this.menuActions.OPEN.apply("Open File"));
+        this.view.getSaveButton().setAction(this.menuActions.SAVE.apply("Save File"));
+        this.view.getSaveAsButton().setAction(this.menuActions.SAVEAS.apply("Save File As"));
+
+        this.view.getPortSelector().addPopupMenuListener(
+                this.menuActions.OPENPORTSELECTOR.apply("Open Port Selector"));
+        this.view.getCompileButton().setAction(this.menuActions.COMPILE.apply("Compile"));
+        this.view.getFlashButton().setAction(this.menuActions.FLASH.apply("Upload"));
     }
 
     @Override
@@ -77,11 +80,11 @@ public class MainController implements PropertyChangeListener {
 
     public void refreshSerialPorts(){
         var portSelector = view.getPortSelector();
-        var selectedItem = portSelector.getSelectedItem();
+        SerialPort selectedItem = (SerialPort) portSelector.getSelectedItem();
         portSelector.removeAllItems();
         for (var port : SerialPort.getCommPorts()) {
             portSelector.addItem(port);
-            if (selectedItem != null && selectedItem.equals(port))
+            if (selectedItem != null && selectedItem.getSystemPortName().equals(port.getSystemPortName()))
                 portSelector.setSelectedItem(port);
         }
     }
