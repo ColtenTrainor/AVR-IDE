@@ -18,6 +18,8 @@ public class SyntaxHighlighter implements Runnable{
     private final MainModel model;
     private final HashMap<String, Color> colorMap = new HashMap<>();
     private final boolean isActivated;
+    private final ArrayList<String> registerIteration = new ArrayList<>();
+    private Pattern constantPattern = null;
 
     public SyntaxHighlighter(MainView view, MainModel model){
         this.view = view;
@@ -29,6 +31,7 @@ public class SyntaxHighlighter implements Runnable{
         decodeColorData(configHandler.getConfigData());
 
         isActivated = true;
+        minorHighlightInit();
     }
 
     private void decodeColorData(HashMap<String, String> data){
@@ -105,7 +108,7 @@ public class SyntaxHighlighter implements Runnable{
 
         for (String inst : InstructionData.getInstructionSet()){
             ArrayList<Integer> indices = findOneInstEachLine(string.toLowerCase(), inst.toLowerCase());
-            if (indices.size() == 0)
+            if (indices.isEmpty())
                 continue;
 
             indices.forEach(index -> {
@@ -116,12 +119,14 @@ public class SyntaxHighlighter implements Runnable{
         }
     }
 
-
-    private void registerHighlight(String text, StyledDocument doc, Style style){
-        ArrayList<String> registerIteration = new ArrayList<>();
+    private void minorHighlightInit(){
         for (int index = 0, end = 32; index < end ; ++index){
             registerIteration.add("r" + index);
         }
+        constantPattern = Pattern.compile("\\b\\d+\\b");
+    }
+    private void registerHighlight(String text, StyledDocument doc, Style style){
+
         for (String reg : registerIteration){
             int index = text.indexOf(reg);
             while (index >= 0) {
@@ -132,8 +137,8 @@ public class SyntaxHighlighter implements Runnable{
         }
     }
     private void constantHighlight(String text, StyledDocument doc, Style style){
-        Pattern pattern = Pattern.compile("\\b\\d+\\b");
-        Matcher matcher = pattern.matcher(text);
+
+        Matcher matcher = constantPattern.matcher(text);
 
         ArrayList<String> numbers = new ArrayList<>();
         while (matcher.find()) {
