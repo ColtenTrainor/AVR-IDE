@@ -141,19 +141,13 @@ public class SyntaxHighlighter implements Runnable{
 
         Matcher matcher = constantPattern.matcher(text);
 
-        ArrayList<String> numbers = new ArrayList<>();
         while (matcher.find()) {
-            String matchedNumber = matcher.group();
-            numbers.add(matchedNumber);
-        }
+            int startIndex = matcher.start();
+            int endIndex = matcher.end();
 
-        for (String number: numbers){
-            int index = text.indexOf(number);
-            while (index >= 0) {
-                StyleConstants.setForeground(style, colorMap.get("constant"));
-                doc.setCharacterAttributes(index, number.length(), style, true);
-                index = text.indexOf(number, index + 1);
-            }
+            StyleConstants.setForeground(style, colorMap.get("constant"));
+            doc.setCharacterAttributes(startIndex, endIndex - startIndex, style, true);
+
         }
     }
 
