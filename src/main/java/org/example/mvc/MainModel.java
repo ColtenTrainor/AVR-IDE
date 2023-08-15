@@ -10,9 +10,8 @@ public class MainModel{
     private File currentOpenedFile;
     private String content;
     private final PropertyChangeSupport changeObserver;
-    private boolean isSaved;
-    public boolean getIsSaved() { return isSaved; }
-    public void setIsSaved(boolean value) { isSaved = value; }
+    private boolean isSaved = true;
+
 
     public MainModel(){
         this.content = "";
@@ -37,22 +36,31 @@ public class MainModel{
         changeObserver.firePropertyChange("file", oldFile, currentOpenedFile);
     }
 
+    public void newFileFromTemplate(File template){
+        File oldFile = currentOpenedFile;
+        this.currentOpenedFile = null;
+        try {
+            if (template.exists())
+                this.setContent(Files.readString(template.toPath()));
+            else this.setContent("Failed to read template file");
+        }catch (IOException | NullPointerException ex){
+            ex.printStackTrace();
+        }
+        changeObserver.firePropertyChange("file", oldFile, currentOpenedFile);
+        this.setIsSaved(false);
+    }
+
     public void setContent(String content){
         String oldContent = this.content;
         this.content = content;
         changeObserver.firePropertyChange("content", oldContent, this.content);
     }
 
-
     public String getCurrentFilePath() {
         return getFilePathOrEmpty(this.currentOpenedFile);
     }
 
     public String getContent() {
-        return this.content;
-    }
-
-    public String getHtmlContent(){
         return this.content;
     }
 
@@ -63,6 +71,12 @@ public class MainModel{
     public String getFilePathOrEmpty(File file){
         if (file != null)
             return file.getAbsolutePath();
-        else return "*No file selected.";
+        else return "New File";
+    }
+    public boolean getIsSaved() { return isSaved; }
+    public void setIsSaved(boolean value) {
+        var oldValue = isSaved;
+        isSaved = value;
+        changeObserver.firePropertyChange("is_saved", oldValue, value);
     }
 }

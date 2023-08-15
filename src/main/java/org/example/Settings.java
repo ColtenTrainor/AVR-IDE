@@ -25,6 +25,11 @@ public final class Settings {
         settingsData.put(MapKeys.defaultSaveDir, newDir.getPath());
     }
 
+    // Final static fields (here for easy reference, not to be serialized)
+    public static final File newFileTemplate = new File("newFileTemplate.asm"); // could make this changeable later
+    public static final String programName = "AVR Development Environment";
+
+
     // Utility fields
     private static final File settingsFile = new File("cfg/settings.cfg");
     private static final HashMap<String, String> settingsData = new HashMap<>();

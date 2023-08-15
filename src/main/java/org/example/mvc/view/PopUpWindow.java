@@ -7,30 +7,25 @@ public class PopUpWindow {
     private JFrame windowFrame;
     private JPanel windowPane;
     private JLabel message;
-    private JButton okButton;
-    private JButton cancelButton;
-    public PopUpWindow(String title, String msg, String oneButton){
+    private JButton[] buttons;
+
+    public PopUpWindow(String title, String msg, String... buttonTexts){
         this.windowFrame = new JFrame(title);
         this.windowPane = new JPanel();
-        this.okButton = new JButton(oneButton);
         this.message = new JLabel(msg);
 
-        this.setPopUpLayout();
-    }
-    public PopUpWindow(String title, String msg, String firstButton, String secondButton){
-        this.windowFrame = new JFrame(title);
-        this.windowPane = new JPanel();
-        this.okButton = new JButton(firstButton);
-        this.cancelButton = new JButton(secondButton);
-        this.message = new JLabel(msg);
+        this.buttons = new JButton[buttonTexts.length];
+        for (int i = 0; i < buttonTexts.length; i++) {
+            this.buttons[i] = new JButton(buttonTexts[i]);
+        }
 
         this.setPopUpLayout();
     }
 
     private void setPopUpLayout(){
-        this.windowPane.add(okButton);
-        if (cancelButton != null)
-            this.windowPane.add(cancelButton);
+        for (var button : buttons) {
+            windowPane.add(button);
+        }
 
         this.windowFrame.setSize(400,100);
         this.windowFrame.add(message, BorderLayout.NORTH);
@@ -46,11 +41,7 @@ public class PopUpWindow {
         this.windowFrame.setVisible(false);
     }
 
-    public JButton getOkButton() {
-        return okButton;
-    }
-
-    public JButton getCancelButton() {
-        return cancelButton;
+    public JButton getButton(int index) {
+        return buttons[index];
     }
 }
