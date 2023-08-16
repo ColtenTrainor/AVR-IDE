@@ -30,7 +30,7 @@ public class MainView {
         codeEditor = new JCodeEditor();
         sideBar = new JSideBar();
         console = new JConsole();
-        console.setInputEnabled(false);
+        console.setInputEnabled(true);
 
         screenSolutionWidth = (int)(getScreenSolution().getWidth() * 0.8);
         screenSolutionHeight = (int)(getScreenSolution().getHeight() * 0.8);
