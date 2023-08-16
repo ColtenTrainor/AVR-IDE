@@ -99,8 +99,11 @@ public class MainView {
         return mainFrame;
     }
 
-    public JTextPane getTextArea(){
+    public JTextPane getEditorPane(){
         return codeEditor.TextPane;
+    }
+    public JCodeEditor getCodeEditor(){
+        return codeEditor;
     }
 
     public JMenuItem getOpenButton() {

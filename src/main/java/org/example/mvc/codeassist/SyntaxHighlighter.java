@@ -1,42 +1,40 @@
 package org.example.mvc.codeassist;
 
-import org.example.mvc.MainModel;
-import org.example.mvc.view.MainView;
 import org.example.util.ConfigIOHandler;
 
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SyntaxHighlighter implements Runnable{
-    private final MainView view;
-    private final MainModel model;
     private final HashMap<String, Color> colorMap = new HashMap<>();
-    private final boolean isActivated;
-    private final ArrayList<String> registerIteration = new ArrayList<>();
-    private final Pattern constantPattern = Pattern.compile("\\b\\d+\\b");;
-    private final Pattern commentPattern = Pattern.compile(";([^\\n;]*)");
-    private String incompleteMasterRegexPatternRenameLater = "(;[^\\n]*)|(\\b(?:0(?:b|x))?\\d+\\b)|\\s(\\.\\S+)\\s|((?:r|R)\\d+)|(\\b(?:ldi|dec|brne)\\b)";
+    private JTextPane textPane;
+    private StyledDocument document;
+    private Style style;
+    private TextRegion textRegion;
 
-    public SyntaxHighlighter(MainView view, MainModel model){
-        this.view = view;
-        this.model = model;
+//    private String masterRegexPatternIncompleteExampleDoNotUse =
+//            "(;[^\\n]*)|(\\b(?:0(?:b|x))?\\d+\\b)|\\s(\\.\\S+)\\s|((?:r|R)\\d+)|(\\b(?:ldi|dec|brne)\\b)";
+    private Pattern highlightPattern;
+
+    public SyntaxHighlighter(StyledDocument document, JTextPane textPane) {
+        this.document = document;
+        this.textPane = textPane;
+        this.style = textPane.addStyle("editor-style", null);
 
         ConfigIOHandler configHandler = new ConfigIOHandler(
                 new File("cfg/highlightColors.cfg"));
         configHandler.deserialize();
         decodeColorData(configHandler.getConfigData());
 
-        isActivated = true;
-        minorHighlightInit();
+        compileHighlightPattern();
     }
 
-    private void decodeColorData(HashMap<String, String> data){
+    private void decodeColorData(HashMap<String, String> data) {
         colorMap.clear();
         for (var tokenType : data.keySet()) {
             try {
@@ -45,143 +43,86 @@ public class SyntaxHighlighter implements Runnable{
         }
     }
 
-    public Color getColor(String tokenType){ return colorMap.get(tokenType); }
+    public Color getColor(String tokenType) { return colorMap.get(tokenType); }
+
+    private void compileHighlightPattern() {
+        var pattern = new StringBuilder();
+        pattern.append("(;[^\\n]*)") // comment
+                .append("|(\\b(?:0(?:b|x))?\\d+\\b)") // constant
+                .append("|\\s(\\.\\S+)\\s") // directive
+                .append("|((?:r|R)\\d+)") // register TODO: replace with dynamic macro list
+                .append("|(\\b(?:"); // beginning of instruction section
+        var instructionSet = InstructionData.getInstructionSet().toArray();
+        for (int i = 0; i < instructionSet.length - 1; i++) {
+            pattern.append(instructionSet[i]).append("|");
+        }
+        pattern.append(instructionSet[instructionSet.length - 1]).append(")\\b)");
+        System.out.println(pattern);
+
+        highlightPattern = Pattern.compile(pattern.toString(), Pattern.CASE_INSENSITIVE);
+    }
+
+    private void calculateLocalHighlightRegion(int offset, int length){
+        var root = document.getDefaultRootElement();
+
+        var startOffset = 0;
+        var endOffset = document.getLength() - 1;
+
+        try {
+            startOffset = root.getElement(root.getElementIndex(offset) - 1).getStartOffset();
+        } catch (Exception ignored) {}
+
+        try {
+            endOffset = root.getElement(root.getElementIndex(offset + length) + 1).getEndOffset();
+        } catch (Exception ignored) {}
+
+        textRegion = new TextRegion(startOffset, endOffset);
+    }
+
+    public void refreshLocalHighlights(int offset, int length) {
+        calculateLocalHighlightRegion(offset, length);
+        SwingUtilities.invokeLater(this);
+    }
+
+    private void matchRegion(){
+        var text = "";
+        try {
+            text = document.getText(textRegion.startOffset, textRegion.length);
+        } catch (BadLocationException e) {
+            throw new RuntimeException(e);
+        }
+        Matcher matcher = highlightPattern.matcher(text);
+
+        while (matcher.find()){
+            System.out.println(matcher.group());
+            applyStyle(matcher, 1, "ignore");
+            applyStyle(matcher, 2, "constant");
+            applyStyle(matcher, 3, "directive");
+            applyStyle(matcher, 4, "macro");
+            applyStyle(matcher, 5, "inst_logic");
+        }
+    }
+
+    private void applyStyle(Matcher matcher, int group, String colorKey){
+        if (matcher.group(group) == null) return;
+        StyleConstants.setForeground(style, colorMap.get(colorKey));
+        document.setCharacterAttributes(textRegion.startOffset + matcher.start(group),
+                matcher.end(group) - matcher.start(group), style, true);
+    }
 
     @Override
     public void run() {
-        String previousContent = "";
-        while (isActivated){
-            try {
-            String currentContent = getViewRawContent();
-
-            if ( ! currentContent.contentEquals(previousContent)){
-                this.contentModify();
-                previousContent = currentContent;
-            }
-            Thread.sleep(500);
-
-            } catch (InterruptedException e) {
-                throw new RuntimeException("Sleep failed.");
-            }
-        }
+        matchRegion();
     }
 
-    private String getViewRawContent() {
-        var doc = view.getTextArea().getDocument();
-        try {
-            return doc.getText(0, doc.getLength());
-        }catch (BadLocationException ex){
-            ex.printStackTrace();
+    private class TextRegion {
+        public int startOffset;
+        public int endOffset;
+        public int length;
+        public TextRegion(int startOffset, int endOffset){
+            this.startOffset = startOffset;
+            this.endOffset = endOffset;
+            length = endOffset - startOffset;
         }
-        return "";
-    }
-
-    private void contentModify(){
-        try {
-            String text = view.getTextArea().getDocument().getText(0, view.getTextArea().getDocument().getLength());
-            model.setContent(text);
-        }catch (BadLocationException ex){
-            ex.printStackTrace();
-        }
-    }
-
-    public void addColorHighlighting() {
-        JTextPane textPane = view.getTextArea();
-        StyledDocument doc = textPane.getStyledDocument();
-        resetStyledDocument(doc, textPane);
-
-        try {
-            String text = doc.getText(0, doc.getLength());
-
-            Style style = textPane.addStyle("style-tag", null);
-
-            instructionHighlight(text, doc, style); // add highlight to instructions
-            registerHighlight(text, doc, style);
-            constantHighlight(text, doc, style);
-            commentHighlight(text, doc, style);
-
-//            textPane.setCaretPosition(doc.getLength()); // reposition caret to last character
-        }catch (BadLocationException ex){
-            ex.printStackTrace();
-        }
-    }
-
-    private void instructionHighlight(String string, StyledDocument doc, Style style){
-
-        for (String inst : InstructionData.getInstructionSet()){
-            ArrayList<Integer> indices = findOneInstEachLine(string.toLowerCase(), inst.toLowerCase());
-            if (indices.isEmpty())
-                continue;
-
-            indices.forEach(index -> {
-                StyleConstants.setForeground(style, colorMap.get(InstructionData.getInstructionData(inst).getCategory()));
-                // Setting attr instead of removing -> inserting
-                doc.setCharacterAttributes(index, inst.length(), style, true);
-            });
-        }
-    }
-
-    private void minorHighlightInit(){
-        for (int index = 0, end = 32; index < end ; ++index){
-            registerIteration.add("r" + index);
-        }
-    }
-    private void registerHighlight(String text, StyledDocument doc, Style style){
-
-        for (String reg : registerIteration){
-            int index = text.indexOf(reg);
-            while (index >= 0) {
-                StyleConstants.setForeground(style, colorMap.get("macro"));
-                doc.setCharacterAttributes(index, reg.length(), style, true);
-                index = text.indexOf(reg, index + 1);
-            }
-        }
-    }
-    private void constantHighlight(String text, StyledDocument doc, Style style){
-
-        Matcher matcher = constantPattern.matcher(text);
-
-        while (matcher.find()) {
-            int startIndex = matcher.start();
-            int endIndex = matcher.end();
-
-            StyleConstants.setForeground(style, colorMap.get("constant"));
-            doc.setCharacterAttributes(startIndex, endIndex - startIndex, style, true);
-
-        }
-    }
-    private void commentHighlight(String text, StyledDocument doc, Style style){
-        Matcher matcher = commentPattern.matcher(text);
-        while (matcher.find()) {
-            int startIndex = matcher.start();
-            int endIndex = matcher.end(1);
-
-            StyleConstants.setForeground(style, colorMap.get("ignore"));
-            doc.setCharacterAttributes(startIndex, endIndex - startIndex, style, true);
-        }
-    }
-
-    private ArrayList<Integer> findOneInstEachLine(String text, String word){
-        ArrayList<Integer> indices = new ArrayList<>();
-
-        Pattern pattern = Pattern.compile("(?<=\n|^)" + word);
-        Matcher matcher = pattern.matcher(text);
-
-        while (matcher.find()) {
-            int startIndex = matcher.start();
-            indices.add(startIndex);
-        }
-        return indices;
-    }
-
-    private void resetStyledDocument(StyledDocument doc, JTextPane textPane) {
-        // Remove styled text
-        doc.setCharacterAttributes(0, doc.getLength(), textPane.getStyle(StyleContext.DEFAULT_STYLE), true);
-
-        // Clear any additional styles
-        Style style = textPane.getStyle(StyleContext.DEFAULT_STYLE);
-        StyleConstants.setForeground(style, textPane.getForeground());
-
-//        textPane.setCaretPosition(doc.getLength()); // Set the caret position to the beginning of the document
     }
 }

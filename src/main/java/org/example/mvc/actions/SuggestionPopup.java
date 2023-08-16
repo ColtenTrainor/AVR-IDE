@@ -35,14 +35,14 @@ public class SuggestionPopup implements Runnable{
     }
     public void showPopupMenu(int x, int y){
         this.setPopupMenuFocus(false);
-        this.popupMenu.show(this.view.getTextArea(), x + 20, y + 10);
+        this.popupMenu.show(this.view.getEditorPane(), x + 20, y + 10);
     }
     public void setPopupMenuFocus(boolean isFocused){
         this.popupMenu.setFocusable(false);
     }
 
     public void addTextPrediction(){
-        JTextPane textPane = view.getTextArea();
+        JTextPane textPane = view.getEditorPane();
         StyledDocument doc = textPane.getStyledDocument();
 
         try{
@@ -69,7 +69,7 @@ public class SuggestionPopup implements Runnable{
 
     private int[] getCaretPositionInView(){
         Rectangle2D xy = null;
-        JTextPane pane = view.getTextArea();
+        JTextPane pane = view.getEditorPane();
         try{
             xy =  pane.modelToView2D(pane.getDocument().getLength());
 //            System.out.println(xy.getX() + " & " + xy.getY());

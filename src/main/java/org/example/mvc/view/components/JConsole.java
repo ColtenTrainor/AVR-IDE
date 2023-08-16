@@ -1,5 +1,7 @@
 package org.example.mvc.view.components;
 
+import org.example.util.Utils;
+
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import java.awt.*;
@@ -45,9 +47,8 @@ public class JConsole extends JPanel {
     }
 
     public void appendConsole(){
-        var doc = inputPane.getDocument();
         try {
-            var command = doc.getText(0, doc.getLength());
+            var command = Utils.getFullTextFromDoc(inputPane.getDocument());
             outputPane.append("\n" + command);
             inputPane.setText("");
             scrollToBottom();

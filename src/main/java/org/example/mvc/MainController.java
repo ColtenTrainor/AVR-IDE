@@ -7,6 +7,8 @@ import org.example.mvc.codeassist.SuggestionManager;
 import org.example.mvc.codeassist.SyntaxHighlighter;
 import org.example.mvc.view.MainView;
 
+import javax.swing.text.StyledDocument;
+import javax.swing.text.StyledEditorKit;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -20,25 +22,26 @@ public class MainController implements PropertyChangeListener {
     public MainController(MainView view, MainModel model){
         this.view = view;
         this.model = model;
-        this.syntaxHighlighter = new SyntaxHighlighter(this.view, this.model);
-        this.suggestionManager = new SuggestionManager(this.view);
+
         this.menuActions = new MenuActions(this.view, this.model, this);
 
         // Set up and initialize stuff
+        view.getEditorPane().setDocument(model.getEditorDocument());
+        model.setEditorDefaultAttrSet(((StyledEditorKit)view.getEditorPane().getEditorKit()).getInputAttributes());
         refreshSerialPorts();
-
-        setUpMenuListeners();
+        setUpListeners();
         setUpLabels();
+
+        this.syntaxHighlighter = new SyntaxHighlighter((StyledDocument) model.getEditorDocument(), view.getEditorPane());
+        this.suggestionManager = new SuggestionManager(this.view);
 
         // Controller listens to model, debug
         this.model.addPropertyChangeListener(this);
-//        this.debugMode.addPropertyChangeListener(this);
     }
     public void runView(){
         this.view.setDefaultFrame();
-        var syntaxThread = new Thread(syntaxHighlighter);
-        syntaxThread.start();
-
+//        var syntaxThread = new Thread(syntaxHighlighter);
+//        syntaxThread.start();
         model.newFileFromTemplate(Settings.newFileTemplate);
     }
 
@@ -51,7 +54,7 @@ public class MainController implements PropertyChangeListener {
         this.view.getFlashButton().setText("Flash");
     }
 
-    private void setUpMenuListeners(){
+    private void setUpListeners(){
         this.view.getNewFileButton().setAction(this.menuActions.NEW.apply("New File"));
         this.view.getOpenButton().setAction(this.menuActions.OPEN.apply("Open File"));
         this.view.getSaveButton().setAction(this.menuActions.SAVE.apply("Save File"));
@@ -61,23 +64,16 @@ public class MainController implements PropertyChangeListener {
                 this.menuActions.OPENPORTSELECTOR.apply("Open Port Selector"));
         this.view.getCompileButton().setAction(this.menuActions.COMPILE.apply("Compile"));
         this.view.getFlashButton().setAction(this.menuActions.FLASH.apply("Upload"));
+
+        this.view.getCodeEditor().setDocumentListener(
+                this.menuActions.EDITORDOCUMENTLISTENER.apply("Editor Document Listener"));
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        switch (evt.getPropertyName().toLowerCase()) {
-            case "file" -> {
-                view.getTextArea().setText("<p>" + model.getContent().replaceAll("\n", "</p><p>") + "</p>");
-            }
-            case "content" -> {
-                syntaxHighlighter.addColorHighlighting();
-                suggestionManager.activateSuggestionPopUp();
-                model.setIsSaved(false);
-            }
-            case "is_saved" -> {
-                view.getMainFrame().setTitle(Settings.programName + " - " + model.getCurrentFilePath() + (model.getIsSaved() ? "" : "*"));
-            }
-        }
+        if (evt.getPropertyName().equalsIgnoreCase("is_saved"))
+            view.getMainFrame().setTitle(Settings.programName + " - " +
+                    model.getCurrentFilePath() + (model.getIsSaved() ? "" : "*"));
     }
 
     public SerialPort getSelectedPort(){
@@ -94,4 +90,8 @@ public class MainController implements PropertyChangeListener {
                 portSelector.setSelectedItem(port);
         }
     }
+
+    public SyntaxHighlighter getSyntaxHighlighter() { return syntaxHighlighter; }
+
+    public SuggestionManager getSuggestionManager() {return suggestionManager; }
 }

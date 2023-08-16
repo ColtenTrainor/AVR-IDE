@@ -6,8 +6,11 @@ import org.example.mvc.MainModel;
 import org.example.mvc.view.MainView;
 import org.example.mvc.view.PopUpWindow;
 import org.example.util.CommandExecutor;
+import org.example.util.Utils;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -25,6 +28,7 @@ public class MenuActions {
     private final MainController controller;
     public final Function<String, Action> OPEN, NEW, SAVE, SAVEAS, COMPILE, FLASH;
     public final Function<String, PopupMenuListener> OPENPORTSELECTOR;
+    public final Function<String, DocumentListener> EDITORDOCUMENTLISTENER;
 
     private final FileNameExtensionFilter AsmFilter = new FileNameExtensionFilter(
             "Assembly File (.asm)", "asm");
@@ -38,10 +42,12 @@ public class MenuActions {
         this.NEW = this::newFile;
         this.SAVE = this::save;
         this.SAVEAS = this::saveAs;
+
         this.COMPILE = this::compile;
         this.FLASH = this::flash;
-
         this.OPENPORTSELECTOR = this::openPortSelector;
+
+        this. EDITORDOCUMENTLISTENER = this::editorDocumentListener;
     }
 
     private Action openFile(String command){
@@ -113,11 +119,8 @@ public class MenuActions {
 
     private boolean saveFileNoDialogue(File file, StandardOpenOption openOption) {
         try {
-            String text = view.getTextArea().getDocument().getText(0, view.getTextArea().getDocument().getLength());
-
-            model.setContent(text);
+            String text = Utils.getFullTextFromDoc(view.getEditorPane().getDocument());
             Files.write(file.toPath(), text.getBytes(), openOption);
-            model.setCurrentFile(file);
 
         } catch (IOException | BadLocationException e) {
             return false;
@@ -218,6 +221,31 @@ public class MenuActions {
 
             @Override
             public void popupMenuCanceled(PopupMenuEvent e) {}
+        };
+    }
+
+    private DocumentListener editorDocumentListener(String s){
+        return new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                textChangedUpdate(e);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                textChangedUpdate(e);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+
+            }
+
+            private void textChangedUpdate(DocumentEvent e){
+                controller.getSyntaxHighlighter().refreshLocalHighlights(e.getOffset(), e.getLength());
+                controller.getSuggestionManager().activateSuggestionPopUp();
+                model.setIsSaved(false);
+            }
         };
     }
 }

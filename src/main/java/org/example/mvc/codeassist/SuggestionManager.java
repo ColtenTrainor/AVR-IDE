@@ -2,6 +2,7 @@ package org.example.mvc.codeassist;
 
 import org.example.mvc.actions.SuggestionPopup;
 import org.example.mvc.view.MainView;
+import org.example.util.Utils;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -19,7 +20,7 @@ public class SuggestionManager {
     }
 
     private void setUpToolTipListener(){
-        JTextPane editableField = view.getTextArea();
+        JTextPane editableField = view.getEditorPane();
         editableField.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
@@ -28,7 +29,7 @@ public class SuggestionManager {
                 int pos = editableField.viewToModel2D(pt);
                 try {
                     // TODO: only add tip if instruction in format "inst ..."
-                    String text = editableField.getDocument().getText(0, editableField.getDocument().getLength());
+                    String text = Utils.getFullTextFromDoc(editableField.getDocument());
                     int[] wordPos = getWordOffsetAndLen(pos, text);
                     tipDisplayText = editableField.getDocument().getText(wordPos[0], wordPos[1]);
 
