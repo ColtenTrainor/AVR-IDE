@@ -100,7 +100,7 @@ public class SyntaxHighlighter implements Runnable{
             constantHighlight(text, doc, style);
             commentHighlight(text, doc, style);
 
-            textPane.setCaretPosition(doc.getLength()); // reposition caret to last character
+//            textPane.setCaretPosition(doc.getLength()); // reposition caret to last character
         }catch (BadLocationException ex){
             ex.printStackTrace();
         }
@@ -182,6 +182,6 @@ public class SyntaxHighlighter implements Runnable{
         Style style = textPane.getStyle(StyleContext.DEFAULT_STYLE);
         StyleConstants.setForeground(style, textPane.getForeground());
 
-        textPane.setCaretPosition(doc.getLength()); // Set the caret position to the beginning of the document
+//        textPane.setCaretPosition(doc.getLength()); // Set the caret position to the beginning of the document
     }
 }
