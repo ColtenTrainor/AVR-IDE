@@ -2,6 +2,7 @@ package org.example.mvc.view.components;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
@@ -54,6 +55,11 @@ public class JConsole extends JPanel {
         } catch (BadLocationException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    public void spitOutput(String message){
+        outputPane.append("\n" + message);
+        scrollToBottom();
     }
 
     public void clearConsole(){

@@ -2,6 +2,7 @@ package org.example.util;
 
 import com.fazecast.jSerialComm.SerialPort;
 import org.example.Settings;
+import org.example.mvc.view.components.JConsole;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,7 +11,6 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 
 public class CommandExecutor {
-
     private static String[] toWindowsCommand(String... cmd){
         String[] options = {"cmd", "/C"};
         String[] concatenatedArray = Arrays.copyOf(options, options.length + cmd.length);
@@ -41,12 +41,12 @@ public class CommandExecutor {
         try {
             Process process = processBuilder.start();
 
-            //read the output
-            InputStreamReader inputStreamReader = new InputStreamReader(process.getInputStream());
+            //TODO: only testing error stream
+            InputStreamReader inputStreamReader = new InputStreamReader(process.getErrorStream());
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             String output;
             while ((output = bufferedReader.readLine()) != null) {
-                System.out.println(output);
+                System.out.println("Spit: " + output);
             }
 
             //wait for the process to complete
@@ -57,7 +57,7 @@ public class CommandExecutor {
             process.destroy();
 
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
     }
 
