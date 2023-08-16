@@ -6,6 +6,7 @@ import org.example.mvc.actions.MenuActions;
 import org.example.mvc.codeassist.SuggestionManager;
 import org.example.mvc.codeassist.SyntaxHighlighter;
 import org.example.mvc.view.MainView;
+import org.example.util.clitools.CommandExecutor;
 
 import javax.swing.text.StyledDocument;
 import javax.swing.text.StyledEditorKit;
@@ -18,10 +19,12 @@ public class MainController implements PropertyChangeListener {
     MenuActions menuActions;
     SyntaxHighlighter syntaxHighlighter;
     SuggestionManager suggestionManager;
+    CommandExecutor commandExecutor;
 
     public MainController(MainView view, MainModel model){
         this.view = view;
         this.model = model;
+        this.commandExecutor = new CommandExecutor();
 
         this.menuActions = new MenuActions(this.view, this.model, this);
 
@@ -67,6 +70,8 @@ public class MainController implements PropertyChangeListener {
 
         this.view.getCodeEditor().setDocumentListener(
                 this.menuActions.EDITORDOCUMENTLISTENER.apply("Editor Document Listener"));
+
+        commandExecutor.addActionListener(menuActions.COMMANDOUTPUTLISTENER.apply("Command Output Listener"));
     }
 
     @Override
@@ -93,5 +98,6 @@ public class MainController implements PropertyChangeListener {
 
     public SyntaxHighlighter getSyntaxHighlighter() { return syntaxHighlighter; }
 
-    public SuggestionManager getSuggestionManager() {return suggestionManager; }
+    public SuggestionManager getSuggestionManager() { return suggestionManager; }
+    public CommandExecutor getCommandExecutor() { return commandExecutor; }
 }

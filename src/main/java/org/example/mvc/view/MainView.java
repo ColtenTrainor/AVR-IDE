@@ -135,4 +135,6 @@ public class MainView {
         return menuBar.FlashButton;
     }
 
+    public JConsole getConsole(){ return console; }
+
 }

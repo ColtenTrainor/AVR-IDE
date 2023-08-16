@@ -13,10 +13,10 @@ import java.util.regex.Pattern;
 
 public class SyntaxHighlighter implements Runnable{
     private final HashMap<String, Color> colorMap = new HashMap<>();
-    private JTextPane textPane;
-    private StyledDocument document;
-    private Style defaultStyle;
-    private Style highlightStyle;
+    private final JTextPane textPane;
+    private final StyledDocument document;
+    private final Style defaultStyle;
+    private final Style highlightStyle;
     private TextRegion textRegion;
     private Pattern highlightPattern;
     private String[] categories;
@@ -76,14 +76,13 @@ public class SyntaxHighlighter implements Runnable{
         highlightPattern = Pattern.compile(pattern.toString(), Pattern.CASE_INSENSITIVE);
     }
 
-    private StringBuilder appendWordList(StringBuilder pattern, String category) {
+    private void appendWordList(StringBuilder pattern, String category) {
         pattern.append("|(\\b(?:");
         var instructionSet = InstructionData.getInstructionSetFromCategory(category).toArray();
         for (int i = 0; i < instructionSet.length - 1; i++) {
             pattern.append(instructionSet[i]).append("|");
         }
         pattern.append(instructionSet[instructionSet.length - 1]).append(")\\b)");
-        return pattern;
     }
 
     private void calculateLocalHighlightRegion(int offset, int length){
@@ -109,6 +108,7 @@ public class SyntaxHighlighter implements Runnable{
     }
 
     private void matchRegion(){
+        document.setCharacterAttributes(textRegion.startOffset, textRegion.length, defaultStyle, true);
         var text = "";
         try {
             text = document.getText(textRegion.startOffset, textRegion.length);
@@ -134,7 +134,6 @@ public class SyntaxHighlighter implements Runnable{
 
     @Override
     public void run() {
-        document.setCharacterAttributes(textRegion.startOffset, textRegion.length, defaultStyle, true);
         matchRegion();
     }
 

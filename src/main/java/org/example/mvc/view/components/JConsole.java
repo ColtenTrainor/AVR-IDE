@@ -3,10 +3,12 @@ package org.example.mvc.view.components;
 import org.example.util.Utils;
 
 import javax.swing.*;
+import javax.swing.event.AncestorListener;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class JConsole extends JPanel {
     private final JPanel consolePane = new JPanel();
@@ -38,6 +40,8 @@ public class JConsole extends JPanel {
         consolePane.add(outputPane, consolePaneConstraints);
 
         setInputEnabled(true);
+
+
     }
 
     private void scrollToBottom(){
@@ -47,10 +51,10 @@ public class JConsole extends JPanel {
         consolePane.scrollRectToVisible(rect);
     }
 
-    public void appendConsole(){
+    public void handleInput(){
         try {
             var command = Utils.getFullTextFromDoc(inputPane.getDocument());
-            outputPane.append("\n" + command);
+            appendConsole(command);
             inputPane.setText("");
             scrollToBottom();
         } catch (BadLocationException ex) {
@@ -58,7 +62,16 @@ public class JConsole extends JPanel {
         }
     }
 
-    public void spitOutput(String message){
+    public void appendOutput(String output){
+        appendConsole(output);
+    }
+
+    public void appendError(String error){
+        //TODO: set text color to red
+        appendConsole(error);
+    }
+
+    private void appendConsole(String message){ //TODO: make this take a color as a parameter
         outputPane.append("\n" + message);
         scrollToBottom();
     }
@@ -71,7 +84,7 @@ public class JConsole extends JPanel {
     private final Action inputEntered = new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            appendConsole();
+            handleInput();
         }
     };
 

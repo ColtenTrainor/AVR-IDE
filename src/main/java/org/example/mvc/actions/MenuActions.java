@@ -5,8 +5,11 @@ import org.example.mvc.MainController;
 import org.example.mvc.MainModel;
 import org.example.mvc.view.MainView;
 import org.example.mvc.view.PopUpWindow;
-import org.example.util.CommandExecutor;
+import org.example.util.clitools.CommandActionListener;
+import org.example.util.clitools.CommandErrorEvent;
+import org.example.util.clitools.CommandExecutor;
 import org.example.util.Utils;
+import org.example.util.clitools.CommandOutputEvent;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -29,6 +32,7 @@ public class MenuActions {
     public final Function<String, Action> OPEN, NEW, SAVE, SAVEAS, COMPILE, FLASH;
     public final Function<String, PopupMenuListener> OPENPORTSELECTOR;
     public final Function<String, DocumentListener> EDITORDOCUMENTLISTENER;
+    public final Function<String, CommandActionListener> COMMANDOUTPUTLISTENER;
 
     private final FileNameExtensionFilter AsmFilter = new FileNameExtensionFilter(
             "Assembly File (.asm)", "asm");
@@ -47,7 +51,8 @@ public class MenuActions {
         this.FLASH = this::flash;
         this.OPENPORTSELECTOR = this::openPortSelector;
 
-        this. EDITORDOCUMENTLISTENER = this::editorDocumentListener;
+        this.EDITORDOCUMENTLISTENER = this::editorDocumentListener;
+        this.COMMANDOUTPUTLISTENER = this::commandOutputListener;
     }
 
     private Action openFile(String command){
@@ -186,13 +191,13 @@ public class MenuActions {
 
     private void compileFile(File currentFile){
         if (model.getIsSaved()){
-            CommandExecutor.Avra.compile(currentFile);
+            controller.getCommandExecutor().avra.compile(currentFile);
         } else if (currentFile != null && currentFile.exists()) {
-            if (saveFileNoDialogue(currentFile, StandardOpenOption.CREATE_NEW)) CommandExecutor.Avra.compile(currentFile);
+            if (saveFileNoDialogue(currentFile, StandardOpenOption.CREATE_NEW)) controller.getCommandExecutor().avra.compile(currentFile);
         } else {
             if (saveFileWithDialogue()){
                 currentFile = model.getCurrentOpenedFile();
-                CommandExecutor.Avra.compile(currentFile);
+                controller.getCommandExecutor().avra.compile(currentFile);
             }
         }
     }
@@ -204,7 +209,7 @@ public class MenuActions {
                 var currentFile = model.getCurrentOpenedFile();
                 compileFile(currentFile);
                 System.out.println(controller.getSelectedPort());
-                CommandExecutor.AvrDude.flash(currentFile, controller.getSelectedPort());
+                controller.getCommandExecutor().avrDude.flash(currentFile, controller.getSelectedPort());
             }
         };
     }
@@ -245,6 +250,20 @@ public class MenuActions {
                 controller.getSyntaxHighlighter().refreshLocalHighlights(e.getOffset(), e.getLength());
                 controller.getSuggestionManager().activateSuggestionPopUp();
                 model.setIsSaved(false);
+            }
+        };
+    }
+
+    private CommandActionListener commandOutputListener(String s) {
+        return new CommandActionListener() {
+            @Override
+            public void errorReceived(CommandErrorEvent e) {
+                view.getConsole().appendError(e.getMessage());
+            }
+
+            @Override
+            public void outputReceived(CommandOutputEvent e) {
+                view.getConsole().appendOutput(e.getMessage());
             }
         };
     }
