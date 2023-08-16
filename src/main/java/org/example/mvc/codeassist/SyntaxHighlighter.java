@@ -79,7 +79,6 @@ public class SyntaxHighlighter implements Runnable{
         try {
             String text = view.getTextArea().getDocument().getText(0, view.getTextArea().getDocument().getLength());
             model.setContent(text);
-//            System.out.println(text);
         }catch (BadLocationException ex){
             ex.printStackTrace();
         }
@@ -150,7 +149,6 @@ public class SyntaxHighlighter implements Runnable{
 
         }
     }
-
     private void commentHighlight(String text, StyledDocument doc, Style style){
         Matcher matcher = commentPattern.matcher(text);
         while (matcher.find()) {
