@@ -185,21 +185,31 @@ public class MenuActions {
             @Override
             public void actionPerformed(ActionEvent e) {
                 compileFile(model.getCurrentOpenedFile());
+//                if (compileFile(model.getCurrentOpenedFile()))
+//                    view.getConsole().appendOutput("Compilation successful");
+//                else view.getConsole().appendError("Compilation failed");
             }
         };
     }
 
-    private void compileFile(File currentFile){
+    private boolean compileFile(File currentFile){
         if (model.getIsSaved()){
             controller.getCommandExecutor().avra.compile(currentFile);
-        } else if (currentFile != null && currentFile.exists()) {
-            if (saveFileNoDialogue(currentFile, StandardOpenOption.CREATE_NEW)) controller.getCommandExecutor().avra.compile(currentFile);
-        } else {
-            if (saveFileWithDialogue()){
-                currentFile = model.getCurrentOpenedFile();
-                controller.getCommandExecutor().avra.compile(currentFile);
-            }
+            return true;
         }
+        if (currentFile != null && currentFile.exists()) {
+            if (saveFileNoDialogue(currentFile, StandardOpenOption.CREATE_NEW)) {
+                controller.getCommandExecutor().avra.compile(currentFile);
+                return true;
+            }
+            return false;
+        }
+        if (saveFileWithDialogue()){
+            currentFile = model.getCurrentOpenedFile();
+            controller.getCommandExecutor().avra.compile(currentFile);
+            return true;
+        }
+        return false;
     }
 
     private Action flash(String s){
@@ -207,9 +217,13 @@ public class MenuActions {
             @Override
             public void actionPerformed(ActionEvent e) {
                 var currentFile = model.getCurrentOpenedFile();
-                compileFile(currentFile);
-                System.out.println(controller.getSelectedPort());
-                controller.getCommandExecutor().avrDude.flash(currentFile, controller.getSelectedPort());
+                if (compileFile(currentFile)) {
+                    controller.getCommandExecutor().avrDude.flash(currentFile, controller.getSelectedPort());
+//                    view.getConsole().appendOutput("Flash successful");
+                }
+//                else {
+//                    view.getConsole().appendError("Failed to compile, aborting flash");
+//                }
             }
         };
     }

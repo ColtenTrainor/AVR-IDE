@@ -16,6 +16,8 @@ public class JConsole extends JPanel {
     private final JTextArea outputPane = new JTextArea();
     private final JTextField inputPane = new JTextField();
     private boolean inputEnabled;
+
+    private Color errorColor = Color.red;
     public JConsole(){
         outputPane.setEditable(false);
 

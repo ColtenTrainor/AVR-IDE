@@ -17,6 +17,18 @@ public class CommandExecutor {
 
     public void addActionListener(CommandActionListener actionListener){ actionListeners.add(actionListener); }
 
+    private void forwardErrorReceived(CommandErrorEvent e){
+        for (var listener : actionListeners) {
+            listener.errorReceived(e);
+        }
+    }
+
+    private void forwardOutputreceived(CommandOutputEvent e){
+        for (var listener : actionListeners) {
+            listener.outputReceived(e);
+        }
+    }
+
     private static String[] toWindowsCommand(String... cmd){
         String[] options = {"cmd", "/C"};
         String[] concatenatedArray = Arrays.copyOf(options, options.length + cmd.length);
@@ -52,9 +64,7 @@ public class CommandExecutor {
             String error;
             while ((error = bufferedReader.readLine()) != null) {
                 var errorEvent = new CommandErrorEvent(this, error);
-                for (var listener : actionListeners) {
-                    listener.errorReceived(errorEvent);
-                }
+                forwardErrorReceived(errorEvent);
             }
 
             inputStreamReader = new InputStreamReader(process.getErrorStream());
@@ -62,9 +72,7 @@ public class CommandExecutor {
             String output;
             while ((output = bufferedReader.readLine()) != null) {
                 var outputEvent = new CommandOutputEvent(this, output);
-                for (var listener : actionListeners) {
-                    listener.outputReceived(outputEvent);
-                }
+                forwardOutputreceived(outputEvent);
             }
 
             //wait for the process to complete
@@ -98,7 +106,7 @@ public class CommandExecutor {
     public class AvrDude {
         public void flash(File asmFile, SerialPort port){
             if (port == null) {
-                System.out.println("port is null, cannot flash"); //TODO: put this in app's console
+                forwardErrorReceived(new CommandErrorEvent(this, "Cannot flash: no port selected"));
                 return;
             }
             switch (Settings.OperatingSystem){
