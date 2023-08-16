@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
 import java.io.File;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,17 +15,19 @@ public class SyntaxHighlighter implements Runnable{
     private final HashMap<String, Color> colorMap = new HashMap<>();
     private JTextPane textPane;
     private StyledDocument document;
-    private Style style;
+    private Style defaultStyle;
+    private Style highlightStyle;
     private TextRegion textRegion;
-
-//    private String masterRegexPatternIncompleteExampleDoNotUse =
-//            "(;[^\\n]*)|(\\b(?:0(?:b|x))?\\d+\\b)|\\s(\\.\\S+)\\s|((?:r|R)\\d+)|(\\b(?:ldi|dec|brne)\\b)";
     private Pattern highlightPattern;
+    private String[] categories;
 
     public SyntaxHighlighter(StyledDocument document, JTextPane textPane) {
         this.document = document;
         this.textPane = textPane;
-        this.style = textPane.addStyle("editor-style", null);
+        this.defaultStyle = textPane.addStyle("default-style", null);
+        this.highlightStyle = textPane.addStyle("highlight-style", defaultStyle);
+        this.categories = new String[4 + InstructionData.getCategorySet().size()];
+        initCategoryArray();
 
         ConfigIOHandler configHandler = new ConfigIOHandler(
                 new File("cfg/highlightColors.cfg"));
@@ -32,6 +35,17 @@ public class SyntaxHighlighter implements Runnable{
         decodeColorData(configHandler.getConfigData());
 
         compileHighlightPattern();
+    }
+
+    private void initCategoryArray(){
+        this.categories[0] = "ignore";
+        this.categories[1] = "constant";
+        this.categories[2] = "directive";
+        this.categories[3] = "macro";
+        var categoryIterator = InstructionData.getCategorySet().iterator();
+        for (int i = 4; i < categories.length; i++) {
+            categories[i] = categoryIterator.next();
+        }
     }
 
     private void decodeColorData(HashMap<String, String> data) {
@@ -48,18 +62,28 @@ public class SyntaxHighlighter implements Runnable{
     private void compileHighlightPattern() {
         var pattern = new StringBuilder();
         pattern.append("(;[^\\n]*)") // comment
-                .append("|(\\b(?:0(?:b|x))?\\d+\\b)") // constant
+                .append("|(\\b(?:(?:0b[0-1]*)|(?:0x(?:\\d|[a-f])*)|\\d+)\\b)") // constant
                 .append("|\\s(\\.\\S+)\\s") // directive
-                .append("|((?:r|R)\\d+)") // register TODO: replace with dynamic macro list
-                .append("|(\\b(?:"); // beginning of instruction section
-        var instructionSet = InstructionData.getInstructionSet().toArray();
+                .append("|(r\\d+)"); // register TODO: replace with dynamic macro list
+
+        for (int i = 4; i < categories.length; i++) {
+            appendWordList(pattern, categories[i]);
+        }
+
+        System.out.println(pattern);
+        System.out.println(Arrays.toString(categories));
+
+        highlightPattern = Pattern.compile(pattern.toString(), Pattern.CASE_INSENSITIVE);
+    }
+
+    private StringBuilder appendWordList(StringBuilder pattern, String category) {
+        pattern.append("|(\\b(?:");
+        var instructionSet = InstructionData.getInstructionSetFromCategory(category).toArray();
         for (int i = 0; i < instructionSet.length - 1; i++) {
             pattern.append(instructionSet[i]).append("|");
         }
         pattern.append(instructionSet[instructionSet.length - 1]).append(")\\b)");
-        System.out.println(pattern);
-
-        highlightPattern = Pattern.compile(pattern.toString(), Pattern.CASE_INSENSITIVE);
+        return pattern;
     }
 
     private void calculateLocalHighlightRegion(int offset, int length){
@@ -94,24 +118,23 @@ public class SyntaxHighlighter implements Runnable{
         Matcher matcher = highlightPattern.matcher(text);
 
         while (matcher.find()){
-            System.out.println(matcher.group());
-            applyStyle(matcher, 1, "ignore");
-            applyStyle(matcher, 2, "constant");
-            applyStyle(matcher, 3, "directive");
-            applyStyle(matcher, 4, "macro");
-            applyStyle(matcher, 5, "inst_logic");
+            for (int i = 0; i < categories.length; i++) {
+                applyStyle(matcher, i + 1, categories[i]);
+            }
         }
     }
 
-    private void applyStyle(Matcher matcher, int group, String colorKey){
+    private void applyStyle(Matcher matcher, int group, String category){
         if (matcher.group(group) == null) return;
-        StyleConstants.setForeground(style, colorMap.get(colorKey));
+//        System.out.printf("%s: Group %d: %s%n", matcher.group(), group, category);
+        StyleConstants.setForeground(highlightStyle, colorMap.get(category));
         document.setCharacterAttributes(textRegion.startOffset + matcher.start(group),
-                matcher.end(group) - matcher.start(group), style, true);
+                matcher.end(group) - matcher.start(group), highlightStyle, true);
     }
 
     @Override
     public void run() {
+        document.setCharacterAttributes(textRegion.startOffset, textRegion.length, defaultStyle, true);
         matchRegion();
     }
 

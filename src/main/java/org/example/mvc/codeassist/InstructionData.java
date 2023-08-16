@@ -10,6 +10,7 @@ import java.util.*;
 public class InstructionData {
 
     private static final HashMap<String, InstructionData> allInstructionData = new HashMap<>();
+    private static final HashMap<String, ArrayList<String>> instructionSetByCategory = new HashMap<>();
     private static String[] essentialInstructions;
     static { loadDataFromConfig(); }
 
@@ -28,6 +29,9 @@ public class InstructionData {
         this.isEssential = isEssential;
 
         allInstructionData.put(instruction, this);
+        if (!instructionSetByCategory.containsKey(category))
+            instructionSetByCategory.put(category, new ArrayList<>());
+        instructionSetByCategory.get(category).add(instruction);
     }
 
     public String getInstruction(){ return instruction; }
@@ -39,6 +43,8 @@ public class InstructionData {
         return allInstructionData.containsKey(inst.toUpperCase());
     }
     public static Set<String> getInstructionSet(){ return allInstructionData.keySet(); }
+    public static ArrayList<String> getInstructionSetFromCategory(String category) { return instructionSetByCategory.get(category); }
+    public static Set<String> getCategorySet() { return instructionSetByCategory.keySet(); }
 
     public static InstructionData getInstructionData(String instruction){
         return allInstructionData.get(instruction.toUpperCase());
@@ -47,7 +53,7 @@ public class InstructionData {
     public static List<String> findMatchedInstructions(String word){
         List<String> list = new ArrayList<>();
 
-        if (!word.equals(""))
+        if (!word.isEmpty())
             for (String inst : allInstructionData.keySet()){
                 if (inst.contains(word.toUpperCase()))
                     list.add(inst);
