@@ -1,11 +1,11 @@
 package org.example.mvc.actions;
 
-import org.example.mvc.MainModel;
-import org.example.mvc.view.MainView;
-import org.example.util.CommandExecutor;
 import org.example.Settings;
 import org.example.mvc.MainController;
+import org.example.mvc.MainModel;
+import org.example.mvc.view.MainView;
 import org.example.mvc.view.PopUpWindow;
+import org.example.util.CommandExecutor;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -18,8 +18,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.function.Function;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class MenuActions {
     private final MainView view;
@@ -67,11 +65,7 @@ public class MenuActions {
         return new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (model.getCurrentOpenedFile() == null) {
-                    saveFileWithDialogue();
-                } else {
-                    saveFile(model.getCurrentOpenedFile(), StandardOpenOption.TRUNCATE_EXISTING);
-                }
+                saveFile();
             }
         };
     }
@@ -85,11 +79,19 @@ public class MenuActions {
         };
     }
 
+    private boolean saveFile(){
+        if (model.getCurrentOpenedFile() == null) {
+            return saveFileWithDialogue();
+        } else {
+            return saveFileNoDialogue(model.getCurrentOpenedFile(), StandardOpenOption.TRUNCATE_EXISTING);
+        }
+    }
+
     private boolean saveFileWithDialogue() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileFilter(AsmFilter);
 
-        fileChooser.setSelectedFile(new File(Settings.getDefaultSaveDir(), "New_File.asm"));
+        fileChooser.setSelectedFile(new File(Settings.getDefaultSaveDir(), "new_file.asm"));
         fileChooser.setCurrentDirectory(Settings.getDefaultSaveDir());
         int option = fileChooser.showSaveDialog(view.getMainFrame());
         if (option == JFileChooser.APPROVE_OPTION) {
@@ -103,20 +105,20 @@ public class MenuActions {
             }
             File newFile = new File(saveDirectory, fileName);
 
-            return saveFile(newFile, StandardOpenOption.CREATE_NEW);
+            return saveFileNoDialogue(newFile, StandardOpenOption.CREATE_NEW);
         } else {
             return false;
         }
     }
 
-    private boolean saveFile(File file, StandardOpenOption openOption) {
+    private boolean saveFileNoDialogue(File file, StandardOpenOption openOption) {
         try {
             String text = view.getTextArea().getDocument().getText(0, view.getTextArea().getDocument().getLength());
 
             model.setContent(text);
+            Files.write(file.toPath(), text.getBytes(), openOption);
             model.setCurrentFile(file);
 
-            Files.write(file.toPath(), text.getBytes(), openOption);
         } catch (IOException | BadLocationException e) {
             return false;
         }
@@ -124,45 +126,44 @@ public class MenuActions {
         return true;
     }
 
-    // This might be useful as a public method somewhere else
-    private String parseHtml(String html){
-        Matcher matcher = Pattern.compile("<p.*?>\\s*(.*?)\\s*</p>").matcher(html);
-        StringBuilder parsedText = new StringBuilder();
-
-        while (matcher.find()) {
-            var newToken = matcher.group(1);
-            parsedText.append(newToken).append("\n");
-        }
-        return parsedText.toString();
-    }
-
     private Action newFile(String command){
         return new AbstractAction(command){
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (model.getCurrentOpenedFile() != null){
-                    newFileWarningWindow();
+                if (model.getIsSaved()){
+                    model.newFileFromTemplate(Settings.newFileTemplate);
                 }
                 else{
-                    model.setCurrentFile(null);
-                    model.setContent("");
+                    newFileWarningWindow();
                 }
             }
         };
     }
     private void newFileWarningWindow(){
-        String message = "Current file might not be saved, abandon changes?";
-        PopUpWindow popUp = new PopUpWindow("Warning:", message,"Yes", "No" );
-        popUp.getOkButton().setAction(new AbstractAction("Yes") {
+        String message = "Current file is not saved, save before closing?";
+        PopUpWindow popUp = new PopUpWindow("Warning:", message,
+                "Save Then Close", "Close Without Saving", "Cancel");
+
+        var saveFirstButton = popUp.getButton(0);
+        var noSaveButton = popUp.getButton(1);
+        var cancelButton = popUp.getButton(2);
+
+        saveFirstButton.setAction(new AbstractAction(saveFirstButton.getText()) {
             @Override
             public void actionPerformed(ActionEvent e) {
-                model.setCurrentFile(null);
-                model.setContent("");
-                model.setIsSaved(false);
+                if (saveFile())
+                    model.newFileFromTemplate(Settings.newFileTemplate);
                 popUp.setInvisible();
             }
         });
-        popUp.getCancelButton().setAction(new AbstractAction("No") {
+        noSaveButton.setAction(new AbstractAction(noSaveButton.getText()) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                model.newFileFromTemplate(Settings.newFileTemplate);
+                popUp.setInvisible();
+            }
+        });
+        cancelButton.setAction(new AbstractAction(cancelButton.getText()) {
             @Override
             public void actionPerformed(ActionEvent e) {
                 popUp.setInvisible();
@@ -184,7 +185,7 @@ public class MenuActions {
         if (model.getIsSaved()){
             CommandExecutor.Avra.compile(currentFile);
         } else if (currentFile != null && currentFile.exists()) {
-            if (saveFile(currentFile, StandardOpenOption.CREATE_NEW)) CommandExecutor.Avra.compile(currentFile);
+            if (saveFileNoDialogue(currentFile, StandardOpenOption.CREATE_NEW)) CommandExecutor.Avra.compile(currentFile);
         } else {
             if (saveFileWithDialogue()){
                 currentFile = model.getCurrentOpenedFile();

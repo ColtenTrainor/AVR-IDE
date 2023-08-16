@@ -18,15 +18,14 @@ public class MainView {
     private final JSideBar sideBar;
     private final JConsole console;
 
-    public MainView(String windowTitle){
+    public MainView(){
         try {
             UIManager.setLookAndFeel(new FlatDarkLaf() {});
         } catch (UnsupportedLookAndFeelException e) {
             throw new RuntimeException(e);
         }
 
-        mainFrame = new JFrame(windowTitle);
-
+        mainFrame = new JFrame();
         menuBar = new MainMenuBar();
         codeEditor = new JCodeEditor();
         sideBar = new JSideBar();

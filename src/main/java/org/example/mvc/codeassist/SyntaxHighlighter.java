@@ -21,6 +21,7 @@ public class SyntaxHighlighter implements Runnable{
     private final ArrayList<String> registerIteration = new ArrayList<>();
     private final Pattern constantPattern = Pattern.compile("\\b\\d+\\b");;
     private final Pattern commentPattern = Pattern.compile(";([^\\n;]*)");
+    private String incompleteMasterRegexPatternRenameLater = "(;[^\\n]*)|(\\b(?:0(?:b|x))?\\d+\\b)|\\s(\\.\\S+)\\s|((?:r|R)\\d+)|(\\b(?:ldi|dec|brne)\\b)";
 
     public SyntaxHighlighter(MainView view, MainModel model){
         this.view = view;

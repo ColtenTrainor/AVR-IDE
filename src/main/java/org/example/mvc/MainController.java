@@ -1,6 +1,7 @@
 package org.example.mvc;
 
 import com.fazecast.jSerialComm.SerialPort;
+import org.example.Settings;
 import org.example.mvc.actions.MenuActions;
 import org.example.mvc.codeassist.SuggestionManager;
 import org.example.mvc.codeassist.SyntaxHighlighter;
@@ -35,7 +36,10 @@ public class MainController implements PropertyChangeListener {
     }
     public void runView(){
         this.view.setDefaultFrame();
-        this.syntaxHighlighter.run();
+        var syntaxThread = new Thread(syntaxHighlighter);
+        syntaxThread.start();
+
+        model.newFileFromTemplate(Settings.newFileTemplate);
     }
 
     private void setUpLabels(){
@@ -61,16 +65,18 @@ public class MainController implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        String propertyName = evt.getPropertyName();
-
-        if (propertyName.equalsIgnoreCase("file")) {
-            view.getMainFrame().setTitle(model.getCurrentFilePath());
-            view.getTextArea().setText("<p>" + model.getContent().replaceAll("\n", "</p><p>") + "</p>");
-            model.setIsSaved(false);
-        }
-        else if (propertyName.equalsIgnoreCase("content")){
-            syntaxHighlighter.addColorHighlighting();
-            suggestionManager.activateSuggestionPopUp();
+        switch (evt.getPropertyName().toLowerCase()) {
+            case "file" -> {
+                view.getTextArea().setText("<p>" + model.getContent().replaceAll("\n", "</p><p>") + "</p>");
+            }
+            case "content" -> {
+                syntaxHighlighter.addColorHighlighting();
+                suggestionManager.activateSuggestionPopUp();
+                model.setIsSaved(false);
+            }
+            case "is_saved" -> {
+                view.getMainFrame().setTitle(Settings.programName + " - " + model.getCurrentFilePath() + (model.getIsSaved() ? "" : "*"));
+            }
         }
     }
 
