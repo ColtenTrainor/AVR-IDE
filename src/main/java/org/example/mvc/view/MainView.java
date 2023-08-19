@@ -6,7 +6,7 @@ import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.fonts.roboto_mono.FlatRobotoMonoFont;
 import org.example.mvc.view.components.JCodeEditor;
 import org.example.mvc.view.components.JConsole;
-import org.example.mvc.view.components.JSideBar;
+import org.example.mvc.view.components.JDocumentationPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,7 +17,7 @@ public class MainView {
     private final int screenSolutionHeight;
     private final MainMenuBar menuBar;
     private final JCodeEditor codeEditor;
-    private final JSideBar sideBar;
+    private final JDocumentationPanel documentationPanel;
     private final JConsole console;
 
     public MainView(){
@@ -37,7 +37,7 @@ public class MainView {
         mainFrame = new JFrame();
         menuBar = new MainMenuBar();
         codeEditor = new JCodeEditor();
-        sideBar = new JSideBar();
+        documentationPanel = new JDocumentationPanel();
         console = new JConsole();
         console.setInputEnabled(true);
 
@@ -60,7 +60,7 @@ public class MainView {
         verticalSplitPane.setDividerLocation((int) (screenSolutionHeight * .7));
 
         JSplitPane horizontalSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-                sideBar, verticalSplitPane);
+                documentationPanel, verticalSplitPane);
         horizontalSplitPane.setDividerLocation(200);
 
         mainContainer.add(menuBar, BorderLayout.NORTH);
