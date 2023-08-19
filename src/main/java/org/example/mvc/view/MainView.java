@@ -1,7 +1,9 @@
 package org.example.mvc.view;
 
 import com.fazecast.jSerialComm.SerialPort;
-import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatDarculaLaf;
+import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
+import com.formdev.flatlaf.fonts.roboto_mono.FlatRobotoMonoFont;
 import org.example.mvc.view.components.JCodeEditor;
 import org.example.mvc.view.components.JConsole;
 import org.example.mvc.view.components.JSideBar;
@@ -19,8 +21,15 @@ public class MainView {
     private final JConsole console;
 
     public MainView(){
+        FlatRobotoFont.install();
+        FlatRobotoMonoFont.install();
+        FlatDarculaLaf.setPreferredFontFamily( FlatRobotoFont.FAMILY );
+        FlatDarculaLaf.setPreferredMonospacedFontFamily( FlatRobotoMonoFont.FAMILY);
+        for(var name : GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()){
+            System.out.println(name);
+        }
         try {
-            UIManager.setLookAndFeel(new FlatDarkLaf() {});
+            UIManager.setLookAndFeel(new FlatDarculaLaf() {});
         } catch (UnsupportedLookAndFeelException e) {
             throw new RuntimeException(e);
         }
@@ -136,5 +145,4 @@ public class MainView {
     }
 
     public JConsole getConsole(){ return console; }
-
 }
