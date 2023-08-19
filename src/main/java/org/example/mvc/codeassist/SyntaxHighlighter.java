@@ -113,7 +113,7 @@ public class SyntaxHighlighter implements Runnable{
         try {
             text = document.getText(textRegion.startOffset, textRegion.length);
         } catch (BadLocationException e) {
-            throw new RuntimeException(e);
+            return;
         }
         Matcher matcher = highlightPattern.matcher(text);
 
