@@ -13,6 +13,9 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     implementation("com.formdev:flatlaf:3.1.1")
+    implementation("com.formdev:flatlaf-fonts-roboto:2.137")
+    implementation("com.formdev:flatlaf-fonts-roboto-mono:3.000")
+//    implementation("com.formdev:flatlaf-intellij-themes:3.2")
     implementation("com.fazecast:jSerialComm:[2.0.0,3.0.0)")
     implementation("com.google.code.gson:gson:2.10.1")
 }

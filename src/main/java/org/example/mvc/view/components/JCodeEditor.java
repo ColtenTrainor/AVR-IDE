@@ -1,18 +1,19 @@
 package org.example.mvc.view.components;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.DefaultEditorKit;
-import javax.swing.text.StyledEditorKit;
 import java.awt.*;
 
 public class JCodeEditor extends JPanel{
     public final JTextPane TextPane = new JTextPane();
     public JCodeEditor() {
+        TextPane.putClientProperty("FlatLaf.style", "font: $monospaced.font");
+
+        JPanel noWrapPanel = new JPanel( new BorderLayout() );
+        noWrapPanel.add(TextPane);
+
         setLayout(new GridLayout());
-        var scrollPane = new JScrollPane(TextPane);
-        TextPane.setEditorKit(new StyledEditorKit());
+        var scrollPane = new JScrollPane(noWrapPanel);
         add(scrollPane);
     }
 

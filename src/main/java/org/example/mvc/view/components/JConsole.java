@@ -3,12 +3,9 @@ package org.example.mvc.view.components;
 import org.example.util.Utils;
 
 import javax.swing.*;
-import javax.swing.event.AncestorListener;
 import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 public class JConsole extends JPanel {
     private final JPanel consolePane = new JPanel();
@@ -20,6 +17,10 @@ public class JConsole extends JPanel {
     private Color errorColor = Color.red;
     public JConsole(){
         outputPane.setEditable(false);
+        outputPane.setLineWrap(true);
+        outputPane.setWrapStyleWord(true);
+        outputPane.putClientProperty("FlatLaf.style", "font: $monospaced.font");
+        inputPane.putClientProperty("FlatLaf.style", "font: $monospaced.font");
 
         consolePane.setLayout(new GridBagLayout());
 
