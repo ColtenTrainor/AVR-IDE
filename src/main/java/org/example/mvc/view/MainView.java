@@ -25,9 +25,6 @@ public class MainView {
         FlatRobotoMonoFont.install();
         FlatDarculaLaf.setPreferredFontFamily( FlatRobotoFont.FAMILY );
         FlatDarculaLaf.setPreferredMonospacedFontFamily( FlatRobotoMonoFont.FAMILY);
-        for(var name : GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()){
-            System.out.println(name);
-        }
         try {
             UIManager.setLookAndFeel(new FlatDarculaLaf() {});
         } catch (UnsupportedLookAndFeelException e) {
