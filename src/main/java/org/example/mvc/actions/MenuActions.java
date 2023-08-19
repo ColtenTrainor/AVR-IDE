@@ -5,11 +5,10 @@ import org.example.mvc.MainController;
 import org.example.mvc.MainModel;
 import org.example.mvc.view.MainView;
 import org.example.mvc.view.PopUpWindow;
-import org.example.util.clitools.CommandActionListener;
-import org.example.util.clitools.CommandErrorEvent;
-import org.example.util.clitools.CommandExecutor;
+import org.example.util.cli.CommandActionListener;
+import org.example.util.cli.CommandErrorEvent;
 import org.example.util.Utils;
-import org.example.util.clitools.CommandOutputEvent;
+import org.example.util.cli.CommandOutputEvent;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

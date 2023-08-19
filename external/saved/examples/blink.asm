@@ -1,4 +1,3 @@
-.includepath "C:\dev\projects\java\AVR-IDE\build\libs\avra\includes"
 .include "m328Pdef.inc"
 
 	ldi r16, 0b00000001

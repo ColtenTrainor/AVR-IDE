@@ -1,4 +1,4 @@
-package org.example.util.clitools;
+package org.example.util.cli;
 
 import java.util.EventObject;
 

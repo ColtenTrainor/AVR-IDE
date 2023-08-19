@@ -1,7 +1,8 @@
-package org.example.util.clitools;
+package org.example.util.cli;
 
-import com.fazecast.jSerialComm.SerialPort;
 import org.example.Settings;
+import org.example.util.cli.tools.AvrDude;
+import org.example.util.cli.tools.Avra;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,9 +12,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class CommandExecutor {
-    public Avra avra = new Avra();
-    public AvrDude avrDude = new AvrDude();
-    private ArrayList<CommandActionListener> actionListeners = new ArrayList<>();
+    private final ArrayList<CommandActionListener> actionListeners = new ArrayList<>();
+    public Avra avra = new Avra(this, new File("avra"),
+            "avra.exe", "avra", "avra");
+    public AvrDude avrDude = new AvrDude(this, new File("avrdude"),
+            actionListeners,
+            "avrdude.exe", "", "");
 
     public void addActionListener(CommandActionListener actionListener){ actionListeners.add(actionListener); }
 
@@ -23,7 +27,7 @@ public class CommandExecutor {
         }
     }
 
-    private void forwardOutputreceived(CommandOutputEvent e){
+    private void forwardOutputReceived(CommandOutputEvent e){
         for (var listener : actionListeners) {
             listener.outputReceived(e);
         }
@@ -46,11 +50,7 @@ public class CommandExecutor {
         }
     }
 
-    public  void runCommand(String... command){
-        runCommand(new File(""), command);
-    }
-
-    public  void runCommand(File directory, String... command) {
+    public void runCommand(File directory, String... command) {
         command = determineOSCommand(command);
 
         ProcessBuilder processBuilder = new ProcessBuilder().command(command);
@@ -72,7 +72,7 @@ public class CommandExecutor {
             String output;
             while ((output = bufferedReader.readLine()) != null) {
                 var outputEvent = new CommandOutputEvent(this, output);
-                forwardOutputreceived(outputEvent);
+                forwardOutputReceived(outputEvent);
             }
 
             //wait for the process to complete
@@ -84,37 +84,6 @@ public class CommandExecutor {
 
         } catch (IOException | InterruptedException e) {
 //            e.printStackTrace();
-        }
-    }
-
-    private static String changeExtension(String fileName){
-        if (fileName.contains(".asm")) return fileName.replace(".asm", ".hex");
-        else return fileName + ".hex";
-    }
-
-    public  class Avra {
-        public  void compile(File asmFile){
-            switch (Settings.OperatingSystem){ //TODO: add include path to command
-                case Windows -> runCommand(new File("avra"), "avra.exe", "\"" + asmFile.getAbsolutePath() + "\"",
-                        "-o", "\"" + Settings.getDefaultSaveDir().getAbsolutePath() + "\\" + changeExtension(asmFile.getName()) + "\"");
-                case Linux -> runCommand(new File("avra"), "avra", "\"" + asmFile.getAbsolutePath() + "\"",
-                        "-o", "\"" + Settings.getDefaultSaveDir().getAbsolutePath() + "/" + changeExtension(asmFile.getName()) + "\"");
-            }
-        }
-    }
-
-    public class AvrDude {
-        public void flash(File asmFile, SerialPort port){
-            if (port == null) {
-                forwardErrorReceived(new CommandErrorEvent(this, "Cannot flash: no port selected"));
-                return;
-            }
-            switch (Settings.OperatingSystem){
-                case Windows -> runCommand(new File("avrdude"), "avrdude.exe", "-p", "m328p",
-                        "-c", "arduino", "-P", port.getSystemPortName(), "-U", "flash:w:" +
-                                changeExtension(asmFile.getAbsolutePath()) + ":i");
-                case Linux -> {}
-            }
         }
     }
 }

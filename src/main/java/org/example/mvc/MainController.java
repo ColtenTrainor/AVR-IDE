@@ -6,7 +6,7 @@ import org.example.mvc.actions.MenuActions;
 import org.example.mvc.codeassist.SuggestionManager;
 import org.example.mvc.codeassist.SyntaxHighlighter;
 import org.example.mvc.view.MainView;
-import org.example.util.clitools.CommandExecutor;
+import org.example.util.cli.CommandExecutor;
 
 import javax.swing.text.StyledDocument;
 import javax.swing.text.StyledEditorKit;
