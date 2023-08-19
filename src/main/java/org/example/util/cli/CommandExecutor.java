@@ -13,10 +13,11 @@ import java.util.Arrays;
 
 public class CommandExecutor {
     private final ArrayList<CommandActionListener> actionListeners = new ArrayList<>();
-    public Avra avra = new Avra(this, new File("avra"),
+    public final Avra avra = new Avra(
+            this, new File("avra"),
             "avra.exe", "avra", "avra");
-    public AvrDude avrDude = new AvrDude(this, new File("avrdude"),
-            actionListeners,
+    public final AvrDude avrDude = new AvrDude(
+            this, new File("avrdude"), actionListeners,
             "avrdude.exe", "", "");
 
     public void addActionListener(CommandActionListener actionListener){ actionListeners.add(actionListener); }
@@ -42,12 +43,10 @@ public class CommandExecutor {
     }
 
     private static String[] determineOSCommand(String... command){
-        switch (Settings.OperatingSystem) {
-            case Windows -> { return toWindowsCommand(command); }
-            case Linux -> { return command; }
-            case Mac -> { return new String[]{}; } //TODO: mac support
-            default -> { return null;}
-        }
+        return switch (Settings.OperatingSystem) {
+            case Windows -> toWindowsCommand(command);
+            case Linux, Mac -> command;
+        };
     }
 
     public void runCommand(File directory, String... command) {

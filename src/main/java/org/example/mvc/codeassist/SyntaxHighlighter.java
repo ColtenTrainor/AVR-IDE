@@ -64,7 +64,7 @@ public class SyntaxHighlighter implements Runnable{
         pattern.append("(;[^\\n]*)") // comment
                 .append("|(\\b(?:(?:0b[0-1]*)|(?:0x(?:\\d|[a-f])*)|\\d+)\\b)") // constant
                 .append("|\\s(\\.\\S+)\\s") // directive
-                .append("|(r\\d+)"); // register TODO: replace with dynamic macro list
+                .append("|\\b(r\\d+)\\b"); // register TODO: replace with dynamic macro list
 
         for (int i = 4; i < categories.length; i++) {
             appendWordList(pattern, categories[i]);
@@ -137,7 +137,7 @@ public class SyntaxHighlighter implements Runnable{
         matchRegion();
     }
 
-    private class TextRegion {
+    private static class TextRegion {
         public int startOffset;
         public int endOffset;
         public int length;
