@@ -41,7 +41,7 @@ public class SyntaxHighlighter implements Runnable{
         this.categories[0] = "ignore";
         this.categories[1] = "constant";
         this.categories[2] = "directive";
-        this.categories[3] = "macro";
+        this.categories[3] = "register";
         var categoryIterator = InstructionData.getCategorySet().iterator();
         for (int i = 4; i < categories.length; i++) {
             categories[i] = categoryIterator.next();
@@ -64,7 +64,7 @@ public class SyntaxHighlighter implements Runnable{
         pattern.append("(;[^\\n]*)") // comment
                 .append("|(\\b(?:(?:0b[0-1]*)|(?:0x(?:\\d|[a-f])*)|\\d+)\\b)") // constant
                 .append("|\\s(\\.\\S+)\\s") // directive
-                .append("|\\b(r\\d+)\\b"); // register TODO: replace with dynamic macro list
+                .append("|(\\b(?:(?:r\\d+)|(?:(?:X|Y|Z)(?:H|L)))\\b)"); // register
 
         for (int i = 4; i < categories.length; i++) {
             appendWordList(pattern, categories[i]);
