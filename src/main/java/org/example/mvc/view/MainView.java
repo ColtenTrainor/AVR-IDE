@@ -17,7 +17,7 @@ public class MainView {
     private final int screenSolutionHeight;
     private final MainMenuBar menuBar;
     private final JCodeEditor codeEditor;
-    private final JDocumentationPanel sideBar;
+    private final JSideBar sideBar;
     private final JConsole console;
 
     public MainView(){
