@@ -1,24 +1,30 @@
 package org.example.mvc.view.components;
 
+import com.formdev.flatlaf.FlatDarculaLaf;
 import org.example.util.Utils;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class JConsole extends JPanel {
     private final JPanel consolePane = new JPanel();
     private final GridBagConstraints consolePaneConstraints = new GridBagConstraints();
-    private final JTextArea outputPane = new JTextArea();
+    private final JTextPane outputPane = new JTextPane();
     private final JTextField inputPane = new JTextField();
     private boolean inputEnabled;
 
-    private Color errorColor = Color.red;
+    private Style outputStyle;
+    private Color outputColor;
+    private Color errorColor = Color.decode("#cc5555");
+
     public JConsole(){
         outputPane.setEditable(false);
-        outputPane.setLineWrap(true);
-        outputPane.setWrapStyleWord(true);
+        outputColor = outputPane.getForeground();
+        outputStyle = outputPane.addStyle("console-style", null);
         outputPane.putClientProperty("FlatLaf.style", "font: $monospaced.font");
         inputPane.putClientProperty("FlatLaf.style", "font: $monospaced.font");
 
@@ -43,8 +49,6 @@ public class JConsole extends JPanel {
         consolePane.add(outputPane, consolePaneConstraints);
 
         setInputEnabled(true);
-
-
     }
 
     private void scrollToBottom(){
@@ -57,7 +61,7 @@ public class JConsole extends JPanel {
     public void handleInput(){
         try {
             var command = Utils.getFullTextFromDoc(inputPane.getDocument());
-            appendConsole(command);
+            appendConsole(command, outputColor);
             inputPane.setText("");
             scrollToBottom();
         } catch (BadLocationException ex) {
@@ -66,16 +70,21 @@ public class JConsole extends JPanel {
     }
 
     public void appendOutput(String output){
-        appendConsole(output);
+        appendConsole(output, outputColor);
     }
 
     public void appendError(String error){
-        //TODO: set text color to red
-        appendConsole(error);
+        appendConsole(error, errorColor);
     }
 
-    private void appendConsole(String message){ //TODO: make this take a color as a parameter
-        outputPane.append("\n" + message);
+    private void appendConsole(String message, Color color){
+        var doc = outputPane.getDocument();
+        StyleConstants.setForeground(outputStyle, color);
+        try {
+            doc.insertString(doc.getLength(), "\n" + message, outputStyle);
+        } catch (BadLocationException e) {
+            throw new RuntimeException(e);
+        }
         scrollToBottom();
     }
 
