@@ -58,20 +58,20 @@ public class CommandExecutor {
         try {
             Process process = processBuilder.start();
 
-            InputStreamReader inputStreamReader = new InputStreamReader(process.getErrorStream());
+            InputStreamReader inputStreamReader = new InputStreamReader(process.getInputStream());
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            String error;
-            while ((error = bufferedReader.readLine()) != null) {
-                var errorEvent = new CommandErrorEvent(this, error);
-                forwardErrorReceived(errorEvent);
-            }
-
-            inputStreamReader = new InputStreamReader(process.getErrorStream());
-            bufferedReader = new BufferedReader(inputStreamReader);
             String output;
             while ((output = bufferedReader.readLine()) != null) {
                 var outputEvent = new CommandOutputEvent(this, output);
                 forwardOutputReceived(outputEvent);
+            }
+
+            inputStreamReader = new InputStreamReader(process.getErrorStream());
+            bufferedReader = new BufferedReader(inputStreamReader);
+            String error;
+            while ((error = bufferedReader.readLine()) != null) {
+                var errorEvent = new CommandErrorEvent(this, error);
+                forwardErrorReceived(errorEvent);
             }
 
             //wait for the process to complete
