@@ -1,0 +1,2 @@
+Icon fonts are from Google Material Symbols
+https://fonts.google.com/icons

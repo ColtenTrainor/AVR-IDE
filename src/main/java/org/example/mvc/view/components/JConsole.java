@@ -1,6 +1,6 @@
 package org.example.mvc.view.components;
 
-import com.formdev.flatlaf.FlatDarculaLaf;
+import org.example.Settings;
 import org.example.util.Utils;
 
 import javax.swing.*;
@@ -15,6 +15,7 @@ public class JConsole extends JPanel {
     private final GridBagConstraints consolePaneConstraints = new GridBagConstraints();
     private final JTextPane outputPane = new JTextPane();
     private final JTextField inputPane = new JTextField();
+    private final JButton clearButton = new JButton();
     private boolean inputEnabled;
 
     private Style outputStyle;
@@ -28,6 +29,21 @@ public class JConsole extends JPanel {
         outputPane.putClientProperty("FlatLaf.style", "font: $monospaced.font");
         inputPane.putClientProperty("FlatLaf.style", "font: $monospaced.font");
 
+        setLayout(new BorderLayout());
+        var sideBar = new JPanel();
+        sideBar.setLayout(new BoxLayout(sideBar, BoxLayout.Y_AXIS));
+        sideBar.add(clearButton);
+        clearButton.setMargin(new Insets(-2, -2, -2, -2));
+        clearButton.setFont(Settings.iconsFont.deriveFont(Font.PLAIN, 20));
+        add(sideBar, BorderLayout.WEST);
+        clearButton.setAction(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                clearConsole();
+            }
+        });
+        clearButton.setText(String.valueOf('\ue872'));
+
         consolePane.setLayout(new GridBagLayout());
 
         consolePaneConstraints.gridx = 0;
@@ -39,10 +55,9 @@ public class JConsole extends JPanel {
         JPanel filler = new JPanel();
         consolePane.add(filler, consolePaneConstraints);
 
-        setLayout(new GridLayout());
         var scrollPane = new JScrollPane(consolePane);
         scrollPane.getVerticalScrollBar().setUnitIncrement(12);
-        add(scrollPane);
+        add(scrollPane, BorderLayout.CENTER);
 
         consolePaneConstraints.gridy = 1;
         consolePaneConstraints.weighty = 0;

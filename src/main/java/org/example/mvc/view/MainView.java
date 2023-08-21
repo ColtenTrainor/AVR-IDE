@@ -36,7 +36,7 @@ public class MainView {
         codeEditor = new JCodeEditor();
         documentationPanel = new JDocumentationPanel();
         console = new JConsole();
-        console.setInputEnabled(true);
+        console.setInputEnabled(false);
 
         screenSolutionWidth = (int)(getScreenSolution().getWidth() * 0.8);
         screenSolutionHeight = (int)(getScreenSolution().getHeight() * 0.8);

@@ -2,7 +2,10 @@ package org.example;
 
 import org.example.util.ConfigIOHandler;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 
 public final class Settings {
@@ -28,7 +31,19 @@ public final class Settings {
     // Final static fields (here for easy reference, not to be serialized)
     public static final File newFileTemplate = new File("newFileTemplate.asm"); // could make this changeable later
     public static final String programName = "AVR Development Environment";
-
+    public static final Font iconsFont;
+    static {
+        Font icons;
+        try {
+            icons = Font.createFont(Font.TRUETYPE_FONT, new File(
+                    "icons\\MaterialSymbolsRounded.ttf"));
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(icons);
+        } catch (IOException | FontFormatException e) {
+            icons = new JLabel().getFont();
+        }
+        iconsFont = icons;
+    }
 
     // Utility fields
     private static final File settingsFile = new File("cfg/settings.cfg");
