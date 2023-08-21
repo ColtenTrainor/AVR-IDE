@@ -125,7 +125,8 @@ public class SyntaxHighlighter implements Runnable{
     }
 
     private String textFilter(String text){
-        // TODO: LOL
+        // TODO: LOL replacing everything between (including) double quotes
+        //  with "(" to ignore highlight
         String pattern = "\"[^\"]*\"";
         Pattern regex = Pattern.compile(pattern);
         Matcher matcher = regex.matcher(text);
@@ -133,11 +134,11 @@ public class SyntaxHighlighter implements Runnable{
         StringBuilder replacedBuffer = new StringBuilder();
         while (matcher.find()){
             String match = matcher.group();
-            String replacement = "(".repeat(match.length() - 1) ;
+            String replacement = "(".repeat(match.length() - 1) + "(" ;
             matcher.appendReplacement(replacedBuffer, Matcher.quoteReplacement(replacement));
         }
         matcher.appendTail(replacedBuffer);
-
+//        System.out.println(replacedBuffer.toString());
         return replacedBuffer.toString();
     }
 
