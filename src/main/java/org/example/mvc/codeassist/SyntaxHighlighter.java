@@ -111,7 +111,7 @@ public class SyntaxHighlighter implements Runnable{
         document.setCharacterAttributes(textRegion.startOffset, textRegion.length, defaultStyle, true);
         var text = "";
         try {
-            text = document.getText(textRegion.startOffset, textRegion.length);
+            text = textFilter(document.getText(textRegion.startOffset, textRegion.length));
         } catch (BadLocationException e) {
             return;
         }
@@ -122,6 +122,23 @@ public class SyntaxHighlighter implements Runnable{
                 applyStyle(matcher, i + 1, categories[i]);
             }
         }
+    }
+
+    private String textFilter(String text){
+        // TODO: LOL
+        String pattern = "\"[^\"]*\"";
+        Pattern regex = Pattern.compile(pattern);
+        Matcher matcher = regex.matcher(text);
+
+        StringBuilder replacedBuffer = new StringBuilder();
+        while (matcher.find()){
+            String match = matcher.group();
+            String replacement = "(".repeat(match.length() - 1) ;
+            matcher.appendReplacement(replacedBuffer, Matcher.quoteReplacement(replacement));
+        }
+        matcher.appendTail(replacedBuffer);
+
+        return replacedBuffer.toString();
     }
 
     private void applyStyle(Matcher matcher, int group, String category){
