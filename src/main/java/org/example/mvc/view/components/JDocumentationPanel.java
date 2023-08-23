@@ -15,15 +15,17 @@ public class JDocumentationPanel extends JPanel{
     private ArrayList<JInstructionPane> instructionBoxes = new ArrayList<>();
 
     public JDocumentationPanel(){
-        setLayout(new GridLayout());
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        var docsPanel = new JPanel();
-        docsPanel.setLayout(new BoxLayout(docsPanel, BoxLayout.Y_AXIS));
-        docsPanel.add(toolBar);
+        add(toolBar);
         toolBar.setLayout(new FlowLayout(FlowLayout.RIGHT));
         toolBar.add(collapseButton);
         collapseButton.setText("\ue5cb");
+        collapseButton.setMargin(new Insets(-2, -2, -2, -2));
         collapseButton.setFont(Settings.iconsFont.deriveFont(Font.PLAIN, 20));
+
+        var docsPanel = new JPanel();
+        docsPanel.setLayout(new BoxLayout(docsPanel, BoxLayout.Y_AXIS));
 
         var scrollPane = new JScrollPane(docsPanel);
         add(scrollPane);
