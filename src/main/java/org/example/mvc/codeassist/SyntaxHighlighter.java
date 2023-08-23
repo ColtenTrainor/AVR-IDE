@@ -134,11 +134,10 @@ public class SyntaxHighlighter implements Runnable{
         StringBuilder replacedBuffer = new StringBuilder();
         while (matcher.find()){
             String match = matcher.group();
-            String replacement = "(".repeat(match.length() - 1) + "(" ;
+            String replacement = "(".repeat(match.length() ) ;
             matcher.appendReplacement(replacedBuffer, Matcher.quoteReplacement(replacement));
         }
         matcher.appendTail(replacedBuffer);
-//        System.out.println(replacedBuffer.toString());
         return replacedBuffer.toString();
     }
 
