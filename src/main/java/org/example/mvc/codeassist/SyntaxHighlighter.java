@@ -114,7 +114,7 @@ public class SyntaxHighlighter implements Runnable{
         document.setCharacterAttributes(textRegion.startOffset, textRegion.length, defaultStyle, true);
         var text = "";
         try {
-            text = textFilter(document.getText(textRegion.startOffset, textRegion.length));
+            text = textReFormatting(document.getText(textRegion.startOffset, textRegion.length));
         } catch (BadLocationException e) {
             return;
         }
@@ -127,9 +127,7 @@ public class SyntaxHighlighter implements Runnable{
         }
     }
 
-    private String textFilter(String text){
-        // TODO: LOL replacing everything between (including) double quotes
-        //  with "(" to ignore highlight
+    private String textReFormatting(String text){
         String pattern = "\"[^\"]*\"";
         Pattern regex = Pattern.compile(pattern);
         Matcher matcher = regex.matcher(text);
