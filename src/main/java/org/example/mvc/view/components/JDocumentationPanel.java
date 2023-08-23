@@ -1,27 +1,67 @@
 package org.example.mvc.view.components;
 
+import org.example.Settings;
 import org.example.mvc.codeassist.InstructionData;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.Style;
+import java.awt.*;
+import java.util.ArrayList;
 
 public class JDocumentationPanel extends JPanel{
 
-    private JTextPane[] instructionBoxes;
+    private JPanel toolBar = new JPanel();
+    private JButton collapseButton = new JButton();
+    private ArrayList<JInstructionPane> instructionBoxes = new ArrayList<>();
 
-    private void loadInstructionData(){
-        instructionBoxes = new JTextPane[InstructionData.getInstructionSet().size()];
-        for (int i = 0; i < instructionBoxes.length; i++) {
-            var box = instructionBoxes[i];
-            var doc = new DefaultStyledDocument();
-            box.setStyledDocument(doc);
-            box.setEditable(false);
-            var style = box.addStyle("docs-style", null);
+    public JDocumentationPanel(){
+        setLayout(new GridLayout());
+
+        var docsPanel = new JPanel();
+        docsPanel.setLayout(new BoxLayout(docsPanel, BoxLayout.Y_AXIS));
+        docsPanel.add(toolBar);
+        toolBar.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        toolBar.add(collapseButton);
+        collapseButton.setText("\ue5cb");
+        collapseButton.setFont(Settings.iconsFont.deriveFont(Font.PLAIN, 20));
+
+        var scrollPane = new JScrollPane(docsPanel);
+        add(scrollPane);
+
+        for (var inst : InstructionData.getInstructionSet()) {
+            var instData = InstructionData.getInstructionData(inst);
+            if (instData.getIsEssential()) {
+                var instPane = new JInstructionPane(instData);
+                instructionBoxes.add(instPane);
+                docsPanel.add(instPane);
+            }
+        }
+    }
+
+    class JInstructionPane extends JPanel{
+        private JTextPane documentationTextPane = new JTextPane();
+        private JButton expandButton = new JButton();
+
+        public JInstructionPane(InstructionData instruction){
+            setBorder(expandButton.getBorder());
+            documentationTextPane.setEditable(false);
+            expandButton.setFont(Settings.iconsFont.deriveFont(Font.PLAIN, 20));
+            expandButton.setText("\ue5cc");
+            expandButton.setBackground(documentationTextPane.getBackground());
+            expandButton.setBorder(documentationTextPane.getBorder());
+            expandButton.setMargin(new Insets(-2, -2, -2, -2));
+
+
+            setLayout(new FlowLayout(FlowLayout.LEFT));
+            add(expandButton);
+            add(documentationTextPane);
+
+            var shortDocStyle = documentationTextPane.addStyle("short-doc-style", null);
             try {
-                doc.insertString(0, "", style);
-            } catch (BadLocationException ignored) { }
+                documentationTextPane.getDocument().insertString(0, InstructionData.getShortInfo(instruction.getInstruction()), shortDocStyle);
+            } catch (BadLocationException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }
