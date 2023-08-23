@@ -1,7 +1,7 @@
 .include "m328Pdef.inc"
 
-	ldi r16, 0b00000001
-	ldi r17, 0b00000001
+	ldi r16, 0b00010000
+	ldi r17, 0b00010000
 	out DDRB, r16
 	
 mainLoop:

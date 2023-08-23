@@ -18,7 +18,7 @@ public class CommandExecutor {
             "avra.exe", "avra", "avra");
     public final AvrDude avrDude = new AvrDude(
             this, new File("avrdude"), actionListeners,
-            "avrdude.exe", "", "");
+            "avrdude.exe", "avrdude", "avrdude");
 
     public void addActionListener(CommandActionListener actionListener){ actionListeners.add(actionListener); }
 

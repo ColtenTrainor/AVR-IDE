@@ -18,6 +18,7 @@ public final class Settings {
         else if (os.contains("linux")) OperatingSystem = OS.Linux;
         else if (os.contains("mac") || os.contains("osx")) OperatingSystem = OS.Mac;
         else throw new RuntimeException("Failed to identify operating system");
+        System.out.printf("Detected OS: %s\n", OperatingSystem);
     }
 
     // Settings fields
