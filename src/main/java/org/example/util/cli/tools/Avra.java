@@ -15,8 +15,8 @@ public class Avra extends CliTool{
 
     public void compile(File asmFile){
         commandExecutor.runCommand(ToolDir, getExecutable(),
-                quote(asmFile.getAbsolutePath()),
-                "-o", quote(changeExtension(asmFile.getAbsolutePath(), ".asm", ".hex")),
-                "-I", quote(includesDir.getAbsolutePath()));
+                asmFile.getAbsolutePath(),
+                "-o", changeExtension(asmFile.getAbsolutePath(), ".asm", ".hex"),
+                "-I", includesDir.getAbsolutePath());
     }
 }
