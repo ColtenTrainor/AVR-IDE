@@ -256,7 +256,6 @@ public class MenuActions {
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-
             }
 
             private void textChangedUpdate(DocumentEvent e){
