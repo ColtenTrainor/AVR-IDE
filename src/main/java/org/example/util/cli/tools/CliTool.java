@@ -26,8 +26,8 @@ public abstract class CliTool {
     protected String getExecutable(){
         return switch (Settings.OperatingSystem){
             case Windows -> windowsExecutable;
-            case Linux -> linuxExecutable;
-            case Mac -> macExecutable;
+            case Linux -> "./" + linuxExecutable;
+            case Mac -> "./" + macExecutable;
         };
     }
 
