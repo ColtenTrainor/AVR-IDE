@@ -37,7 +37,9 @@ public final class Settings {
         Font icons;
         try {
             icons = Font.createFont(Font.TRUETYPE_FONT, new File(
-                    "icons\\MaterialSymbolsRounded.ttf"));
+                    "icons" +
+                            (OperatingSystem == OS.Windows ? "\\" : "/") +
+                            "MaterialSymbolsRounded.ttf"));
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(icons);
         } catch (IOException | FontFormatException e) {
