@@ -38,7 +38,7 @@ public class CommandExecutor {
         String[] options = {"cmd", "/C"};
         String[] concatenatedArray = Arrays.copyOf(options, options.length + cmd.length);
         System.arraycopy(cmd, 0, concatenatedArray, options.length, cmd.length);
-        System.out.printf(Arrays.toString(concatenatedArray));
+//        System.out.printf(Arrays.toString(concatenatedArray));
         return concatenatedArray;
     }
 
@@ -51,6 +51,7 @@ public class CommandExecutor {
 
     public void runCommand(File directory, String... command) {
         command = determineOSCommand(command);
+        debugLogCommand(command);
 
         ProcessBuilder processBuilder = new ProcessBuilder().command(command);
         processBuilder.directory(directory);
@@ -84,6 +85,14 @@ public class CommandExecutor {
         } catch (IOException | InterruptedException e) {
 //            e.printStackTrace();
         }
+    }
+
+    private void debugLogCommand(String... command){
+        var builder = new StringBuilder();
+        for(var s : command){
+            builder.append(s).append(" ");
+        }
+        System.out.println(builder);
     }
 }
 
