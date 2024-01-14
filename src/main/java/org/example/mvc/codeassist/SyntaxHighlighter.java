@@ -23,9 +23,9 @@ public class SyntaxHighlighter implements Runnable{
 
     private static final HashMap<String, String> initialCategories = new HashMap<>();
     static {
-//        initialCategories.put("ignore", "(;[^\\n]*)");
-//        initialCategories.put("constant", "(\\b(?:(?:0b[0-1]*)|(?:0x(?:\\d|[a-f])*)|\\d+)\\b)");
-//        initialCategories.put("directive", "(?:\\s|^)(\\.\\S+)(?:\\s|$)");
+        initialCategories.put("ignore", "(;[^\\n]*)");
+        initialCategories.put("constant", "(\\b(?:(?:0b[0-1]*)|(?:0x(?:\\d|[a-f])*)|\\d+)\\b)");
+        initialCategories.put("directive", "(?:\\s|^)(\\.\\S+)(?:\\s|$)");
         initialCategories.put("register", "(\\b(?:(?:r\\d+)|(?:(?:X|Y|Z)(?:H|L)))\\b)");
     }
 
