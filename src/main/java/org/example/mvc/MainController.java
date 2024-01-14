@@ -8,6 +8,7 @@ import org.example.mvc.codeassist.SyntaxHighlighter;
 import org.example.mvc.view.MainView;
 import org.example.util.cli.CommandExecutor;
 
+import javax.swing.text.PlainDocument;
 import javax.swing.text.StyledDocument;
 import javax.swing.text.StyledEditorKit;
 import java.beans.PropertyChangeEvent;
@@ -29,7 +30,9 @@ public class MainController implements PropertyChangeListener {
         this.menuActions = new MenuActions(this.view, this.model, this);
 
         // Set up and initialize stuff
+        view.getEditorPane().getDocument().putProperty(PlainDocument.tabSizeAttribute, 4);
         view.getEditorPane().setDocument(model.getEditorDocument());
+
         model.setEditorDefaultAttrSet(((StyledEditorKit)view.getEditorPane().getEditorKit()).getInputAttributes());
         refreshSerialPorts();
         setUpListeners();
