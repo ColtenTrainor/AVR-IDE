@@ -94,8 +94,6 @@ public class SyntaxHighlighter implements Runnable{
         var startOffset = 0;
         var endOffset = document.getLength();
 
-        System.out.println(endOffset);
-
         try {
             startOffset = root.getElement(root.getElementIndex(offset) - 1).getStartOffset();
         } catch (Exception ignored) {}

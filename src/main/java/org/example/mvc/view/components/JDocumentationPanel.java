@@ -6,6 +6,8 @@ import org.example.mvc.codeassist.InstructionData;
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class JDocumentationPanel extends JPanel{
@@ -43,20 +45,36 @@ public class JDocumentationPanel extends JPanel{
     class JInstructionPane extends JPanel{
         private JTextPane documentationTextPane = new JTextPane();
         private JButton expandButton = new JButton();
+        private JTextPane expandedText = new JTextPane();
 
         public JInstructionPane(InstructionData instruction){
             setBorder(expandButton.getBorder());
+            setLayout(new BorderLayout());
+
+            expandedText.setVisible(false);
             documentationTextPane.setEditable(false);
+            expandedText.setEditable(false);
             expandButton.setFont(Settings.iconsFont.deriveFont(Font.PLAIN, 20));
             expandButton.setText("\ue5cc");
             expandButton.setBackground(documentationTextPane.getBackground());
             expandButton.setBorder(documentationTextPane.getBorder());
             expandButton.setMargin(new Insets(-2, -2, -2, -2));
+            expandButton.addActionListener(e ->
+            {
+                expandedText.setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, \n" +
+                        "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. \n" +
+                        "Ut enim ad minim veniam, quis nostrud exercitation \n" +
+                        "ullamco laboris nisi ut aliquip ex ea commodo consequat.\n");
+                expandedText.setVisible(!expandedText.isVisible());
+                expandButton.setText(expandedText.isVisible() ? "\ue5cf" : "\ue5cc");
+            });
 
+            JPanel topSide = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            topSide.add(expandButton);
+            topSide.add(documentationTextPane);
 
-            setLayout(new FlowLayout(FlowLayout.LEFT));
-            add(expandButton);
-            add(documentationTextPane);
+            add(expandedText, BorderLayout.CENTER);
+            add(topSide, BorderLayout.NORTH);
 
             var shortDocStyle = documentationTextPane.addStyle("short-doc-style", null);
             try {
