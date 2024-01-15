@@ -30,6 +30,7 @@ public class JDocumentationPanel extends JPanel{
         docsPanel.setLayout(new BoxLayout(docsPanel, BoxLayout.Y_AXIS));
 
         var scrollPane = new JScrollPane(docsPanel);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(10);
         add(scrollPane);
 
         for (var inst : InstructionData.getInstructionSet()) {
